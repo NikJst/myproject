@@ -1,0 +1,14 @@
+/Users/nj/Documents/Testing3/bin/Debug/net9.0/Testing3
+/Users/nj/Documents/Testing3/bin/Debug/net9.0/Testing3.deps.json
+/Users/nj/Documents/Testing3/bin/Debug/net9.0/Testing3.runtimeconfig.json
+/Users/nj/Documents/Testing3/bin/Debug/net9.0/Testing3.dll
+/Users/nj/Documents/Testing3/bin/Debug/net9.0/Testing3.pdb
+/Users/nj/Documents/Testing3/obj/Debug/net9.0/Testing3.GeneratedMSBuildEditorConfig.editorconfig
+/Users/nj/Documents/Testing3/obj/Debug/net9.0/Testing3.AssemblyInfoInputs.cache
+/Users/nj/Documents/Testing3/obj/Debug/net9.0/Testing3.AssemblyInfo.cs
+/Users/nj/Documents/Testing3/obj/Debug/net9.0/Testing3.csproj.CoreCompileInputs.cache
+/Users/nj/Documents/Testing3/obj/Debug/net9.0/Testing3.dll
+/Users/nj/Documents/Testing3/obj/Debug/net9.0/refint/Testing3.dll
+/Users/nj/Documents/Testing3/obj/Debug/net9.0/Testing3.pdb
+/Users/nj/Documents/Testing3/obj/Debug/net9.0/Testing3.genruntimeconfig.cache
+/Users/nj/Documents/Testing3/obj/Debug/net9.0/ref/Testing3.dll

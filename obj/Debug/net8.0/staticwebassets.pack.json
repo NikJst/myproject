@@ -1,0 +1,121 @@
+{
+  "Files": [
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/Styles.css",
+      "PackagePath": "staticwebassets/Styles.css"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/book.png",
+      "PackagePath": "staticwebassets/image/book.png"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/close.png",
+      "PackagePath": "staticwebassets/image/close.png"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/close.psd",
+      "PackagePath": "staticwebassets/image/close.psd"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/exit.png",
+      "PackagePath": "staticwebassets/image/exit.png"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/icon.png",
+      "PackagePath": "staticwebassets/image/icon.png"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/komment.png",
+      "PackagePath": "staticwebassets/image/komment.png"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/like+.png",
+      "PackagePath": "staticwebassets/image/like+.png"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/like+.psd",
+      "PackagePath": "staticwebassets/image/like+.psd"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/like.png",
+      "PackagePath": "staticwebassets/image/like.png"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/menu.png",
+      "PackagePath": "staticwebassets/image/menu.png"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/menu.psd",
+      "PackagePath": "staticwebassets/image/menu.psd"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/message.png",
+      "PackagePath": "staticwebassets/image/message.png"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/new.png",
+      "PackagePath": "staticwebassets/image/new.png"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/new.psd",
+      "PackagePath": "staticwebassets/image/new.psd"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/profile.png",
+      "PackagePath": "staticwebassets/image/profile.png"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/profile.psd",
+      "PackagePath": "staticwebassets/image/profile.psd"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/repost.png",
+      "PackagePath": "staticwebassets/image/repost.png"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/star.png",
+      "PackagePath": "staticwebassets/image/star.png"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/Без имени-1.psd",
+      "PackagePath": "staticwebassets/image/Без имени-1.psd"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/Без имени-2.psd",
+      "PackagePath": "staticwebassets/image/Без имени-2.psd"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/Без имени-3.psd",
+      "PackagePath": "staticwebassets/image/Без имени-3.psd"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/image/лайк.psd",
+      "PackagePath": "staticwebassets/image/лайк.psd"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/index.html",
+      "PackagePath": "staticwebassets/index.html"
+    },
+    {
+      "Id": "/Users/nj/Documents/Testing3/wwwroot/script.js",
+      "PackagePath": "staticwebassets/script.js"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.Testing3.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.Testing3.props",
+      "PackagePath": "build\\Testing3.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.Testing3.props",
+      "PackagePath": "buildMultiTargeting\\Testing3.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.Testing3.props",
+      "PackagePath": "buildTransitive\\Testing3.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

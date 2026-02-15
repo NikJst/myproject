@@ -1,0 +1,220 @@
+/* Сброс стилей */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #fefefe;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* высота экрана */
+}
+
+header {
+  position: relative; /* чтобы потом позиционировать кнопку внутри */
+
+  background-color: #49679a;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+.settings-btn {
+  position: absolute; /* фиксируем внутри header */
+  right: 1rem; /* отступ от правого края */
+  background: #49679a;
+  border: none;
+  font-size: 1.4rem;
+  color: white;
+  cursor: pointer;
+}
+
+/* Основной блок с прокруткой */
+.cards-container {
+  flex: 1; /*здесь занимает всё доступное пространство между header и footer */
+  overflow-y: auto;
+  padding: 1rem;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* центрируем карточки по горизонтали */
+  padding: 2rem 0rem; /* сверху/снизу 2rem, слева/справа 1rem */
+}
+/* Карточки */
+.card {
+  background-color: white;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 30px;
+  box-shadow: -3px 20px 28px rgba(0, 0, 0, 0.1);
+  width: 99%; /* карточка занимает 90% ширины контейнера */
+  max-width: 400px; /* ограничение для больших экранов */
+  /*padding-top: 3rem;  внутренний отступ сверху текста внутри карточки */
+  margin-top: 1rem; /* внешний отступ сверху. 	margin-top — пространство снаружи блока, то есть отступ от соседних элементов карточки или других карточек.*/
+  position: relative; /* чтобы кнопка закрыть позиционировалась внутри */
+  box-shadow: 0 0 84px rgba(0, 0, 0, 0.36);
+}
+
+button {
+  padding: 0; /* убираем внутренние отступы */
+  border: none; /* убираем рамку кнопки */
+  background: none; /* убираем фон */
+  cursor: pointer; /* курсор при наведении */
+}
+
+button img {
+  /* ИКОНКИ КАРТОЧЕК  */
+  width: 34px;
+  height: 34px;
+  display: block;
+}
+
+.text-block {
+  margin-top: 1rem; /* расстояние между текстом и кнопкой */
+  font-size: 2rem;
+}
+
+.close-btn {
+  position: absolute; /* позиция относительно .card */
+  top: 0.5rem;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #909090;
+}
+.close-btn img {
+  width: 34px;
+  height: 34px;
+  opacity: 0.2; /* прозрачность иконки, 0 = полностью прозрачная, 1 = полностью видимая */
+  display: block;
+}
+
+.close-btn:hover {
+  color: #ff0000; /* при наведении меняем цвет ===> ЕЩЕ НЕ СДЕЛАНО */
+}
+
+.buttons-bottom {
+  display: flex;
+  justify-content: space-between; /* равномерно распределяем кнопки */
+  margin-top: 1rem; /* отступ сверху от текста */
+}
+
+.buttons-bottom button {
+  flex: 1; /* растягиваем кнопки одинаково */
+  margin: 0 0.6rem; /* отступы между кнопками */
+  padding: 0.8rem;
+  border: none;
+  border: 0.5px solid #ffffff;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: rgb(136, 136, 136);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.buttons-bottom button:hover {
+  color: rgb(255, 255, 255);
+}
+
+footer {
+  background-color: #f0f0f0;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.8rem;
+}
+.settings-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(255, 255, 255);
+  padding: 2rem;
+  display: none;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.settings-menu.active {
+  display: block;
+}
+
+.settings-menu .close-menu {
+  position: absolute; /* позиция внутри меню */
+  top: 1rem; /* отступ сверху */
+  right: 1rem; /* отступ справа */
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+/* Контейнер с пунктами меню */
+.settings-content {
+  font-size: 2rem;
+
+  margin-top: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 30px;
+  border: 1px solid #ffffff;
+  background-color: #ffffff;
+}
+
+.settings-content button {
+  display: flex; /* делаем кнопку флекс-контейнером */
+  align-items: center; /* вертикальное центрирование */
+  gap: 10px; /* расстояние между иконкой и текстом */
+  width: 100%;
+  padding: 0.8rem 0 0.8rem 1.5rem; /* текст слева с отступом */
+  font-size: 2rem;
+  border-radius: 30px;
+  border: 1px solid #ffffff;
+  background-color: #ffffff;
+  color: rgb(6, 6, 6);
+  cursor: pointer;
+  text-align: left;
+}
+.settings-content button::before {
+  content: ""; /* пустой контент, будет картинка */
+  opacity: 0.2;
+  position: absolute;
+  right: 3rem; /* позиция слева */
+  width: 34px;
+  height: 34px;
+  background-image: url("image/menu.png");
+  background-size: contain; /* чтобы не растягивалась */
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.settings-content button:hover {
+  color: #ffffff;
+  background-color: #b3b3b3;
+}
+
+
+.like-btn { 
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.like-btn .like-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* чтобы картинка не растягивалась */
+    display: block;
+}
