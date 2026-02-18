@@ -5,7 +5,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<IGuestService, GuestRepository>();
+
+builder.Services.AddScoped<IGuestService, GuestService>();
+
+builder.Services.AddScoped<IUserAndGuestRepository, UserAndGuestRepository>();
 
 builder.Services.AddScoped<ILikeRepository, LikeRepositoryMock>();
 

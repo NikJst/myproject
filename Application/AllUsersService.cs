@@ -1,0 +1,39 @@
+using Microsoft.AspNetCore.Http;
+
+namespace Testing3;
+
+public interface IGuestService
+{
+    User GetOrCreateGuest(HttpContext context);
+}
+public class GuestService : IGuestService
+{
+    private readonly IUserAndGuestRepository _userAndGuestRepository;
+
+    public GuestService(IUserAndGuestRepository userAndGuestRepository)
+    {
+        _userAndGuestRepository = userAndGuestRepository;
+    }
+    public User GetOrCreateGuest(HttpContext context)
+    {
+        // Проверяем, есть ли cookie
+        var cookie = context.Request.Cookies["GuestId"]; //изет строку с id гостя
+        if (cookie != null && Guid.TryParse(cookie, out var userId))
+        {
+            var existing = _userAndGuestRepository.Get(userId);
+            if (existing != null)
+                return existing;
+        }
+
+        var guest = new Guest
+        {
+            GuidId = Guid.NewGuid(),
+            Name = "Guest_" + Guid.NewGuid().ToString().Substring(0, 5)
+        };
+
+        _userAndGuestRepository.Add(guest);
+        context.Response.Cookies.Append("GuestId", guest.GuidId.ToString()); //сохраняем id гостя в cookie и отдаем его клиенту
+
+        return guest;
+    }
+}
