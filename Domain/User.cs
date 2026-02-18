@@ -13,6 +13,4 @@ public class User
         Name = name ?? throw new ArgumentNullException("Name required");
     }
 
-    // Конструктор для ORM (без параметров)
-    public User() { }
 }
