@@ -1,8 +1,17 @@
-/* Сброс стилей */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.add-post-btn { /* кнопка добавления поста */
+    background-color: #ccc; /* светло-серый фон */
+    color: #000000;            /* черный текст */
+    border: none;           /* без рамки */
+    padding: 10px 20px;     /* внутренние отступы */
+    border-radius: 5px;     /* скругленные углы */
+    cursor: pointer;        /* курсор указатель */
+    font-size: 16px;        /* размер текста */
+}
+
+.add-post-btn:hover {
+    background-color: #000000; /* чуть темнее при наведении */
+    color: #ffffff; /* белый текст при наведении */
+    transition: background-color 0.3s; /* плавное изменение фона */
 }
 
 body {
@@ -24,7 +33,7 @@ header {
 .settings-btn {
   position: absolute; /* фиксируем внутри header */
   right: 1rem; /* отступ от правого края */
-  background: #49679a;
+  background: #ffffff;
   border: none;
   font-size: 1.4rem;
   color: white;

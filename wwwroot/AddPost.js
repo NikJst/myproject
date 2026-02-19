@@ -67,6 +67,38 @@ async function loadAllPosts() {
     }
 }
 
+// Функция создания поста на сервере
+async function createPost() {
+    try {
+        const response = await fetch("http://192.168.1.35:3000/api/Post", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                text: "Пример текста поста",
+                userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+            })
+        });
+
+        if (!response.ok) throw new Error("Ошибка при создании поста");
+
+        const newPost = await response.json();
+        console.log("Пост создан:", newPost);
+
+        // Создаём карточку на странице
+        createEmptyPostCard("Новый пост", newPost.text);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+// Привязываем кнопку к функции при загрузке страницы
+document.addEventListener("DOMContentLoaded", () => {
+    const addPostBtn = document.querySelector(".add-post-btn"); // ищем кнопку по классу
+    if (addPostBtn) {
+        addPostBtn.addEventListener("click", createPost); // просто передаем функцию
+    }
+});
+
 // Вызовем сразу при загрузке страницы
 loadAllPosts();
 async function handleCreatePost(text) {
