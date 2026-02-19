@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IGuestService, GuestService>();
 builder.Services.AddScoped<IPostService, PostService>();
-builder.Services.AddSingleton<IPostRepository, PostRepository>();
+builder.Services.AddSingleton<IPostRepository, PostRepository>();// здесь важно чтобы репозитории жил все время жизни приложения, а не каждый запрос
 
 builder.Services.AddSingleton<IUserAndGuestRepository, UserAndGuestRepository>();
 

@@ -20,10 +20,6 @@ public class PostController : ControllerBase
     [HttpPost]
     public IActionResult CreatePost([FromBody] CreatePostRequest request)
     {
-        // _postService.CreatePost(request.Text, request.UserId);// создаем пост
-
-        // var newPost = _postService.GetPost(Guid.NewGuid());// получаем созданный пост
-        // return CreatedAtAction(nameof(GetPost), new { id = newPost?.GuidId }, newPost);// объект создан и мы можем получить его по этому пути
 
         try
         {
