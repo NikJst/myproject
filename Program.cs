@@ -11,13 +11,14 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddScoped<IGuestService, GuestService>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddSingleton<IPostRepository, PostRepository>();
 
-builder.Services.AddScoped<IUserAndGuestRepository, UserAndGuestRepository>();
+builder.Services.AddSingleton<IUserAndGuestRepository, UserAndGuestRepository>();
 
-builder.Services.AddScoped<ILikeRepository, LikeRepositoryMock>();
+// builder.Services.AddScoped<ILikeRepository, LikeRepositoryMock>();
 
 var app = builder.Build();
-
 
 app.UseSwagger();
 app.UseSwaggerUI();

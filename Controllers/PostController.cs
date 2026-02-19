@@ -1,24 +1,35 @@
 using Microsoft.AspNetCore.Mvc;
 namespace Testing3;
-//===============>доделать DTO
+//===============>DTO
+public class CreatePostRequest
+{
+    public string Text { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
+}
 [ApiController]
 [Route("api/[controller]")]
 public class PostController : ControllerBase
 {
-    private readonly PostService _postService;
+    private readonly IPostService _postService;
 
-    public PostController(PostService postService)
+    public PostController(IPostService postService)
     {
         _postService = postService;
     }
 
     [HttpPost]
-    public IActionResult CreatePost([FromBody] Post post)
+    public IActionResult CreatePost([FromBody] CreatePostRequest request)
     {
+        // _postService.CreatePost(request.Text, request.UserId);// создаем пост
+
+        // var newPost = _postService.GetPost(Guid.NewGuid());// получаем созданный пост
+        // return CreatedAtAction(nameof(GetPost), new { id = newPost?.GuidId }, newPost);// объект создан и мы можем получить его по этому пути
+
         try
         {
-            _postService.CreatePost(post.Text, post.UserId);
-            return Ok(post);
+            _postService.CreatePost(request.Text, request.UserId);
+            Console.WriteLine("Post created"); // для отладки
+            return Ok(request);
         }
         catch (Exception ex)
         {
@@ -38,10 +49,7 @@ public class PostController : ControllerBase
     public IActionResult GetPost(Guid postId)
     {
         var post = _postService.GetPost(postId);
-        if (post == null)
-        {
-            return NotFound();
-        }
+        if (post == null) return NotFound();
         return Ok(post);
     }
 

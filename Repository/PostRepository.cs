@@ -12,7 +12,9 @@ class PostRepository : IPostRepository
     private readonly List<Post> _posts = new();
     public void Add(Post post)
     {
+        Console.WriteLine($"Adding post with text: {post.Text} and user ID: {post.UserId}");
         _posts.Add(post);
+        Console.WriteLine("Post added to repository");
     }
     public void Remove(Guid postId)
     {
