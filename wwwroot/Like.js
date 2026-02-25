@@ -1,15 +1,26 @@
 document.addEventListener('click', async (e) => {
-    const likeButton = e.target.closest('.like-btn');
+    // Находим кнопку, которая содержит изображение лайка
+    const likeButton = e.target.closest('button');
     if (!likeButton) return;
 
-    const likeIcon = likeButton.querySelector('.like-icon');
+    const likeIcon = likeButton.querySelector('img');
+    if (!likeIcon || (!likeIcon.src.includes('like.png') && !likeIcon.src.includes('like+.png'))) return;
 
     try {
-        const response = await fetch('/api/like', { method: 'POST' });
+        const response = await fetch('/api/like', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+
+            body: JSON.stringify({
+                postId: likeButton.dataset.postId || 1 // используем data-атрибут или 1 по умолчанию
+            })
+        });
 
         if (!response.ok) {
             console.error('Ошибка при лайке:', response.status, response.statusText);
-            return;
+            throw new Error('Ошибка при лайке');
         }
 
         const data = await response.json(); // { LikesCount: ... }

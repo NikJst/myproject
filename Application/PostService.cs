@@ -10,32 +10,36 @@ public interface IPostService
 
 public class PostService : IPostService
 {
+    private readonly ILogger<PostService> _logger;
     private readonly IPostRepository _postRepository;
 
-    public PostService(IPostRepository postRepository) =>
-        _postRepository = postRepository ?? throw new ArgumentNullException(nameof(postRepository));
+    public PostService(IPostRepository postRepository, ILogger<PostService> logger) =>
+        (_postRepository, _logger) = (postRepository ?? throw new ArgumentNullException(nameof(postRepository)), logger);
 
     public void CreatePost(string text, Guid userId)
     {
-        Console.WriteLine($"Creating post with text: {text} and user ID: {userId}");
+        _logger.LogInformation("Creating post with text: {Text} and user ID: {UserId}", text, userId);
         var post = new Post(text, userId);
-        Console.WriteLine($"Post created: {post.Text} with ID: {post.GuidId}");
+        _logger.LogInformation("Post created: {Text} with ID: {GuidId}", post.Text, post.GuidId);
         _postRepository.Add(post);
-        Console.WriteLine("Post added to repository");
+        _logger.LogInformation("Post added to repository");
     }
 
     public void DeletePost(Guid postId)
     {
+        _logger.LogInformation("Deleting post with ID: {PostId}", postId);
         _postRepository.Remove(postId);
     }
 
     public Post? GetPost(Guid postId)
     {
+        _logger.LogInformation("Getting post with ID: {PostId}", postId);
         return _postRepository.GetPost(postId);
     }
 
     public List<Post> GetAllPosts()
     {
+        _logger.LogInformation("Getting all posts");
         return _postRepository.GetAllPosts();
     }
 }

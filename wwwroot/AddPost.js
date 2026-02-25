@@ -67,6 +67,7 @@ async function loadAllPosts() {
     }
 }
 
+
 // Функция создания поста на сервере
 async function createPost() {
     try {

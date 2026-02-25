@@ -8,21 +8,24 @@ public interface IGuestService
 }
 public class GuestService : IGuestService
 {
+    private readonly ILogger<GuestService> logger;
     private readonly IUserAndGuestRepository _userAndGuestRepository;
 
-    public GuestService(IUserAndGuestRepository userAndGuestRepository)
+    public GuestService(ILogger<GuestService> logger, IUserAndGuestRepository userAndGuestRepository)
     {
+        this.logger = logger;
         _userAndGuestRepository = userAndGuestRepository;
     }
     public User GetOrCreateGuest(HttpContext context)
     {
         // Проверяем, есть ли cookie
-        var cookie = context.Request.Cookies["GuestId"]; //изет строку с id гостя
+        var cookie = context.Request.Cookies["GuestId"]; //извлекаем строку с id гостя
         if (cookie != null && Guid.TryParse(cookie, out var userId))
         {
+            logger.LogInformation($"Проверка существования пользователя с id {userId}");
             var existing = _userAndGuestRepository.Get(userId);
             if (existing != null)
-                return existing;
+                return existing; // если гость уже существует, возвращаем его объект
         }
 
         var guest = new Guest
@@ -32,7 +35,8 @@ public class GuestService : IGuestService
         };
 
         _userAndGuestRepository.Add(guest);
-        context.Response.Cookies.Append("GuestId", guest.GuidId.ToString()); //сохраняем id гостя в cookie и отдаем его клиенту
+        context.Response.Cookies.Append("GuestId", guest.GuidId.ToString());
+        logger.LogInformation($"Пользователь не найден: создаем нового с id {guest.GuidId} и cookie, и отдаем его клиенту");
 
         return guest;
     }

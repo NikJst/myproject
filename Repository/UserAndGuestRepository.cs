@@ -6,12 +6,14 @@ public interface IUserAndGuestRepository
 }
 public class UserAndGuestRepository : IUserAndGuestRepository
 {
+    private readonly ILogger<UserAndGuestRepository> logger;
     static Dictionary<Guid, User> Users = new Dictionary<Guid, User>();
 
     public User? Get(Guid userid)
     {
         Users.TryGetValue(userid, out var user);
-        return user;//возвращаем пользователя или null
+        logger.LogInformation($"Пользователь с id {userid} найден: {user?.Name}, => return");
+        return user;
     }
     public void Add(User user)
     {

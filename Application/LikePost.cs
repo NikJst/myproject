@@ -1,37 +1,43 @@
 namespace Testing3;
-public class LikePost
-{
-    private readonly ILikeRepository _repo;
 
-    public LikePost(ILikeRepository repo)
-    {
-        _repo = repo;
-    }
+public interface ILikePost
+{
+    void SetLikePost(Guid userId, Guid postId);
+    void RemoveLikePost(Guid userId, Guid postId);
+    int GetLikeCount(Guid postId);
+}
+
+public class LikePost : ILikePost
+{
+    private readonly ILogger<LikePost> _logger;
+    private readonly ILikeRepository _repo;
+    public LikePost(ILikeRepository repo, ILogger<LikePost> logger) => (_repo, _logger) = (repo, logger);
 
     public void SetLikePost(Guid userId, Guid postId)
     {
         if (_repo.Exists(userId, postId))
         {
-            Console.WriteLine("вызван Exists, лайк уже существует");
-            throw new InvalidOperationException("Like already exists");
+            _logger.LogWarning("Лайк уже существует для пользователя {UserId} и поста {PostId}", userId, postId);
+            throw new InvalidOperationException("Лайк уже существует");
         }
         var like = new Like(userId, postId);
         _repo.Add(like);
-        Console.WriteLine($"User {userId} liked post {postId}");
+        _logger.LogInformation("Пользователь {UserId} создал new Like и добавил его к посту {PostId}", userId, postId);
     }
 
     public void RemoveLikePost(Guid userId, Guid postId)
     {
         if (!_repo.Exists(userId, postId))
-        {
-            throw new InvalidOperationException("Like does not exist");
-        }
+            return;
+
         _repo.Remove(userId, postId);
-        Console.WriteLine($"User {userId} unliked post {postId}");
+        _logger.LogInformation("Пользователь {UserId} удалил лайк с поста {PostId}", userId, postId);
     }
 
     public int GetLikeCount(Guid postId)
     {
-        return _repo.GetLikeCount(postId);
+        var count = _repo.GetLikeCount(postId);
+        _logger.LogInformation("Пост {PostId} имеет {Count} лайков", postId, count);
+        return count;
     }
 }

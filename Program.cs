@@ -1,7 +1,15 @@
 ﻿using Testing3;
 using Microsoft.OpenApi;
+using Serilog;
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 
@@ -9,11 +17,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
+builder.Services.AddScoped<ILikePost, LikePost>();
 builder.Services.AddScoped<IGuestService, GuestService>();
 builder.Services.AddSingleton<IPostService, PostService>();
 builder.Services.AddSingleton<IPostRepository, PostRepository>();// здесь важно чтобы репозитории жил все время жизни приложения, а не каждый запрос
-
 builder.Services.AddSingleton<IUserAndGuestRepository, UserAndGuestRepository>();
 
 // builder.Services.AddScoped<ILikeRepository, LikeRepositoryMock>();
