@@ -1,24 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
 namespace Testing3;
-//===============>DTO
-public class CreatePostRequest
+public class PostDto //DTO
 {
     public string Text { get; set; } = string.Empty;
     public Guid UserId { get; set; }
+    public bool LikedByUser { get; set; }
 }
+
 [ApiController]
 [Route("api/[controller]")]
 public class PostController : ControllerBase
 {
     private readonly IPostService _postService;
+    private readonly IGuestService _guestService;
 
-    public PostController(IPostService postService)
+    public PostController(IPostService postService, IGuestService guestService)
     {
         _postService = postService;
+        _guestService = guestService;
     }
 
     [HttpPost]
-    public IActionResult CreatePost([FromBody] CreatePostRequest request)
+    public IActionResult CreatePost([FromBody] PostDto request)
     {
 
         try
@@ -52,7 +55,12 @@ public class PostController : ControllerBase
     [HttpGet]
     public IActionResult GetAllPosts()
     {
-        var posts = _postService.GetAllPosts();
-        return Ok(posts);
+
+        var user = _guestService.GetOrCreateGuest(HttpContext);
+
+        var postDtos = _postService.GetAllPostsForUser(user.GuidId);
+        return Ok(postDtos);
+        // var posts = _postService.GetAllPosts();
+        // return Ok(posts);
     }
 }

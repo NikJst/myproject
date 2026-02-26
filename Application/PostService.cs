@@ -6,6 +6,9 @@ public interface IPostService
     void DeletePost(Guid postId);
     Post? GetPost(Guid postId);
     List<Post> GetAllPosts();
+
+    // TODO: Add LikePost and UnlikePost methods
+    List<PostDto> GetAllPostsForUser(Guid userId);
 }
 
 public class PostService : IPostService
@@ -41,5 +44,17 @@ public class PostService : IPostService
     {
         _logger.LogInformation("Getting all posts");
         return _postRepository.GetAllPosts();
+    }
+
+    public List<PostDto> GetAllPostsForUser(Guid userId)
+    {
+        var posts = _postRepository.GetAllPosts();
+
+        return posts.Select(p => new PostDto
+        {
+            Text = p.Text,
+            UserId = p.UserId,
+            LikedByUser = true
+        }).ToList();
     }
 }

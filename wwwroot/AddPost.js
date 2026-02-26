@@ -1,111 +1,129 @@
-function createEmptyPostCard(title = "Новый пост", text = "Введите текст...") {
-    const container = document.querySelector(".cards-container");
-    if (!container) return;
+function createEmptyPostCard(
+  title = "Новый пост",
+  text = "Введите текст...",
+  postId = null,
+) {
+  const container = document.querySelector(".cards-container");
+  if (!container) return;
 
-    const card = document.createElement("div");
-    card.classList.add("card");
+  const card = document.createElement("div");
+  card.classList.add("card");
 
-    // Кнопка закрытия
-    const closeBtn = document.createElement("button");
-    closeBtn.classList.add("close-btn");
+  if (postId) card.dataset.postId = postId; // сохраняем id поста
 
-    const closeImg = document.createElement("img");
-    closeImg.src = "image/close.png";
-    closeImg.alt = "";
-    closeBtn.appendChild(closeImg);
+  // Кнопка закрытия
+  const closeBtn = document.createElement("button");
+  closeBtn.classList.add("close-btn");
 
-    // Блок текста
-    const textBlock = document.createElement("div");
-    textBlock.classList.add("text-block");
+  const closeImg = document.createElement("img");
+  closeImg.src = "image/close.png";
+  closeImg.alt = "";
+  closeBtn.appendChild(closeImg);
 
-    // Заголовок
-    const h2 = document.createElement("h2");
-    h2.textContent = title;
+  // Блок текста
+  const textBlock = document.createElement("div");
+  textBlock.classList.add("text-block");
 
-    // Текст
-    const p = document.createElement("p");
-    p.textContent = text;
+  // Заголовок
+  const h2 = document.createElement("h2");
+  h2.textContent = title;
 
-    textBlock.appendChild(h2);
-    textBlock.appendChild(p);
+  // Текст
+  const p = document.createElement("p");
+  p.textContent = text;
 
-    // Нижние кнопки
-    const buttonsBottom = document.createElement("div");
-    buttonsBottom.classList.add("buttons-bottom");
+  textBlock.appendChild(h2);
+  textBlock.appendChild(p);
 
-    const icons = ["repost.png", "star.png", "message.png", "like.png"];
-    icons.forEach(icon => {
-        const btn = document.createElement("button");
-        const img = document.createElement("img");
-        img.src = `image/${icon}`;
-        img.alt = "";
-        btn.appendChild(img);
-        buttonsBottom.appendChild(btn);
-    });
+  // кнопки
+  const buttonsBottom = document.createElement("div");
+  buttonsBottom.classList.add("buttons-bottom");
 
-    // Сборка карточки
-    card.appendChild(closeBtn);
-    card.appendChild(textBlock);
-    card.appendChild(buttonsBottom);
+  const icons = ["repost.png", "star.png", "message.png", "like.png"];
+  icons.forEach((icon) => {
+    const btn = document.createElement("button");
+    const img = document.createElement("img");
+    img.src = `image/${icon}`;
+    img.alt = "";
 
-    container.prepend(card);
+    btn.appendChild(img);
+
+    // лайк-кнопка получает postId через data-атрибут
+    if (icon === "like.png" && postId) {
+      btn.dataset.postId = postId;
+
+      // Добавляем элемент для отображения количества лайков
+      const likesCount = document.createElement("span");
+      likesCount.classList.add("likes-count");
+      likesCount.style.marginLeft = "5px";
+      likesCount.style.fontSize = "14px";
+      likesCount.textContent = "0"; // начальное значение
+      btn.appendChild(likesCount);
+    }
+    buttonsBottom.appendChild(btn);
+  });
+
+  // Сборка карточки
+  card.appendChild(closeBtn);
+  card.appendChild(textBlock);
+  card.appendChild(buttonsBottom);
+
+  container.prepend(card);
 }
 // Функция для получения всех постов с сервера
 async function loadAllPosts() {
-    try {
-        const response = await fetch("http://192.168.1.35:3000/api/Post");
-        if (!response.ok) throw new Error("Ошибка при получении постов");
+  try {
+    const response = await fetch("http://192.168.1.35:3000/api/Post");
+    if (!response.ok) throw new Error("Ошибка при получении постов");
 
-        const posts = await response.json();
+    const posts = await response.json();
 
-        // Для каждого поста создаем карточку
-        posts.forEach(post => {
-            createEmptyPostCard("Новый пост", post.text);
-        });
-    } catch (error) {
-        console.error("Ошибка loadAllPosts:", error);
-    }
+    // Для каждого поста создаем карточку
+    posts.forEach((post) => {
+      createEmptyPostCard("Новый пост", post.text, post.guidId);
+    });
+  } catch (error) {
+    console.error("Ошибка loadAllPosts:", error);
+  }
 }
-
 
 // Функция создания поста на сервере
 async function createPost() {
-    try {
-        const response = await fetch("http://192.168.1.35:3000/api/Post", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                text: "Пример текста поста",
-                userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-            })
-        });
+  try {
+    const response = await fetch("http://192.168.1.35:3000/api/Post", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text: "Пример текста поста",
+        // userId не указываем, сервер сам подставит текущего гостя
+      }),
+    });
 
-        if (!response.ok) throw new Error("Ошибка при создании поста");
+    if (!response.ok) throw new Error("Ошибка при создании поста");
 
-        const newPost = await response.json();
-        console.log("Пост создан:", newPost);
+    const newPost = await response.json();
+    console.log("Пост создан:", newPost);
 
-        // Создаём карточку на странице
-        createEmptyPostCard("Новый пост", newPost.text);
-    } catch (error) {
-        console.error(error);
-    }
+    // Создаём карточку на странице с правильным postId и userId
+    createEmptyPostCard("Новый пост", newPost.text, newPost.guidId);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 // Привязываем кнопку к функции при загрузке страницы
 document.addEventListener("DOMContentLoaded", () => {
-    const addPostBtn = document.querySelector(".add-post-btn"); // ищем кнопку по классу
-    if (addPostBtn) {
-        addPostBtn.addEventListener("click", createPost); // просто передаем функцию
-    }
+  const addPostBtn = document.querySelector(".add-post-btn"); // ищем кнопку по классу
+  if (addPostBtn) {
+    addPostBtn.addEventListener("click", createPost); // просто передаем функцию
+  }
 });
 
 // Вызовем сразу при загрузке страницы
 loadAllPosts();
 async function handleCreatePost(text) {
-    const newPost = await createPostOnServer(text);
-    if (newPost) {
-        createEmptyPostCard("Новый пост", newPost.text);
-    }
+  const newPost = await createPostOnServer(text);
+  if (newPost) {
+    createEmptyPostCard("Новый пост", newPost.text, newPost.guidId);
+  }
 }
-

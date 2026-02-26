@@ -3,7 +3,6 @@ namespace Testing3.Controllers;
 
 public class LikePostDto
 {
-    public Guid UserId { get; set; }
     public Guid PostId { get; set; }
 }
 [ApiController]
@@ -26,14 +25,28 @@ public class LikeController : ControllerBase
 
         try
         {
-            likePost.SetLikePost(dto.UserId, dto.PostId);
+            likePost.SetLikePost(user.GuidId, dto.PostId);
         }
         catch (InvalidOperationException)
         {
-            likePost.RemoveLikePost(dto.UserId, dto.PostId);
+            likePost.RemoveLikePost(user.GuidId, dto.PostId);
         }
 
         var count = likePost.GetLikeCount(dto.PostId);
         return Ok(new { LikesCount = count });
+    }
+    [HttpGet("post/{postId}")]
+    public IActionResult GetLikesInfo(Guid postId)
+    {
+        var user = guestService.GetOrCreateGuest(HttpContext);
+        var likedByUser = likePost.IsLikedByUser(user.GuidId, postId);
+
+        var count = likePost.GetLikeCount(postId);
+
+        return Ok(new
+        {
+            LikesCount = count,
+            LikedByUser = likedByUser
+        });
     }
 }

@@ -7,6 +7,11 @@ public interface IUserAndGuestRepository
 public class UserAndGuestRepository : IUserAndGuestRepository
 {
     private readonly ILogger<UserAndGuestRepository> logger;
+    public UserAndGuestRepository(ILogger<UserAndGuestRepository> logger)
+    {
+        this.logger = logger;
+    }
+
     static Dictionary<Guid, User> Users = new Dictionary<Guid, User>();
 
     public User? Get(Guid userid)
@@ -20,6 +25,7 @@ public class UserAndGuestRepository : IUserAndGuestRepository
 
         Users[user.GuidId] = user;//добавляем пользователя в словарь
     }
+
 
     // // Отправляем cookie клиенту
     // context.Response.Cookies.Append("GuestId", guestId.ToString());
