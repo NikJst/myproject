@@ -12,10 +12,7 @@ document.addEventListener('click', async (e) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-
-            body: JSON.stringify({
-                postId: likeButton.dataset.postId || 1 // используем data-атрибут или 1 по умолчанию
-            })
+      body: JSON.stringify({ postId: postId }),
         });
 
         if (!response.ok) {
