@@ -35,6 +35,7 @@ public class LikeController : ControllerBase
         var count = likePost.GetLikeCount(dto.PostId);
         return Ok(new { LikesCount = count });
     }
+    
     [HttpGet("post/{postId}")]
     public IActionResult GetLikesInfo(Guid postId)
     {
