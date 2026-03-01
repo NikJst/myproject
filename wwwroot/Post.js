@@ -9,7 +9,7 @@ function createEmptyPostCard(
   const card = document.createElement("div");
   card.classList.add("card");
 
-  if (postId) card.dataset.postId = postId; // сохраняем id поста
+  if (postId) card.dataset.postId = postId; //====> сохраняем id поста если он предан
 
   // Кнопка закрытия
   const closeBtn = document.createElement("button");
@@ -38,7 +38,6 @@ function createEmptyPostCard(
   // кнопки
   const buttonsBottom = document.createElement("div");
   buttonsBottom.classList.add("buttons-bottom");
-
   const icons = ["repost.png", "star.png", "message.png", "like.png"];
   icons.forEach((icon) => {
     const btn = document.createElement("button");
@@ -48,9 +47,10 @@ function createEmptyPostCard(
 
     btn.appendChild(img);
 
-    // лайк-кнопка получает postId через data-атрибут
+    //===> лайк-кнопка получает postId через data-атрибут
     if (icon === "like.png" && postId) {
       btn.dataset.postId = postId;
+      console.log("Лайк-кнопка получила postId:", postId);
 
       // Добавляем элемент для отображения количества лайков
       const likesCount = document.createElement("span");

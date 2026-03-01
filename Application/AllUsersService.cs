@@ -22,7 +22,7 @@ public class GuestService : IGuestService
         var cookie = context.Request.Cookies["GuestId"]; //извлекаем строку с id гостя
         if (cookie != null && Guid.TryParse(cookie, out var userId))
         {
-            logger.LogInformation($"Проверка существования пользователя с id {userId}");
+            logger.LogInformation($"Проверка существования пользователя с id ===> {userId}");
             var existing = _userAndGuestRepository.Get(userId);
             if (existing != null)
                 return existing; // если гость уже существует, возвращаем его объект
@@ -36,7 +36,7 @@ public class GuestService : IGuestService
 
         _userAndGuestRepository.Add(guest);
         context.Response.Cookies.Append("GuestId", guest.GuidId.ToString());
-        logger.LogInformation($"Пользователь не найден: создаем нового с id {guest.GuidId} и cookie, и отдаем его клиенту");
+        logger.LogInformation($"Пользователь не найден: создаем нового с id ===> {guest.GuidId} и отдаем cookie клиенту");
 
         return guest;
     }

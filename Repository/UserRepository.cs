@@ -25,10 +25,4 @@ public class UserAndGuestRepository : IUserAndGuestRepository
 
         Users[user.GuidId] = user;//добавляем пользователя в словарь
     }
-
-
-    // // Отправляем cookie клиенту
-    // context.Response.Cookies.Append("GuestId", guestId.ToString());
-
-    // return guest;
 }
