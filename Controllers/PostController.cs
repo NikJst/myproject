@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 namespace Testing3;
 public class PostDto //DTO
 {
@@ -18,11 +19,13 @@ public class PostController : ControllerBase
 {
     private readonly IPostService _postService;
     private readonly IGuestService _guestService;
+    private readonly ILogger<PostController> _logger;
 
-    public PostController(IPostService postService, IGuestService guestService)
+    public PostController(IPostService postService, IGuestService guestService, ILogger<PostController> logger)
     {
         _postService = postService;
         _guestService = guestService;
+        _logger = logger;
     }
 
     [HttpPost]
@@ -33,7 +36,7 @@ public class PostController : ControllerBase
         {
             var user = _guestService.GetOrCreateGuest(HttpContext);
             _postService.CreatePost(request.Text, user.GuidId);
-            Console.WriteLine($"Post created with user ID: {user.GuidId}"); // для отладки
+            _logger.LogInformation("Post created with user ID: {UserId}", user.GuidId);
             return Ok(new { Text = request.Text, GuidId = user.GuidId });
         }
         catch (Exception ex)

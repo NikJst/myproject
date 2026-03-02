@@ -11,6 +11,7 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.0",
           "Serilog": "4.3.1",
           "Serilog.AspNetCore": "10.0.0",
+          "Serilog.Settings.Configuration": "10.0.0",
           "Serilog.Sinks.Console": "6.1.1",
           "Swashbuckle.AspNetCore": "10.1.4"
         },

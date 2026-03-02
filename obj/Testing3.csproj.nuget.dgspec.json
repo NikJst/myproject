@@ -55,6 +55,10 @@
               "target": "Package",
               "version": "[10.0.0, )"
             },
+            "Serilog.Settings.Configuration": {
+              "target": "Package",
+              "version": "[10.0.0, )"
+            },
             "Serilog.Sinks.Console": {
               "target": "Package",
               "version": "[6.1.1, )"
