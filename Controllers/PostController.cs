@@ -1,5 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 namespace Testing3;
+public class PostDto //DTO
+{
+    public string Text { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
+    public bool LikedByUser { get; set; }
+}
+
 public class CreatePostDto //DTO for creating posts
 {
     public string Text { get; set; } = string.Empty;
@@ -19,14 +26,15 @@ public class PostController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult CreatePost([FromBody] PostDto request)
+    public IActionResult CreatePost([FromBody] CreatePostDto request)
     {
 
         try
         {
-            _postService.CreatePost(request.Text, request.UserId);
-            Console.WriteLine("Post created"); // для отладки
-            return Ok(request);
+            var user = _guestService.GetOrCreateGuest(HttpContext);
+            _postService.CreatePost(request.Text, user.GuidId);
+            Console.WriteLine($"Post created with user ID: {user.GuidId}"); // для отладки
+            return Ok(new { Text = request.Text, GuidId = user.GuidId });
         }
         catch (Exception ex)
         {
