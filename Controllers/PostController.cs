@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 namespace Testing3;
-public class PostDto //DTO
+public class CreatePostDto //DTO for creating posts
 {
     public string Text { get; set; } = string.Empty;
-    public Guid UserId { get; set; }
-    public bool LikedByUser { get; set; }
 }
 
 [ApiController]
