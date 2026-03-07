@@ -1,18 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 namespace Testing3;
-public class PostDto //DTO
-{
-    public string Text { get; set; } = string.Empty;
-    public Guid UserId { get; set; }
-    public bool LikedByUser { get; set; }
-}
-
-public class CreatePostDto //DTO for creating posts
-{
-    public string Text { get; set; } = string.Empty;
-}
-
 [ApiController]
 [Route("api/[controller]")]
 public class PostController : ControllerBase
@@ -29,7 +17,7 @@ public class PostController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult CreatePost([FromBody] CreatePostDto request)
+    public IActionResult CreatePost([FromBody] BasePostDto request)
     {
 
         try

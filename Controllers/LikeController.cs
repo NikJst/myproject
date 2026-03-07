@@ -1,10 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 namespace Testing3.Controllers;
-
-public class LikePostDto
-{
-    public Guid PostId { get; set; }
-}
 [ApiController]
 [Route("api/[controller]")]
 public class LikeController : ControllerBase

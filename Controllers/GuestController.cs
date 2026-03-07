@@ -1,10 +1,5 @@
-
-
-namespace Testing3.Controllers;
-
 using Microsoft.AspNetCore.Mvc;
-
-
+namespace Testing3.Controllers;
 [ApiController]
 [Route("guest")]
 public class GuestController : Controller

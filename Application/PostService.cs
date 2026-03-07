@@ -6,9 +6,7 @@ public interface IPostService
     void DeletePost(Guid postId);
     Post? GetPost(Guid postId);
     List<Post> GetAllPosts();
-
-    // TODO: Add LikePost and UnlikePost methods
-    List<PostDto> GetAllPostsForUser(Guid userId);
+    List<LikedPostDto> GetAllPostsForUser(Guid userId);
 }
 
 public class PostService : IPostService
@@ -16,12 +14,13 @@ public class PostService : IPostService
     private readonly ILogger<PostService> _logger;
     private readonly IPostRepository _postRepository;
 
-    public PostService(IPostRepository postRepository, ILogger<PostService> logger) =>
-        (_postRepository, _logger) = (postRepository ?? throw new ArgumentNullException(nameof(postRepository)), logger);
-
+    public PostService(IPostRepository postRepository, ILogger<PostService> logger) 
+    {
+        _postRepository = postRepository ?? throw new ArgumentNullException(nameof(postRepository));
+        _logger = logger;
+    }
     public void CreatePost(string text, Guid userId)
     {
-        _logger.LogInformation($"Creating post with text: {text} and user ID: {userId}");
         var post = new Post(text, userId);
         _logger.LogInformation($"Post created: {post.Text} with ID: {post.GuidId}");
         _postRepository.Add(post);
@@ -46,11 +45,11 @@ public class PostService : IPostService
         return _postRepository.GetAllPosts();
     }
 
-    public List<PostDto> GetAllPostsForUser(Guid userId)
+    public List<LikedPostDto> GetAllPostsForUser(Guid userId)
     {
         var posts = _postRepository.GetAllPosts();
 
-        return posts.Select(p => new PostDto
+        return posts.Select(p => new LikedPostDto
         {
             Text = p.Text,
             UserId = p.UserId,
