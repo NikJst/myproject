@@ -21,22 +21,22 @@ public class PostService : IPostService
 
     public void CreatePost(string text, Guid userId)
     {
-        _logger.LogInformation("Creating post with text: {Text} and user ID: {UserId}", text, userId);
+        _logger.LogInformation($"Creating post with text: {text} and user ID: {userId}");
         var post = new Post(text, userId);
-        _logger.LogInformation("Post created: {Text} with ID: {GuidId}", post.Text, post.GuidId);
+        _logger.LogInformation($"Post created: {post.Text} with ID: {post.GuidId}");
         _postRepository.Add(post);
         _logger.LogInformation("Post added to repository");
     }
 
     public void DeletePost(Guid postId)
     {
-        _logger.LogInformation("Deleting post with ID: {PostId}", postId);
+        _logger.LogInformation($"Deleting post with ID: {postId}");
         _postRepository.Remove(postId);
     }
 
     public Post? GetPost(Guid postId)
     {
-        _logger.LogInformation("Getting post with ID: {PostId}", postId);
+        _logger.LogInformation($"Getting post with ID: {postId}");
         return _postRepository.GetPost(postId);
     }
 

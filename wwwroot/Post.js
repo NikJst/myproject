@@ -3,7 +3,7 @@ function createEmptyPostCard(
   text = "Введите текст...",
   postId = null,
 ) {
-  const container = document.querySelector(".cards-container");
+  const container = document.querySelector(".cards-container"); //====> находим контейнер для карточек
   if (!container) return;
 
   const card = document.createElement("div");

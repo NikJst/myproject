@@ -17,7 +17,7 @@ public class UserAndGuestRepository : IUserAndGuestRepository
     public User? Get(Guid userid)
     {
         Users.TryGetValue(userid, out var user);
-        logger.LogInformation($"Пользователь с id {userid} найден: {user?.Name}, => return");
+        logger.LogInformation($"Пользователь найден {user?.Name} => return");
         return user;
     }
     public void Add(User user)

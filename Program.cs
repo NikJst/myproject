@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
-
+    
 builder.Services.AddControllers();
 
 // Enable middleware to serve generated Swagger as a JSON endpoint.
