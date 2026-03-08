@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IGuestService, GuestService>();
-builder.Services.AddScoped<ILikePost, LikePost>();
+builder.Services.AddScoped<ILikeService, LikePost>();
 builder.Services.AddSingleton<ILikeRepository, LikeRepositoryMock>();
 builder.Services.AddSingleton<IPostService, PostService>();
 builder.Services.AddSingleton<IPostRepository, PostRepository>();// здесь важно чтобы репозитории жил все время жизни приложения, а не каждый запрос

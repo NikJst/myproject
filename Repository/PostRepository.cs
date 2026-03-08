@@ -9,10 +9,17 @@ public interface IPostRepository
 }
 class PostRepository : IPostRepository
 {
+    private readonly ILogger<PostRepository> _logger;
     private readonly List<Post> _posts = [];
+    public PostRepository(ILogger<PostRepository> logger)
+    {
+        _logger = logger;
+    }
     public void Add(Post post)
     {
         _posts.Add(post);
+        _logger.LogInformation($"Post created with ID: {post.GuidId}");
+
     }
     public void Remove(Guid postId)
     {

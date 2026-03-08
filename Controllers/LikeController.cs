@@ -4,10 +4,10 @@ namespace Testing3.Controllers;
 [Route("api/[controller]")]
 public class LikeController : ControllerBase
 {
-    private readonly ILikePost likePost;
+    private readonly ILikeService likePost;
     private readonly IGuestService guestService;
 
-    public LikeController(ILikePost likePost, IGuestService guestService)
+    public LikeController(ILikeService likePost, IGuestService guestService)
     {
         this.likePost = likePost;
         this.guestService = guestService;

@@ -1,6 +1,6 @@
 namespace Testing3;
 
-public interface ILikePost
+public interface ILikeService
 {
     void SetLikePost(Guid userId, Guid postId);
     void RemoveLikePost(Guid userId, Guid postId);
@@ -8,7 +8,7 @@ public interface ILikePost
     bool IsLikedByUser(Guid userId, Guid postId);
 }
 
-public class LikePost : ILikePost
+public class LikePost : ILikeService
 {
     private readonly ILogger<LikePost> _logger;
     private readonly ILikeRepository _repo;

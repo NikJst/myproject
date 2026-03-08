@@ -12,6 +12,7 @@ public class ViewPostDto //DTO for displaying posts with like status
 public class CreatePostDto //DTO for creating posts
 {
     public string Text { get; set; } = string.Empty;
+    public bool LikedByUser { get; set; } = false;
 }
 
 public class LikePostDto //DTO for toggling like on a post

@@ -24,7 +24,6 @@ public class PostService : IPostService
     public void CreatePost(string text, Guid userId)
     {
         var post = new Post(text, userId);
-        _logger.LogInformation($"Post created: {post.Text} with ID: {post.GuidId}");
         _postRepository.Add(post);
         _logger.LogInformation("Post added to repository");
     }

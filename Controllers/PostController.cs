@@ -24,7 +24,7 @@ public class PostController : ControllerBase
             var user = _guestService.GetOrCreateGuest(HttpContext);
             _postService.CreatePost(request.Text, user.GuidId);
             _logger.LogInformation("Post created with user ID: {UserId}", user.GuidId);
-            return Ok(new { Text = request.Text, GuidId = user.GuidId });
+            return Ok(new { Text = request.Text, user.GuidId, });
         }
         catch (Exception ex)
         {
@@ -40,22 +40,23 @@ public class PostController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("{postId}")]
-    public IActionResult GetPost(Guid postId)
-    {
-        var post = _postService.GetPost(postId);
-        if (post == null) return NotFound();
-        return Ok(post);
-    }
 
     [HttpGet]
     public IActionResult GetAllPosts()
     {
         var user = _guestService.GetOrCreateGuest(HttpContext);
         
-        var postDtos = _postService.GetAllPostsForUser(user.GuidId);
-        return Ok(postDtos);
+        var dto = _postService.GetAllPostsForUser(user.GuidId);
+        return Ok(dto);
         // var posts = _postService.GetAllPosts();
         // return Ok(posts);
+    }
+
+    [HttpGet("{postId}")]
+    public IActionResult GetPost(Guid postId)
+    {
+        var post = _postService.GetPost(postId);
+        if (post == null) return NotFound();
+        return Ok(post);
     }
 }
