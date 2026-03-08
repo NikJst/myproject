@@ -64,6 +64,8 @@ function createEmptyPostCard(
     //===> лайк-кнопка получает postId через data-атрибут
     if (icon === "like.png" && postId) {
       btn.dataset.postId = postId;
+      btn.id = `like-btn-${postId}`; // уникальный id для кнопки LIKE а не только люббой кнопки в картчоке - (like-btn-{postId})
+
       console.log(
         "Лайк-кнопка получила postId:",
         postId,
@@ -104,7 +106,7 @@ async function loadAllPosts() {
       createEmptyPostCard(
         "Новый пост",
         post.text,
-        post.userId, // вся проблема была в имени поля ==> теперь используем userId вместо guidId
+        post.userId, // вся проблема была в имени поля. теперь используем userId вместо guidId
         post.likedByUser,
       );
     });
@@ -121,7 +123,7 @@ async function createPost() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         text: "Пример текста поста",
-        // userId не указываем, сервер сам подставит текущего гостя
+        // userId не указываем, сервер сам подставит текущего гостя из куков
       }),
     });
 
@@ -129,9 +131,8 @@ async function createPost() {
 
     const newPost = await response.json();
     console.log("Пост создан:", newPost);
-
     // Создаём карточку на странице с правильным postId и userId
-    createEmptyPostCard("Новый пост", newPost.text, newPost.guidId);
+    createEmptyPostCard("Новый пост", newPost.text, newPost.userId);
   } catch (error) {
     console.error(error);
   }
@@ -145,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Вызовем сразу при загрузке страницы
+// Вызовем при загрузке страницы
 loadAllPosts();
 async function handleCreatePost(text) {
   const newPost = await createPostOnServer(text);
@@ -153,7 +154,7 @@ async function handleCreatePost(text) {
     createEmptyPostCard(
       "Новый пост",
       newPost.text,
-      newPost.guidId,
+      newPost.userId,
       newPost.likedByUser,
     );
   }
