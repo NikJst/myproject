@@ -12,7 +12,7 @@ document.addEventListener("click", async (e) => {
   // Берем postId из data-атрибута кнопки
   const postId = likeButton.dataset.postId;
   if (!postId) {
-    console.log("postId не найден в кнопке");
+    console.error("postId не найден в кнопке");
     return;
   }
 

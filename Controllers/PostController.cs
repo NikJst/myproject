@@ -23,12 +23,11 @@ public class PostController : ControllerBase
         {
             var user = _guestService.GetOrCreateGuest(HttpContext);
             _postService.CreatePost(request.Text, user.GuidId);
-            _logger.LogInformation("Post created with user ID: {UserId}", user.GuidId);
+            _logger.LogInformation("Post создан with user ID: {UserId}", user.GuidId);
             return Ok(new { Text = request.Text, user.GuidId, });
         }
         catch (Exception ex)
         {
-            // Возвращаем 500 + текст ошибки
             return StatusCode(500, new { message = ex.Message, stack = ex.StackTrace });
         }
     }
@@ -48,8 +47,6 @@ public class PostController : ControllerBase
         
         var dto = _postService.GetAllPostsForUser(user.GuidId);
         return Ok(dto);
-        // var posts = _postService.GetAllPosts();
-        // return Ok(posts);
     }
 
     [HttpGet("{postId}")]
