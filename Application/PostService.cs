@@ -6,17 +6,19 @@ public interface IPostService
     void DeletePost(Guid postId);
     Post? GetPost(Guid postId);
     List<Post> GetAllPosts();
-    List<LikedPostDto> GetAllPostsForUser(Guid userId);
+    List<ViewPostDto> GetAllPostsForUser(Guid userId);
 }
 
 public class PostService : IPostService
 {
+    private readonly ILikeRepository _likeRepository;
     private readonly ILogger<PostService> _logger;
     private readonly IPostRepository _postRepository;
 
-    public PostService(IPostRepository postRepository, ILogger<PostService> logger) 
+    public PostService(IPostRepository postRepository, ILikeRepository likeRepository, ILogger<PostService> logger) 
     {
         _postRepository = postRepository ?? throw new ArgumentNullException(nameof(postRepository));
+        _likeRepository = likeRepository ?? throw new ArgumentNullException(nameof(likeRepository));
         _logger = logger;
     }
     public void CreatePost(string text, Guid userId)
@@ -45,15 +47,15 @@ public class PostService : IPostService
         return _postRepository.GetAllPosts();
     }
 
-    public List<LikedPostDto> GetAllPostsForUser(Guid userId)
+    public List<ViewPostDto> GetAllPostsForUser(Guid userId)
     {
         var posts = _postRepository.GetAllPosts();
 
-        return posts.Select(p => new LikedPostDto
+        return posts.Select(p => new ViewPostDto
         {
             Text = p.Text,
             UserId = p.UserId,
-            LikedByUser = true
+            LikedByUser = _likeRepository.Exists(userId, p.GuidId) //доделать в будщем как один запрос к бд
         }).ToList();
     }
 }

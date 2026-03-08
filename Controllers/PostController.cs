@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 namespace Testing3;
 [ApiController]
 [Route("api/[controller]")]
@@ -17,7 +16,7 @@ public class PostController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult CreatePost([FromBody] BasePostDto request)
+    public IActionResult CreatePost([FromBody] CreatePostDto request)
     {
 
         try
@@ -52,9 +51,8 @@ public class PostController : ControllerBase
     [HttpGet]
     public IActionResult GetAllPosts()
     {
-
         var user = _guestService.GetOrCreateGuest(HttpContext);
-
+        
         var postDtos = _postService.GetAllPostsForUser(user.GuidId);
         return Ok(postDtos);
         // var posts = _postService.GetAllPosts();

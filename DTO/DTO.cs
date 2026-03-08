@@ -1,12 +1,15 @@
+using System.ComponentModel.DataAnnotations;
 namespace Testing3;
-public class LikedPostDto //DTO for displaying posts with like status
+public class ViewPostDto //DTO for displaying posts with like status
 {
+
     public string Text { get; set; } = string.Empty;
+    [Required]
     public Guid UserId { get; set; }
     public bool LikedByUser { get; set; }
 }
 
-public class BasePostDto //DTO for creating posts
+public class CreatePostDto //DTO for creating posts
 {
     public string Text { get; set; } = string.Empty;
 }

@@ -2,6 +2,7 @@ function createEmptyPostCard(
   title = "Новый пост",
   text = "Введите текст...",
   postId = null,
+  likedByUser = false,
 ) {
   const container = document.querySelector(".cards-container"); //====> находим контейнер для карточек
   if (!container) return;
@@ -42,7 +43,13 @@ function createEmptyPostCard(
   icons.forEach((icon) => {
     const btn = document.createElement("button");
     const img = document.createElement("img");
-    img.src = `image/${icon}`;
+
+    // Если это лайк и пользователь лайкнул пост, используем картинку like+
+    if (icon === "like.png" && likedByUser) {
+      img.src = "image/like+.png";
+    } else {
+      img.src = `image/${icon}`;
+    }
     img.alt = "";
 
     btn.appendChild(img);
@@ -50,7 +57,12 @@ function createEmptyPostCard(
     //===> лайк-кнопка получает postId через data-атрибут
     if (icon === "like.png" && postId) {
       btn.dataset.postId = postId;
-      console.log("Лайк-кнопка получила postId:", postId);
+      console.log(
+        "Лайк-кнопка получила postId:",
+        postId,
+        "Liked:",
+        likedByUser,
+      );
 
       // Добавляем элемент для отображения количества лайков
       const likesCount = document.createElement("span");
@@ -80,7 +92,12 @@ async function loadAllPosts() {
 
     // Для каждого поста создаем карточку
     posts.forEach((post) => {
-      createEmptyPostCard("Новый пост", post.text, post.guidId);
+      createEmptyPostCard(
+        "Новый пост",
+        post.text,
+        post.guidId,
+        post.likedByUser,
+      );
     });
   } catch (error) {
     console.error("Ошибка loadAllPosts:", error);
@@ -124,6 +141,11 @@ loadAllPosts();
 async function handleCreatePost(text) {
   const newPost = await createPostOnServer(text);
   if (newPost) {
-    createEmptyPostCard("Новый пост", newPost.text, newPost.guidId);
+    createEmptyPostCard(
+      "Новый пост",
+      newPost.text,
+      newPost.guidId,
+      newPost.likedByUser,
+    );
   }
 }
