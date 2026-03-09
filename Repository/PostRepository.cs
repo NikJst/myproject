@@ -31,6 +31,12 @@ class PostRepository : IPostRepository
     }
     public List<Post> GetAllPosts()
     {
-        return _posts.ToList();
+       
+        _logger.LogInformation("Getting all posts");
+        foreach (var post in _posts)
+        {
+            _logger.LogInformation($"PostId в репозитории: {post.GuidId}");
+        }
+        return _posts;
     }
 }

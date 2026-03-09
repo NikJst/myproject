@@ -52,6 +52,7 @@ public class PostService : IPostService
 
         return posts.Select(p => new ViewPostDto
         {
+            GuidId = p.GuidId,
             Text = p.Text,
             UserId = p.UserId,
             LikedByUser = _likeRepository.Exists(userId, p.GuidId) //доделать в будщем как один запрос к бд
