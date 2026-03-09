@@ -1,23 +1,20 @@
-import { createEmptyPostCard } from "./ModelCard.js";
-
 document.addEventListener("click", async (e) => {
   const likeButton = e.target.closest("button");
-  if (!likeButton) return;
+  if (!likeButton) return; //выход если клик не на кнопку
 
   const likeIcon = likeButton.querySelector("img");
   if (
     !likeIcon ||
     (!likeIcon.src.includes("like.png") && !likeIcon.src.includes("like+.png"))
   )
-    return;
+    return; //выход если иконка лайка не найдена
 
   // Берем postId из data-атрибута кнопки
   const postId = likeButton.dataset.postId;
   if (!postId) {
     console.error("postId не найден в кнопке");
-    return;
+    return; //выход если postId не найден
   }
-
   console.log("Нажат лайк для postId:", postId);
 
   try {
@@ -26,12 +23,16 @@ document.addEventListener("click", async (e) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ postId: postId }),
+      body: JSON.stringify({ postId: postId }), // в теле запроса отправляем postId как объект { postId: "..." }
     });
 
     if (!response.ok) {
-      console.error("Ошибка при лайке:", response.status, response.statusText);
-      throw new Error("Ошибка при лайке");
+      console.error(
+        "Ошибка при постановке Like:",
+        response.status,
+        response.statusText,
+      );
+      throw new Error("Ошибка при постановке Like");
     }
 
     const data = await response.json(); // { LikesCount: ... }
@@ -40,9 +41,9 @@ document.addEventListener("click", async (e) => {
     likeIcon.src = likeButton.classList.contains("liked")
       ? "image/like+.png"
       : "image/like.png";
-
-    console.log("Текущее количество лайков:", data.LikesCount);
   } catch (err) {
-    console.error("Ошибка при лайке:", err);
+    console.error("Ошибка при постановке Like:", err);
+  } finally {
+    console.log("Постановка Like завершена");
   }
 });
