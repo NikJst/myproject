@@ -23,13 +23,14 @@ public class PostController : ControllerBase
         try
         {
             var user = _guestService.GetOrCreateGuest(HttpContext);
-            var post = _postService.CreatePost(request.Text, user.GuidId);
+            var post = _postService.CreatePost(request.Text, user.GuidId, request.Title);
             _logger.LogInformation("Post создан with user ID: {UserId}", user.GuidId);
             return Ok(new 
             {
                 Text = request.Text,
                 GuidId = post.GuidId,
-                UserId = user.GuidId
+                UserId = user.GuidId,
+                Title = request.Title
             });
         }
         catch (Exception ex)

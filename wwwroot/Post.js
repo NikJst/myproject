@@ -1,4 +1,5 @@
 import { createEmptyPostCard } from "./ModelCard.js";
+import { togglePostForm } from "./CardForm.js";
 
 // Функция для получения всех постов с сервера
 async function loadAllPosts() {
@@ -13,7 +14,7 @@ async function loadAllPosts() {
     posts.forEach((post) => {
       console.log("Обработка поста:", post);
       createEmptyPostCard(
-        "Новый пост",
+        post.title,
         post.text,
         post.guidId,
         post.likedByUser,
@@ -32,6 +33,7 @@ async function createPost() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        title: "Новый пост",
         text: "Пример текста поста",
         // userId не указываем, сервер сам подставит текущего гостя из куков
       }),
@@ -41,9 +43,8 @@ async function createPost() {
 
     const newPost = await response.json();
     console.log("Пост создан:", newPost);
-    // Создаём карточку на странице с правильным guidId и userId
     createEmptyPostCard(
-      "Новый пост",
+      newPost.title,
       newPost.text,
       newPost.guidId,
       newPost.likedByUser,
@@ -58,7 +59,7 @@ async function createPost() {
 document.addEventListener("DOMContentLoaded", () => {
   const addPostBtn = document.querySelector(".add-post-btn"); // ищем кнопку по классу
   if (addPostBtn) {
-    addPostBtn.addEventListener("click", createPost); // просто передаем функцию
+    addPostBtn.addEventListener("click", togglePostForm); // используем новую функцию формы
   }
 });
 
@@ -68,7 +69,7 @@ async function handleCreatePost(text) {
   const newPost = await createPostOnServer(text);
   if (newPost) {
     createEmptyPostCard(
-      "Новый пост",
+      newPost.title,
       newPost.text,
       newPost.guidId,
       newPost.likedByUser,

@@ -3,7 +3,7 @@ using Testing3.DTO;
 
 public interface IPostService
 {
-    Post CreatePost(string text, Guid userId);
+    Post CreatePost(string text, Guid userId, string? title = null);
     void DeletePost(Guid postId);
     Post? GetPost(Guid postId);
     List<Post> GetAllPosts();
@@ -22,9 +22,9 @@ public class PostService : IPostService
         _likeRepository = likeRepository ?? throw new ArgumentNullException(nameof(likeRepository));
         _logger = logger;
     }
-    public Post CreatePost(string text, Guid userId)
+    public Post CreatePost(string text, Guid userId, string? title = null)
     {
-        var post = new Post(text, userId); // Guidid генерируется автоматически в конструкторе Post
+        var post = new Post(text, userId, title); // Guidid генерируется автоматически в конструкторе Post
         return _postRepository.Add(post);
     }
 
@@ -54,6 +54,7 @@ public class PostService : IPostService
         {
             GuidId = p.GuidId,
             Text = p.Text,
+            Title = p.Title,
             UserId = p.UserId,
             LikedByUser = _likeRepository.Exists(userId, p.GuidId) //доделать в будщем как один запрос к бд
         }).ToList();

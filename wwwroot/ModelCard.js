@@ -1,6 +1,6 @@
 export function createEmptyPostCard(
-  title = "Новый пост",
-  text = "Введите текст...",
+  title = null,
+  text = null,
   guidId = null,
   likedByUser = false,
   userId = null,
