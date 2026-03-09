@@ -22,14 +22,23 @@ export function createPostForm() {
 
   const titleLabel = document.createElement("label");
   titleLabel.textContent = "Заголовок:";
-  titleLabel.setAttribute("for", "post-title");
+  titleLabel.setAttribute("for", "post-title"); //
 
   const titleInput = document.createElement("input");
   titleInput.type = "text";
   titleInput.id = "post-title";
-  titleInput.name = "title";
-  titleInput.placeholder = "Введите заголовок поста";
-  titleInput.value = "title"; // значение по умолчанию
+  titleInput.name = "title"; //
+  titleInput.placeholder = "<Введите заголовок, если хотите>";
+  titleInput.value = null; // значение по умолчанию
+
+  // Надписи исчезают при клике на поле
+  titleInput.addEventListener("focus", function () {
+    this.placeholder = "";
+  });
+
+  titleInput.addEventListener("blur", function () {
+    this.placeholder = "<Введите заголовок, если хотите>";
+  });
 
   titleGroup.appendChild(titleLabel);
   titleGroup.appendChild(titleInput);
@@ -48,6 +57,15 @@ export function createPostForm() {
   textArea.placeholder = "Введите текст поста...";
   textArea.rows = 4;
   textArea.required = true;
+
+  // Надписи исчезают при клике на поле
+  textArea.addEventListener("focus", function () {
+    this.placeholder = "Введите текст поста...";
+  });
+
+  textArea.addEventListener("blur", function () {
+    this.placeholder = "Введите текст поста...";
+  });
 
   textGroup.appendChild(textLabel);
   textGroup.appendChild(textArea);

@@ -1,12 +1,25 @@
+/* Контейнер для кнопок действий */
+.action-buttons-container {
+  position: fixed;
+  bottom: 5vh; /* изменено с 10vh на 5vh */
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* центрирование кнопок по горизонтали */
+  gap: 10px; /* расстояние между кнопками */
+  z-index: 100;
+}
+
 .add-post-btn {
   /* кнопка добавления поста */
   background-color: #ccc; /* светло-серый фон */
   color: #000000; /* черный текст */
   border: none; /* без рамки */
-  padding: 10px 20px; /* внутренние отступы */
-  border-radius: 5px; /* скругленные углы */
+  padding: 12px 24px; /* увеличено на 20% (было 10px 20px) */
+  border-radius: 32px; /* изменено на 32px */
   cursor: pointer; /* курсор указатель */
-  font-size: 16px; /* размер текста */
+  font-size: 19.2px; /* увеличено на 20% (было 16px) */
 }
 
 .add-post-btn:hover {
@@ -83,7 +96,7 @@ button img {
 
 .text-block {
   margin-top: 1rem; /* расстояние между текстом и кнопкой */
-  font-size: 2rem;
+  font-size: 2rem; /* размер шрифта */
 }
 
 .close-btn {
@@ -275,18 +288,25 @@ footer {
 .form-group textarea {
   width: 100%;
   padding: 0.8rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1.1rem;
+  border: 2px solid #ffffff;
+  border-radius: 32px;
+  font-size: 2rem; /* размер шрифта */
   font-family: inherit;
   transition: border-color 0.3s;
   box-sizing: border-box;
 }
 
+#post-title {
+  font-size: 2rem; /* такой же размер как h2 в карточках */
+  font-weight: bold; /* жирный начертание как у заголовка */
+  margin: 0; /* убираем отступы как у h2 */
+  padding: 0; /* убираем внутренние отступы */
+}
+
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #ffffff; /* синий цвет при фокусе */
 }
 
 .form-group textarea {
@@ -303,10 +323,10 @@ footer {
 
 .submit-btn,
 .cancel-btn {
-  padding: 0.8rem 2rem;
+  padding: 12px 24px; /* как у add-post-btn */
   border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
+  border-radius: 32px; /* как у add-post-btn */
+  font-size: 19.2px; /* как у add-post-btn */
   cursor: pointer;
   transition: background-color 0.3s;
 }
