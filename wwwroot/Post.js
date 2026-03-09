@@ -1,96 +1,5 @@
-function createEmptyPostCard(
-  title = "Новый пост",
-  text = "Введите текст...",
-  postId = null,
-  likedByUser = false,
-) {
-  console.log(
-    "createEmptyPostCard вызван с postId:",
-    postId,
-    "likedByUser:",
-    likedByUser,
-  );
+import { createEmptyPostCard } from "./ModelCard.js";
 
-  const container = document.querySelector(".cards-container"); //====> находим контейнер для карточек
-  if (!container) return;
-
-  const card = document.createElement("div");
-  card.classList.add("card");
-
-  if (postId) card.dataset.postId = postId; //====> сохраняем id поста если он предан
-
-  // Кнопка закрытия
-  const closeBtn = document.createElement("button");
-  closeBtn.classList.add("close-btn");
-
-  const closeImg = document.createElement("img");
-  closeImg.src = "image/close.png";
-  closeImg.alt = "";
-  closeBtn.appendChild(closeImg);
-
-  // Блок текста
-  const textBlock = document.createElement("div");
-  textBlock.classList.add("text-block");
-
-  // Заголовок
-  const h2 = document.createElement("h2");
-  h2.textContent = title;
-
-  // Текст
-  const p = document.createElement("p");
-  p.textContent = text;
-
-  textBlock.appendChild(h2);
-  textBlock.appendChild(p);
-
-  // кнопки
-  const buttonsBottom = document.createElement("div");
-  buttonsBottom.classList.add("buttons-bottom");
-  const icons = ["repost.png", "star.png", "message.png", "like.png"];
-  icons.forEach((icon) => {
-    const btn = document.createElement("button");
-    const img = document.createElement("img");
-
-    // Если это лайк и пользователь лайкнул пост, используем картинку like+
-    if (icon === "like.png" && likedByUser) {
-      img.src = "image/like+.png";
-    } else {
-      img.src = `image/${icon}`;
-    }
-    img.alt = "";
-
-    btn.appendChild(img);
-
-    //===> лайк-кнопка получает postId через data-атрибут
-    if (icon === "like.png" && postId) {
-      btn.dataset.postId = postId;
-      btn.id = `like-btn-${postId}`; // уникальный id для кнопки LIKE а не только люббой кнопки в картчоке - (like-btn-{postId})
-
-      console.log(
-        "Лайк-кнопка получила postId:",
-        postId,
-        "Liked:",
-        likedByUser,
-      );
-
-      // Добавляем элемент для отображения количества лайков
-      const likesCount = document.createElement("span");
-      likesCount.classList.add("likes-count");
-      likesCount.style.marginLeft = "5px";
-      likesCount.style.fontSize = "14px";
-      likesCount.textContent = "0"; // начальное значение
-      btn.appendChild(likesCount);
-    }
-    buttonsBottom.appendChild(btn);
-  });
-
-  // Сборка карточки
-  card.appendChild(closeBtn);
-  card.appendChild(textBlock);
-  card.appendChild(buttonsBottom);
-
-  container.prepend(card);
-}
 // Функция для получения всех постов с сервера
 async function loadAllPosts() {
   try {
@@ -106,8 +15,9 @@ async function loadAllPosts() {
       createEmptyPostCard(
         "Новый пост",
         post.text,
-        post.userId, // вся проблема была в имени поля. теперь используем userId вместо guidId
+        post.guidId,
         post.likedByUser,
+        post.userId,
       );
     });
   } catch (error) {
@@ -131,8 +41,14 @@ async function createPost() {
 
     const newPost = await response.json();
     console.log("Пост создан:", newPost);
-    // Создаём карточку на странице с правильным postId и userId
-    createEmptyPostCard("Новый пост", newPost.text, newPost.userId);
+    // Создаём карточку на странице с правильным guidId и userId
+    createEmptyPostCard(
+      "Новый пост",
+      newPost.text,
+      newPost.guidId,
+      newPost.likedByUser,
+      newPost.userId,
+    );
   } catch (error) {
     console.error(error);
   }
@@ -154,8 +70,9 @@ async function handleCreatePost(text) {
     createEmptyPostCard(
       "Новый пост",
       newPost.text,
-      newPost.userId,
+      newPost.guidId,
       newPost.likedByUser,
+      newPost.userId,
     );
   }
 }

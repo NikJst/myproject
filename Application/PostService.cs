@@ -1,8 +1,9 @@
 namespace Testing3;
+using Testing3.DTO;
 
 public interface IPostService
 {
-    void CreatePost(string text, Guid userId);
+    Post CreatePost(string text, Guid userId);
     void DeletePost(Guid postId);
     Post? GetPost(Guid postId);
     List<Post> GetAllPosts();
@@ -21,11 +22,10 @@ public class PostService : IPostService
         _likeRepository = likeRepository ?? throw new ArgumentNullException(nameof(likeRepository));
         _logger = logger;
     }
-    public void CreatePost(string text, Guid userId)
+    public Post CreatePost(string text, Guid userId)
     {
-        var post = new Post(text, userId);
-        _postRepository.Add(post);
-        _logger.LogInformation("Post added to repository");
+        var post = new Post(text, userId); // Guidid генерируется автоматически в конструкторе Post
+        return _postRepository.Add(post);
     }
 
     public void DeletePost(Guid postId)

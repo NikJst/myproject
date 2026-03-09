@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-namespace Testing3;
+using Testing3;
+using Testing3.DTO;
 [ApiController]
 [Route("api/[controller]")]
 public class PostController : ControllerBase
@@ -22,9 +23,14 @@ public class PostController : ControllerBase
         try
         {
             var user = _guestService.GetOrCreateGuest(HttpContext);
-            _postService.CreatePost(request.Text, user.GuidId);
+            var post = _postService.CreatePost(request.Text, user.GuidId);
             _logger.LogInformation("Post создан with user ID: {UserId}", user.GuidId);
-            return Ok(new { Text = request.Text, user.GuidId, });
+            return Ok(new 
+            {
+                Text = request.Text,
+                GuidId = post.GuidId,
+                UserId = user.GuidId
+            });
         }
         catch (Exception ex)
         {

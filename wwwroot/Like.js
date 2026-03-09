@@ -1,3 +1,5 @@
+import { createEmptyPostCard } from "./ModelCard.js";
+
 document.addEventListener("click", async (e) => {
   const likeButton = e.target.closest("button");
   if (!likeButton) return;

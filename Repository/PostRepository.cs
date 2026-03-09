@@ -2,7 +2,7 @@ using Testing3;
 
 public interface IPostRepository
 {
-    void Add(Post post);
+    Post Add(Post post);
     void Remove(Guid postId);
     Post? GetPost(Guid postId);
     List<Post> GetAllPosts();
@@ -15,11 +15,11 @@ class PostRepository : IPostRepository
     {
         _logger = logger;
     }
-    public void Add(Post post)
+    public Post Add(Post post)
     {
         _posts.Add(post);
         _logger.LogInformation($"Post created with ID: {post.GuidId}");
-
+        return post; // понадобилось вернуть целый обьект поста потому что нужен его GuidID
     }
     public void Remove(Guid postId)
     {
