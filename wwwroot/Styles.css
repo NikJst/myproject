@@ -97,6 +97,8 @@ button img {
 .text-block {
   margin-top: 1rem; /* расстояние между текстом и кнопкой */
   font-size: 2rem; /* размер шрифта */
+  word-wrap: break-word; /* перенос длинных слов */
+  overflow-wrap: break-word; /* перенос слов для современных браузеров */
 }
 
 .close-btn {

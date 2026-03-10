@@ -149,20 +149,20 @@ async function createPostWithFormData(postData) {
 
     if (!response.ok) throw new Error("Ошибка при создании поста");
 
-    const newPost = await response.json();
+    const newPost = await response.json(); //newpost это ортвет
     console.log("Пост создан:", newPost);
 
     // Импортируем createEmptyPostCard и создаем карточку
     const { createEmptyPostCard } = await import("./ModelCard.js");
     createEmptyPostCard(
       postData.title,
-      newPost.text,
+      postData.text,
       newPost.guidId,
       newPost.likedByUser,
       newPost.userId,
     );
   } catch (error) {
-    console.error("Ошибка при создании поста:", error);
+    console.error("Ошибка при создании карточки:", error);
   }
 }
 
