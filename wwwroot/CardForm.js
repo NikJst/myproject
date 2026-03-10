@@ -1,6 +1,6 @@
 // Функция для создания формы добавления поста
 export function createPostForm() {
-  const container = document.querySelector(".cards-container");
+  const container = document.querySelector(".posts-container");
   if (!container) return;
 
   // Создаем модальное окно для формы
@@ -182,4 +182,28 @@ export function togglePostForm() {
   if (modal.style.display === "flex") {
     document.getElementById("post-text").focus();
   }
+}
+
+// Функция для создания кнопки добавления поста
+export function createAddPostButton() {
+  const container = document.querySelector(".action-buttons-container");
+  if (!container) {
+    console.error("Контейнер .action-buttons-container не найден");
+    return null;
+  }
+
+  // Создаем кнопку добавления поста
+  const addPostButton = document.createElement("button");
+  addPostButton.className = "add-post-btn";
+  addPostButton.textContent = "Добавить пост";
+
+  // Обработчик клика для открытия формы создания поста
+  addPostButton.addEventListener("click", function () {
+    togglePostForm();
+  });
+
+  // Добавляем кнопку в контейнер
+  container.appendChild(addPostButton);
+
+  return addPostButton;
 }
