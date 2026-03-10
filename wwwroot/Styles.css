@@ -5,8 +5,8 @@
   left: 0;
   right: 0;
   display: flex;
-  flex-direction: column;
-  align-items: center; /* центрирование кнопок по горизонтали */
+  flex-direction: row; /* изменено на row для горизонтального расположения */
+  justify-content: center; /* центрирование кнопок по горизонтали */
   gap: 10px; /* расстояние между кнопками */
   z-index: 100;
 }
@@ -24,6 +24,23 @@
 
 .add-post-btn:hover {
   background-color: #000000; /* чуть темнее при наведении */
+  color: #ffffff; /* белый текст при наведении */
+  transition: background-color 0.3s; /* плавное изменение фона */
+}
+
+.profile-btn {
+  /* кнопка профиля - такой же стиль как у add-post-btn */
+  background-color: #ccc; /* светло-серый фон */
+  color: #000000; /* черный текст */
+  border: none; /* без рамки */
+  padding: 12px 24px; /* как у add-post-btn */
+  border-radius: 32px; /* как у add-post-btn */
+  cursor: pointer; /* курсор указатель */
+  font-size: 19.2px; /* как у add-post-btn */
+}
+
+.profile-btn:hover {
+  background-color: #000000; /* как у add-post-btn при наведении */
   color: #ffffff; /* белый текст при наведении */
   transition: background-color 0.3s; /* плавное изменение фона */
 }
