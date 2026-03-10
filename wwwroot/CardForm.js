@@ -207,3 +207,27 @@ export function createAddPostButton() {
 
   return addPostButton;
 }
+
+// Функция для создания кнопки "На главную"
+export function createMainPageButton() {
+  const container = document.querySelector(".action-buttons-container");
+  if (!container) {
+    console.error("Контейнер .action-buttons-container не найден");
+    return null;
+  }
+
+  // Создаем кнопку "На главную"
+  const mainPageButton = document.createElement("button");
+  mainPageButton.className = "main-page-btn";
+  mainPageButton.textContent = "На главную";
+
+  // Обработчик клика для перехода на главную страницу
+  mainPageButton.addEventListener("click", function () {
+    window.location.href = "/index.html";
+  });
+
+  // Добавляем кнопку в контейнер
+  container.appendChild(mainPageButton);
+
+  return mainPageButton;
+}
