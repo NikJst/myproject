@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
 /* Контейнер для кнопок действий */
 .action-buttons-container {
   position: fixed;
@@ -29,11 +31,13 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Roboto", Arial, sans-serif;
   background-color: #fefefe;
   display: flex;
   flex-direction: column;
   height: 100vh; /* высота экрана */
+  max-width: 100%; /* как у контейнера карточек */
+  margin: 0 auto; /* центрирование как у контейнера */
 }
 
 header {
@@ -63,7 +67,9 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center; /* центрируем карточки по горизонтали */
-  padding: 2rem 0rem; /* сверху/снизу 2rem, слева/справа 1rem */
+  /* padding: 2rem 0rem; /* сверху/снизу 2rem, слева/справа 1rem */
+  max-width: 100%; /* контейнер занимает 90% ширины */
+  margin: 0 auto; /* центрирование контейнера */
 }
 /* Карточки */
 .card {
@@ -72,10 +78,10 @@ header {
   margin-bottom: 1rem;
   border-radius: 30px;
   box-shadow: -3px 20px 28px rgba(0, 0, 0, 0.1);
-  width: 90%; /* карточка занимает 90% ширины контейнера */
+  width: 85%; /* карточка занимает 100% ширины контейнера */
   max-width: 400px; /* ограничение для больших экранов */
   /*padding-top: 3rem;  внутренний отступ сверху текста внутри карточки */
-  margin-top: 1rem; /* внешний отступ сверху. 	margin-top — пространство снаружи блока, то есть отступ от соседних элементов карточки или других карточек.*/
+  margin-top: 2rem; /* внешний отступ сверху. 	margin-top — пространство снаружи блока, то есть отступ от соседних элементов карточки или других карточек.*/
   position: relative; /* чтобы кнопка закрыть позиционировалась внутри */
   box-shadow: 0 0 84px rgba(191, 191, 191, 1);
 }
@@ -95,8 +101,21 @@ button img {
 }
 
 .text-block {
-  margin-top: 1rem; /* расстояние между текстом и кнопкой */
-  font-size: 2rem; /* размер шрифта */
+  margin-top: 0.2rem; /* расстояние между текстом и кнопкой */
+  font-size: 18px; /* размер шрифта */
+  font-family: "Roboto"; /* шрифт Roboto */
+  font-weight: 500; /* средне-жирный шрифт */
+}
+
+.text-block h2 {
+  font-size: 26px; /* размер шрифта заголовка */
+  margin: 0 0 0.1rem 0; /* уменьшенные отступы */
+  font-family: "Roboto"; /* шрифт Roboto */
+}
+
+.text-block p {
+  margin: 0.2; /* убираем отступы параграфа */
+  font-weight: 500; /* средне-жирный шрифт */
 }
 
 .close-btn {
@@ -130,7 +149,7 @@ button img {
 
 .buttons-bottom button {
   flex: 1; /* растягиваем кнопки одинаково */
-  margin: 0 0.6rem; /* отступы между кнопками */
+  margin: 0 0.1rem; /* уменьшенные отступы между кнопками */
   padding: 0.8rem;
   border: none;
   border: 0.5px solid #ffffff;
@@ -291,7 +310,7 @@ footer {
   border: 2px solid #ffffff;
   border-radius: 32px;
   font-size: 2rem; /* размер шрифта */
-  font-family: inherit;
+  font-family: "Roboto", Arial, sans-serif;
   transition: border-color 0.3s;
   box-sizing: border-box;
 }

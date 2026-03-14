@@ -22,14 +22,14 @@ export function createEmptyPostCard(
 
   if (guidId) card.dataset.postId = guidId; //====> сохраняем id поста если он предан
 
-  // Кнопка закрытия
-  const closeBtn = document.createElement("button");
-  closeBtn.classList.add("close-btn");
+  // // Кнопка закрытия
+  // const closeBtn = document.createElement("button");
+  // closeBtn.classList.add("close-btn");
 
-  const closeImg = document.createElement("img");
-  closeImg.src = "image/close.png";
-  closeImg.alt = "";
-  closeBtn.appendChild(closeImg);
+  // const closeImg = document.createElement("img");
+  // closeImg.src = "image/close.png";
+  // closeImg.alt = "";
+  // closeBtn.appendChild(closeImg);
 
   // Блок текста
   const textBlock = document.createElement("div");
@@ -80,7 +80,7 @@ export function createEmptyPostCard(
   });
 
   // Сборка карточки
-  card.appendChild(closeBtn);
+  // card.appendChild(closeBtn);
   card.appendChild(textBlock);
   card.appendChild(buttonsBottom);
 
