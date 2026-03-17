@@ -6,26 +6,29 @@ using Testing3.DTO;
 public class PostController : ControllerBase
 {
     private readonly IPostService _postService;
-    private readonly IGuestService _guestService;
     private readonly ILogger<PostController> _logger;
+    private readonly IUserService _userService;
 
-    public PostController(IPostService postService, IGuestService guestService, ILogger<PostController> logger)
+    public PostController(IPostService postService, IUserService userService, ILogger<PostController> logger)
     {
         _postService = postService;
-        _guestService = guestService;
+        _userService = userService;
         _logger = logger;
     }
 
     [HttpPost]
-    public IActionResult CreatePost([FromBody] CreatePostDto request)
+    public async Task<IActionResult> CreatePost([FromBody] CreatePostDto request)
     {
 
         try
         {
-            var user = _guestService.GetOrCreateGuest(HttpContext);
-            var post = _postService.CreatePost(request.Text, user.GuidId, request.Title);
-            _logger.LogInformation("Post создан with user ID: {UserId}", user.GuidId);
-            return Ok(new 
+            var user = await _userService.GetOrCreateUser(HttpContext);
+
+            var post = await _postService.CreatePostAsync(request.Text, user.GuidId, request.Title);
+
+            _logger.LogInformation($"Post создан with user ID: {user.GuidId}");
+
+            return Ok(new
             {
                 Text = request.Text,
                 GuidId = post.GuidId,
@@ -51,7 +54,7 @@ public class PostController : ControllerBase
     public IActionResult GetAllPosts()
     {
         var user = _guestService.GetOrCreateGuest(HttpContext);
-        
+
         var dto = _postService.GetAllPostsForUser(user.GuidId);
         return Ok(dto);
     }

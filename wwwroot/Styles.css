@@ -105,6 +105,8 @@ button img {
   font-size: 18px; /* размер шрифта */
   font-family: "Roboto"; /* шрифт Roboto */
   font-weight: 500; /* средне-жирный шрифт */
+  word-wrap: break-word; /* перенос длинных слов */
+  overflow-wrap: break-word; /* перенос слов */
 }
 
 .text-block h2 {
@@ -116,6 +118,8 @@ button img {
 .text-block p {
   margin: 0.2; /* убираем отступы параграфа */
   font-weight: 500; /* средне-жирный шрифт */
+  word-wrap: break-word; /* перенос длинных слов */
+  overflow-wrap: break-word; /* перенос слов */
 }
 
 .close-btn {

@@ -7,12 +7,11 @@ public class Post
         UserId = userId;
         Title = title;
     }
-    
+
     public Guid GuidId { get; set; } = Guid.NewGuid();
     public Guid UserId { get; private set; }
     public string Text { get; private set; } = string.Empty;
     public string? Title { get; private set; } = null;
-
-    // Конструктор для ORM (без параметров)
+    public bool IsPublished { get; set; } // true = видимо всем, false = черновик
     public Post() { }
 }

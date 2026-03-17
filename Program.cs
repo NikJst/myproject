@@ -1,23 +1,26 @@
 ﻿using Testing3;
 using Microsoft.OpenApi;
 using Serilog;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
-    
-builder.Services.AddControllers();
 
+builder.Services.AddSingleton<ApplicationDbContext>(options =>
+    new ApplicationDbContext(options.GetRequiredService<DbContextOptions<ApplicationDbContext>>()));
+
+
+builder.Services.AddControllers();
 // Enable middleware to serve generated Swagger as a JSON endpoint.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IGuestService, GuestService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILikeService, LikePost>();
 builder.Services.AddSingleton<ILikeRepository, LikeRepositoryMock>();
 builder.Services.AddSingleton<IPostService, PostService>();
 builder.Services.AddSingleton<IPostRepository, PostRepository>();// здесь важно чтобы репозитории жил все время жизни приложения, а не каждый запрос
-builder.Services.AddSingleton<IUserAndGuestRepository, UserAndGuestRepository>();
 
 // builder.Services.AddScoped<ILikeRepository, LikeRepositoryMock>();
 

@@ -1,42 +1,59 @@
 using Microsoft.AspNetCore.Http;
-
+using Microsoft.EntityFrameworkCore;
 namespace Testing3;
 
-public interface IGuestService
+public interface IUserService
 {
-    User GetOrCreateGuest(HttpContext context);
+    Task<User> GetOrCreateUser(HttpContext context);
+    Task<List<User>> GetAllUsers();
 }
-public class GuestService : IGuestService
+public class UserService : IUserService
 {
-    private readonly ILogger<GuestService> logger;
-    private readonly IUserAndGuestRepository _userAndGuestRepository;
+    private readonly ILogger<UserService> logger;
+    private readonly ApplicationDbContext dbcontext;
 
-    public GuestService(ILogger<GuestService> logger, IUserAndGuestRepository userAndGuestRepository)
+    public UserService(ILogger<UserService> logger, ApplicationDbContext context)
     {
         this.logger = logger;
-        _userAndGuestRepository = userAndGuestRepository;
+        dbcontext = context;
     }
-    public User GetOrCreateGuest(HttpContext context)
+    public async Task<User> GetOrCreateUser(HttpContext httpcontext)
     {
         // Проверяем, есть ли cookie
-        var cookie = context.Request.Cookies["GuestId"]; //извлекаем строку с id гостя
+        var cookie = httpcontext.Request.Cookies["GuestId"];
         if (cookie != null && Guid.TryParse(cookie, out var userId))
         {
-            var existing = _userAndGuestRepository.Get(userId);
+            var existing = await dbcontext.Users
+            .FirstOrDefaultAsync(u => u.GuidId == userId);
             if (existing != null)
-                return existing; // если гость уже существует, возвращаем его объект
+            {
+                return existing;
+            }
         }
 
-        var guest = new Guest
+        var user = new User(string.Empty)
         {
             GuidId = Guid.NewGuid(),
-            Name = "Guest_" + Guid.NewGuid().ToString().Substring(0, 5)
+            Name = "Guest_" + Guid.NewGuid().ToString().Substring(0, 5),
+            IsGuest = true,
         };
 
-        _userAndGuestRepository.Add(guest);
-        context.Response.Cookies.Append("GuestId", guest.GuidId.ToString());
-        logger.LogInformation("Пользователь не найден: создаем нового и отдаем cookie клиенту");
+        await dbcontext.Users.AddAsync(user);
+        await dbcontext.SaveChangesAsync();
+        httpcontext.Response.Cookies.Append("GuestId", user.GuidId.ToString());
+        logger.LogInformation("Создаем нового и отдаем cookie клиенту");
 
-        return guest;
+        return user;
+    }
+
+
+    public async Task<List<User>> GetAllUsers()
+    {
+        var users = await dbcontext.Users
+        .OrderBy(u => u.Name)//нет индекса по имени, но в тесте не жалко
+        .ToListAsync();
+        var count = await dbcontext.Users.CountAsync();
+        logger.LogInformation($"Получено {count} пользователей");
+        return users;
     }
 }
