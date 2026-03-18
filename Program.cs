@@ -8,21 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
-builder.Services.AddSingleton<ApplicationDbContext>(options =>
-    new ApplicationDbContext(options.GetRequiredService<DbContextOptions<ApplicationDbContext>>()));
-
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers();
 // Enable middleware to serve generated Swagger as a JSON endpoint.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<ILikeService, LikePost>();
-builder.Services.AddSingleton<ILikeRepository, LikeRepositoryMock>();
-builder.Services.AddSingleton<IPostService, PostService>();
-builder.Services.AddSingleton<IPostRepository, PostRepository>();// здесь важно чтобы репозитории жил все время жизни приложения, а не каждый запрос
-
-// builder.Services.AddScoped<ILikeRepository, LikeRepositoryMock>();
+builder.Services.AddScoped<ILikeService, LikeService>();
+builder.Services.AddScoped<IPostService, PostService>();
 
 var app = builder.Build();
 

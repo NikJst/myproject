@@ -6,40 +6,41 @@ namespace Testing3.Controllers;
 [Route("api/[controller]")]
 public class LikeController : ControllerBase
 {
-    private readonly ILikeService likePost;
-    private readonly IGuestService guestService;
+    private readonly ILikeService _likePost;
+    private readonly IUserService _userService;
 
-    public LikeController(ILikeService likePost, IGuestService guestService)
+    public LikeController(ILikeService likePost, IUserService userService)
     {
-        this.likePost = likePost;
-        this.guestService = guestService;
+        _likePost = likePost;
+        _userService = userService;
     }
 
     [HttpPost]
-    public IActionResult ToggleLike([FromBody] LikePostDto dto)
+    public async Task<IActionResult> ToggleLike([FromBody] LikePostDto dto)
     {
-        var user = guestService.GetOrCreateGuest(HttpContext);// получаем объект гостя из куки или создаем новый
+        var user = await _userService.GetOrCreateUser(HttpContext);// получаем объект UserId из куки или создаем новый
 
         try
         {
-            likePost.SetLikePost(user.GuidId, dto.PostId);
+            _likePost.SetLikePost(user.UserId, dto.PostId);
         }
         catch (InvalidOperationException)
         {
-            likePost.RemoveLikePost(user.GuidId, dto.PostId);
+            _likePost.RemoveLikePost(user.UserId, dto.PostId);
         }
 
-        var count = likePost.GetLikeCount(dto.PostId);
+        var count = _likePost.GetLikeCount(dto.PostId);
         return Ok(new { LikesCount = count });
     }
-    
-    [HttpGet("post/{postId}")]
-    public IActionResult GetLikesInfo(Guid postId)
-    {
-        var user = guestService.GetOrCreateGuest(HttpContext);
-        var likedByUser = likePost.IsLikedByUser(user.GuidId, postId);
 
-        var count = likePost.GetLikeCount(postId);
+    [HttpGet("post/{postId}")]
+    public async Task<IActionResult> GetLikesInfo(Guid postId) //cкорее всего для отображения количества лайков и статуса лайка для текущего 
+    {
+        var user = await _userService.GetOrCreateUser(HttpContext);
+
+        var likedByUser = _likePost.IsLikedByUser(user.UserId, postId);
+
+        var count = _likePost.GetLikeCount(postId);
 
         return Ok(new
         {

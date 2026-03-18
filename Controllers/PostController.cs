@@ -5,15 +5,15 @@ using Testing3.DTO;
 [Route("api/[controller]")]
 public class PostController : ControllerBase
 {
-    private readonly IPostService _postService;
     private readonly ILogger<PostController> _logger;
+    private readonly IPostService _postService;
     private readonly IUserService _userService;
 
-    public PostController(IPostService postService, IUserService userService, ILogger<PostController> logger)
+    public PostController(ILogger<PostController> logger, IPostService postService, IUserService userService)
     {
+        _logger = logger;
         _postService = postService;
         _userService = userService;
-        _logger = logger;
     }
 
     [HttpPost]
@@ -24,15 +24,14 @@ public class PostController : ControllerBase
         {
             var user = await _userService.GetOrCreateUser(HttpContext);
 
-            var post = await _postService.CreatePostAsync(request.Text, user.GuidId, request.Title);
+            var post = await _postService.CreatePostAsync(request);
 
-            _logger.LogInformation($"Post создан with user ID: {user.GuidId}");
+            _logger.LogInformation($"Post создан with user ID: {user.UserId}");
 
-            return Ok(new
+            return Ok(new CreatePostDto
             {
                 Text = request.Text,
-                GuidId = post.GuidId,
-                UserId = user.GuidId,
+                Id = post.PostId,
                 Title = request.Title
             });
         }
@@ -42,21 +41,21 @@ public class PostController : ControllerBase
         }
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAllPosts()
+    {
+        var user = await _userService.GetOrCreateUser(HttpContext);
+
+        var dto = await _postService.GetAllPostsForUserAsync(user.UserId);
+        return Ok(dto);
+    }
+
+
     [HttpDelete("{postId}")]
     public IActionResult DeletePost(Guid postId)
     {
         _postService.DeletePost(postId);
         return Ok();
-    }
-
-
-    [HttpGet]
-    public IActionResult GetAllPosts()
-    {
-        var user = _guestService.GetOrCreateGuest(HttpContext);
-
-        var dto = _postService.GetAllPostsForUser(user.GuidId);
-        return Ok(dto);
     }
 
     [HttpGet("{postId}")]

@@ -1,67 +1,70 @@
 namespace Testing3;
 using Testing3.DTO;
+using Microsoft.EntityFrameworkCore;
 
 public interface IPostService
 {
-    Task<Post> CreatePostAsync(string text, Guid userId, string? title = null); // дописать dto на проверку гостя для черновика
+    Task<Post> CreatePostAsync(CreatePostDto request); // дописать dto на проверку гостя для черновика
     void DeletePost(Guid postId);
     Post? GetPost(Guid postId);
     List<Post> GetAllPosts();
-    List<ViewPostDto> GetAllPostsForUser(Guid userId);
+    Task<List<ViewPostsDto>> GetAllPostsForUserAsync(Guid userId);
 }
 public class PostService : IPostService
 {
-
-    private readonly ILikeRepository _likeRepository;
     private readonly ILogger<PostService> _logger;
-
-    private readonly ApplicationDbContext _context;
+    private readonly ApplicationDbContext _dbcontext;
     public PostService(ApplicationDbContext dbContext, ILogger<PostService> logger)
     {
-        _context = dbContext;
+        _dbcontext = dbContext;
         _logger = logger;
     }
-    public async Task<Post> CreatePostAsync(string text, Guid userId, string? title = null )
+    public async Task<Post> CreatePostAsync(CreatePostDto request)
     {
-        await _context.Posts.AddAsync(new CreatePostDto
-
-        {
-            Text = text,
-            Title = title,
-        });
-        await _context.SaveChangesAsync();
-        return _context.Posts.Last();
-    }
-
-    public void DeletePost(Guid postId)
-    {
-        _logger.LogInformation($"Deleting post with ID: {postId}");
-        _postRepository.Remove(postId);
+        var post = new Post(request.Text, request.UserId, request.Title);
+        await _dbcontext.Posts.AddAsync(post);
+        await _dbcontext.SaveChangesAsync();
+        return post;
     }
 
     public Post? GetPost(Guid postId)
     {
         _logger.LogInformation($"Getting post with ID: {postId}");
-        return _postRepository.GetPost(postId);
+        return _dbcontext.Posts.FirstOrDefault(p => p.PostId == postId);
     }
 
     public List<Post> GetAllPosts()
     {
         _logger.LogInformation("Getting all posts");
-        return _postRepository.GetAllPosts();
+        return _dbcontext.Posts.ToList();
     }
 
-    public List<ViewPostDto> GetAllPostsForUser(Guid userId)
+    public Task<List<ViewPostsDto>> GetAllPostsForUserAsync(Guid userId)
     {
-        var posts = _postRepository.GetAllPosts();
 
-        return posts.Select(p => new ViewPostDto
+        var posts = _dbcontext.Posts
+
+        .Include(p => _dbcontext.Likes) // включить связанные объекты
+        // .Where(p => _dbcontext.Likes.Any(l => l.UserId == userId && l.PostId == p.PostId)) оставить эту строку для того чтобы показывать пользователю посты которые он лайкнул
+        .Select(p => new ViewPostsDto // мы выбираем что отдавать клиенту
         {
-            GuidId = p.GuidId,
+            GuidId = p.PostId,
             Text = p.Text,
             Title = p.Title,
-            UserId = p.UserId,
-            LikedByUser = _likeRepository.Exists(userId, p.GuidId) //доделать в будщем как один запрос к бд
-        }).ToList();
+            LikedByUser = _dbcontext.Likes.Any(l => l.UserId == userId && l.PostId == p.PostId)
+        })
+        .ToListAsync();
+        return posts;
+
+    }
+    public void DeletePost(Guid postId)
+    {
+        _logger.LogInformation($"Deleting post with ID: {postId}");
+        var post = _dbcontext.Posts.FirstOrDefault(p => p.PostId == postId);
+        if (post != null)
+        {
+            _dbcontext.Posts.Remove(post);
+            _dbcontext.SaveChanges();
+        }
     }
 }

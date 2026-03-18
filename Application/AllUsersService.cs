@@ -19,31 +19,32 @@ public class UserService : IUserService
     }
     public async Task<User> GetOrCreateUser(HttpContext httpcontext)
     {
-        // Проверяем, есть ли cookie
+        // Проверяем, на наличие записи в cookie
         var cookie = httpcontext.Request.Cookies["GuestId"];
         if (cookie != null && Guid.TryParse(cookie, out var userId))
         {
-            var existing = await dbcontext.Users
-            .FirstOrDefaultAsync(u => u.GuidId == userId);
-            if (existing != null)
+            var findUser = await dbcontext.Users
+            .FirstOrDefaultAsync(u => u.UserId == userId);
+            if (findUser != null)
             {
-                return existing;
+                return findUser;
             }
         }
 
         var user = new User(string.Empty)
         {
-            GuidId = Guid.NewGuid(),
-            Name = "Guest_" + Guid.NewGuid().ToString().Substring(0, 5),
+            UserId = Guid.NewGuid(),
+            Name = "Guest_" + Guid.NewGuid().ToString()[..5],
             IsGuest = true,
         };
 
         await dbcontext.Users.AddAsync(user);
         await dbcontext.SaveChangesAsync();
-        httpcontext.Response.Cookies.Append("GuestId", user.GuidId.ToString());
+        httpcontext.Response.Cookies.Append("GuestId", user.UserId.ToString());
         logger.LogInformation("Создаем нового и отдаем cookie клиенту");
 
-        return user;
+        return user; //целый обьект для использования в других методах
+
     }
 
 
