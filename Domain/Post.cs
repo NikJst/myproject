@@ -9,6 +9,7 @@ public class Post
         Text = text ?? throw new ArgumentNullException(nameof(text));
         UserId = userId;
         Title = title;
+        PostId = Guid.NewGuid();
     }
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

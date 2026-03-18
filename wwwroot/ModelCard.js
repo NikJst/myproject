@@ -1,13 +1,14 @@
 export function createEmptyPostCard(
-  title = null,
-  text = null,
-  guidId = null,
-  likedByUser = false,
-  userId = null,
+  title,
+  text,
+  postId,
+  likedByUser,
+  userId,
+  likesCount = 0, // Добавляем параметр для счетчика лайков
 ) {
   console.log(
-    "createEmptyPostCard вызван с guidId:",
-    guidId,
+    "createEmptyPostCard вызван с postId:",
+    postId,
     "likedByUser:",
     likedByUser,
     "userId:",
@@ -20,7 +21,7 @@ export function createEmptyPostCard(
   const card = document.createElement("div");
   card.classList.add("card");
 
-  if (guidId) card.dataset.postId = guidId; //====> сохраняем id поста если он предан
+  if (postId) card.dataset.postId = postId; //====> сохраняем id поста если он предан
 
   // // Кнопка закрытия
   // const closeBtn = document.createElement("button");
@@ -64,16 +65,27 @@ export function createEmptyPostCard(
 
     btn.appendChild(img); //====> добавляем картинку в кнопку
 
-    //===> лайк-кнопка получает guidId через data-атрибут
-    if (icon === "like.png" && guidId) {
-      btn.dataset.postId = guidId;
-      btn.id = `like-btn-${guidId}`; // уникальный id для кнопки LIKE а не только люббой кнопки в картчоке - (like-btn-{guidId})
+    //===> лайк-кнопка получает postId через data-атрибут
+    if (icon === "like.png" && postId) {
+      btn.dataset.postId = postId;
+      btn.id = `like-btn-${postId}`; // уникальный id для кнопки LIKE а не только люббой кнопки в картчоке - (like-btn-{postId})
+
+      // Создаем счетчик лайков
+      const likeCount = document.createElement("span");
+      likeCount.classList.add("like-count");
+      likeCount.textContent = likesCount;
+      likeCount.id = `like-count-${postId}`;
+      
+      // Добавляем счетчик после кнопки
+      btn.appendChild(likeCount);
 
       console.log(
-        "Лайк-кнопка получила guidId:",
-        guidId,
+        "Лайк-кнопка получила postId:",
+        postId,
         "Liked:",
         likedByUser,
+        "Likes count:",
+        likesCount,
       );
     }
     buttonsBottom.appendChild(btn);

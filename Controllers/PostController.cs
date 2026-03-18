@@ -23,16 +23,17 @@ public class PostController : ControllerBase
         try
         {
             var user = await _userService.GetOrCreateUser(HttpContext);
+            var post = await _postService.CreatePostAsync(request.Text, request.Title, user.UserId);
 
-            var post = await _postService.CreatePostAsync(request);
 
             _logger.LogInformation($"Post создан with user ID: {user.UserId}");
 
             return Ok(new CreatePostDto
             {
                 Text = request.Text,
-                Id = post.PostId,
-                Title = request.Title
+                PostId = post.PostId,
+                Title = request.Title,
+                UserId = user.UserId,// взяли id из сессии
             });
         }
         catch (Exception ex)

@@ -1,16 +1,17 @@
 namespace Testing3.DTO;
 public class ViewPostsDto //DTO for displaying posts
 {
-    public Guid GuidId { get; set; }
+    public Guid PostId { get; set; }  // Изменено с GuidId на PostId для соответствия фронтенду
     public string? Title { get; set; }
     public string Text { get; set; } = string.Empty;
     public Guid UserId { get; set; }
     public bool LikedByUser { get; set; }
+    public int LikesCount { get; set; }  // Добавляем счетчик лайков
 }
 
 public class CreatePostDto //DTO for creating posts
 {
-    public Guid Id { get; set; }
+    public Guid PostId { get; set; }
     public Guid UserId { get; set; }
     public string Text { get; set; } = string.Empty;
     public string? Title { get; set; }
@@ -22,7 +23,7 @@ public class LikePostDto //DTO for toggling like on a post
 {
     public Guid PostId { get; set; }
 }
-public class ViewUserCardDto
+public class ViewUserCardDto // это карточки с пользователяи, пока рано
 {
     public bool IsGuest { get; set; }
     public Guid GuidId { get; set; }

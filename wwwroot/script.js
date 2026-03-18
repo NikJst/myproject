@@ -17,8 +17,8 @@ async function ensureGuestId() {
     console.log("Текущий origin страницы:", window.location.origin);
     console.log("Cookie ДО запроса /guest:", document.cookie);
 
-    const resp = await fetch("/guest", { credentials: "same-origin" });
-    console.log("Ответ /guest:", resp.status, resp.statusText, resp.url);
+    const resp = await fetch("/User", { credentials: "same-origin" });//изменил c guest на User
+    console.log("Ответ /User:", resp.status, resp.statusText, resp.url);
 
     let guestPayload;
     try {
@@ -26,11 +26,11 @@ async function ensureGuestId() {
     } catch {
       guestPayload = null;
     }
-    console.log("Payload /guest:", guestPayload);
+    console.log("Payload /User:", guestPayload);
 
-    console.log("Cookie ПОСЛЕ запроса /guest:", document.cookie);
+    console.log("Cookie ПОСЛЕ запроса /User:", document.cookie);
   } catch (err) {
-    console.error("Не удалось получить гостя с сервера (/guest):", err);
+    console.error("Не удалось получить гостя с сервера (/User):", err);
   }
 
   const guestId = getCookie("GuestId");

@@ -16,6 +16,13 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        // Конфигурация для DateTime - используем UTC
+        modelBuilder.Entity<User>()
+            .Property(u => u.CreatedAt)
+            .HasConversion(
+                v => v.ToUniversalTime(),
+                v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+
         //	•	HasOne — это с точки зрения текущей сущности.
         //	•	WithMany / WithOne — это с точки зрения той сущности, к которой вы привязываетесь.
 

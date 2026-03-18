@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 public interface IPostService
 {
-    Task<Post> CreatePostAsync(CreatePostDto request); // дописать dto на проверку гостя для черновика
+    Task<Post> CreatePostAsync(string text, string? title = null, Guid? userId = null); // дописать dto на проверку гостя для черновика
     void DeletePost(Guid postId);
     Post? GetPost(Guid postId);
     List<Post> GetAllPosts();
@@ -19,9 +19,9 @@ public class PostService : IPostService
         _dbcontext = dbContext;
         _logger = logger;
     }
-    public async Task<Post> CreatePostAsync(CreatePostDto request)
+    public async Task<Post> CreatePostAsync(string text, string? title = null, Guid? userId = null)
     {
-        var post = new Post(request.Text, request.UserId, request.Title);
+        var post = new Post(text, userId ?? Guid.Empty, title);
         await _dbcontext.Posts.AddAsync(post);
         await _dbcontext.SaveChangesAsync();
         return post;
@@ -43,15 +43,21 @@ public class PostService : IPostService
     {
 
         var posts = _dbcontext.Posts
-
-        .Include(p => _dbcontext.Likes) // включить связанные объекты
-        // .Where(p => _dbcontext.Likes.Any(l => l.UserId == userId && l.PostId == p.PostId)) оставить эту строку для того чтобы показывать пользователю посты которые он лайкнул
+        .Include(p => p.Likes) // включить связанные объекты
         .Select(p => new ViewPostsDto // мы выбираем что отдавать клиенту
         {
-            GuidId = p.PostId,
+            UserId = p.UserId,
+            PostId = p.PostId,  // Изменено с GuidId на PostId
             Text = p.Text,
             Title = p.Title,
-            LikedByUser = _dbcontext.Likes.Any(l => l.UserId == userId && l.PostId == p.PostId)
+            LikedByUser = p.Likes.Any(l => l.UserId == userId), //измененный и правильный вариант
+            LikesCount = p.Likes.Count  // Добавляем подсчет лайков
+
+            //то что было LikedByUser = _dbcontext.Likes.Any(l => l.UserId == userId && l.PostId == p.PostId)
+
+            // ===> то что стало | теперь мы обращаемся к посту, заходим в его в лайки, потом находим соответствие если среди этих лайков тот, который поставил определённый пользователь(userid == userid) 
+            // Мы больше не лезем в _dbcontext.Likes вручную!
+            // Мы спрашиваем СУБЪЕКТИВНО у поста: "Есть ли среди ТВОИХ лайков мой?
         })
         .ToListAsync();
         return posts;

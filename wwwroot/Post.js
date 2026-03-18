@@ -8,17 +8,16 @@ async function loadAllPosts() {
     if (!response.ok) throw new Error("Ошибка при получении постов");
 
     const posts = await response.json();
-    console.log("Полученные посты с сервера:", posts);
 
     // Для каждого поста создаем карточку
     posts.forEach((post) => {
-      console.log("Обработка поста:", post);
       createEmptyPostCard(
         post.title,
         post.text,
-        post.guidId,
+        post.postId,//==
         post.likedByUser,
         post.userId,
+        post.likesCount, // Добавляем количество лайков
       );
     });
   } catch (error) {
@@ -46,9 +45,10 @@ async function createPost() {
     createEmptyPostCard(
       newPost.title,
       newPost.text,
-      newPost.guidId,
+      newPost.postId,//==
       newPost.likedByUser,
       newPost.userId,
+      0, // Новый пост всегда имеет 0 лайков
     );
   } catch (error) {
     console.error(error);
@@ -65,15 +65,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Вызовем при загрузке страницы
 loadAllPosts();
-async function handleCreatePost(text) {
-  const newPost = await createPostOnServer(text);
-  if (newPost) {
-    createEmptyPostCard(
-      newPost.title,
-      newPost.text,
-      newPost.guidId,
-      newPost.likedByUser,
-      newPost.userId,
-    );
-  }
-}
+  // const newPost = await createPostOnServer(text);
+  // if (newPost) {
+  //   createEmptyPostCard(
+  //     newPost.title,
+  //     newPost.text,
+  //     newPost.postId,//==
+  //     newPost.likedByUser,
+  //     newPost.userId,
+  //   );
+  // }
+
+

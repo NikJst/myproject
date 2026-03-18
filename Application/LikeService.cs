@@ -31,6 +31,7 @@ public class LikeService : ILikeService
         var like = new Like(userId, postId);
 
         await _context.Likes.AddAsync(like);
+        await _context.SaveChangesAsync();// сохраняем изменения в базе данных
         _logger.LogInformation($"Пользователь {userId} создал new Like и добавил его к посту {postId}");
     }
 

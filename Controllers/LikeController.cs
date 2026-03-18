@@ -22,15 +22,15 @@ public class LikeController : ControllerBase
 
         try
         {
-            _likePost.SetLikePost(user.UserId, dto.PostId);
+            await _likePost.SetLikePost(user.UserId, dto.PostId);
         }
         catch (InvalidOperationException)
         {
-            _likePost.RemoveLikePost(user.UserId, dto.PostId);
+            await _likePost.RemoveLikePost(user.UserId, dto.PostId);
         }
 
         var count = _likePost.GetLikeCount(dto.PostId);
-        return Ok(new { LikesCount = count });
+        return Ok(new { likesCount = count }); // Изменено на нижний регистр для соответствия фронтенду
     }
 
     [HttpGet("post/{postId}")]
@@ -44,8 +44,8 @@ public class LikeController : ControllerBase
 
         return Ok(new
         {
-            LikesCount = count,
-            LikedByUser = likedByUser
+            likesCount = count, // Изменено на нижний регистр
+            likedByUser = likedByUser
         });
     }
 }

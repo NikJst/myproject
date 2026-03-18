@@ -36,11 +36,23 @@ document.addEventListener("click", async (e) => {
     }
 
     const data = await response.json(); // { LikesCount: ... }
+    
+    // Проверяем структуру ответа
+    if (!data || typeof data.likesCount === 'undefined') {
+      console.error("Некорректный ответ сервера:", data);
+      throw new Error("Некорректный ответ сервера");
+    }
 
     likeButton.classList.toggle("liked");
     likeIcon.src = likeButton.classList.contains("liked")
       ? "image/like+.png"
       : "image/like.png";
+    
+    // Обновляем счетчик лайков
+    const likeCount = document.getElementById(`like-count-${postId}`);
+    if (likeCount) {
+      likeCount.textContent = data.likesCount;
+    }
   } catch (err) {
     console.error("Ошибка при постановке Like:", err);
   } finally {

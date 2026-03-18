@@ -16,7 +16,7 @@ public class User
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));
         IsGuest = true;
-        CreatedAt = DateTime.Now;
+        // CreatedAt будет установлен явно при создании
     }
 
 }

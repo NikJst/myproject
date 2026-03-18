@@ -36,6 +36,7 @@ public class UserService : IUserService
             UserId = Guid.NewGuid(),
             Name = "Guest_" + Guid.NewGuid().ToString()[..5],
             IsGuest = true,
+            CreatedAt = DateTime.UtcNow
         };
 
         await dbcontext.Users.AddAsync(user);
