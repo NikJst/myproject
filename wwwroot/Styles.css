@@ -4,13 +4,27 @@
 .action-buttons-container {
   position: fixed;
   bottom: 5vh; /* изменено с 10vh на 5vh */
-  left: 0;
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%); /* центрирование по горизонтали */
   display: flex;
   flex-direction: row; /* изменено на row для горизонтального расположения */
   justify-content: center; /* центрирование кнопок по горизонтали */
   gap: 10px; /* расстояние между кнопками */
   z-index: 100;
+  
+  /* Стили как у кнопок */
+  background-color: #ccc; /* светло-серый фон */
+  border: none; /* без рамки */
+  padding: 8px 16px; /* внутренние отступы */
+  border-radius: 32px; /* скругленные углы */
+  
+  /* Для плавности */
+  transition: background-color 0.3s; /* плавное изменение фона */
+}
+
+.action-buttons-container:hover {
+
+  color: #ffffff; /* белый текст при наведении */
 }
 
 .add-post-btn {
@@ -42,6 +56,23 @@
 }
 
 .profile-btn:hover {
+  background-color: #000000; /* как у add-post-btn при наведении */
+  color: #ffffff; /* белый текст при наведении */
+  transition: background-color 0.3s; /* плавное изменение фона */
+}
+
+.index-btn {
+  /* кнопка "На главную" - такой же стиль как у add-post-btn */
+  background-color: #ccc; /* светло-серый фон */
+  color: #000000; /* черный текст */
+  border: none; /* без рамки */
+  padding: 12px 24px; /* как у add-post-btn */
+  border-radius: 32px; /* как у add-post-btn */
+  cursor: pointer; /* курсор указатель */
+  font-size: 19.2px; /* как у add-post-btn */
+}
+
+.index-btn:hover {
   background-color: #000000; /* как у add-post-btn при наведении */
   color: #ffffff; /* белый текст при наведении */
   transition: background-color 0.3s; /* плавное изменение фона */
@@ -94,13 +125,13 @@ header {
   padding: 1rem;
   margin-bottom: 1rem;
   border-radius: 30px;
-  box-shadow: -3px 20px 28px rgba(0, 0, 0, 0.1);
+  box-shadow: -0px 20px 28px rgba(0, 0, 0, 0.1);
   width: 85%; /* карточка занимает 100% ширины контейнера */
   max-width: 400px; /* ограничение для больших экранов */
   /*padding-top: 3rem;  внутренний отступ сверху текста внутри карточки */
   margin-top: 2rem; /* внешний отступ сверху. 	margin-top — пространство снаружи блока, то есть отступ от соседних элементов карточки или других карточек.*/
   position: relative; /* чтобы кнопка закрыть позиционировалась внутри */
-  box-shadow: 0 0 84px rgba(191, 191, 191, 1);
+  /* box-shadow: 0 0 84px rgba(191, 191, 191, 1); */
 }
 
 button {

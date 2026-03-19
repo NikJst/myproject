@@ -76,9 +76,10 @@
               <i class="fas fa-cog mr-2"></i>Настройки
             </button> -->
           </div>
-          <!-- контейнер для кнопок действий -->
-          <div class="action-buttons-container"></div>
         </div>
+
+        <!-- контейнер для кнопок действий -->
+        <div class="action-buttons-container"></div>
 
         <!-- Статистика -->
         <div class="flex space-x-8 mt-6 pt-6 border-t border-gray-200">
@@ -293,14 +294,16 @@
       import {
         createAddPostButton,
         createPostForm,
-        createMainPageButton,
       } from "./CardForm.js";
+      
+      // Импортируем навигационные кнопки
+      import { createNavigationButtons } from "./NavigationButtons.js";
 
       // Создаем кнопки при загрузке страницы
       document.addEventListener("DOMContentLoaded", function () {
         createAddPostButton();
         createPostForm();
-        createMainPageButton();
+        createNavigationButtons();
       });
 
       // Добавление интерактивности для кнопок лайков

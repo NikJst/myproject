@@ -77,7 +77,13 @@
     <script type="module" src="Post.js"></script>
     <script type="module" src="Like.js"></script>
     <!-- Подключите скрипт на странице -->
-    <script src="Bottons.js"></script>
-    <!-- подключение JS -->
+    <script type="module">
+      import { createNavigationButtons } from "./NavigationButtons.js";
+      
+      // Создаем навигационные кнопки при загрузке страницы
+      document.addEventListener("DOMContentLoaded", function () {
+        createNavigationButtons();
+      });
+    </script>
   </body>
 </html>
