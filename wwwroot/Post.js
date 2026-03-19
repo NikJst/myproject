@@ -38,7 +38,7 @@ async function createPost() {
       }),
     });
 
-    if (!response.ok) throw new Error("Ошибка при создании поста");
+    if (!response.ok) throw new Error("Ошибка при создании карточки");
 
     const newPost = await response.json();
     console.log("Пост создан:", newPost);
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// Вызовем при загрузке страницы
+// Загружаем все посты при загрузке страницы
 loadAllPosts();
   // const newPost = await createPostOnServer(text);
   // if (newPost) {

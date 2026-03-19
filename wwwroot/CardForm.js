@@ -1,6 +1,6 @@
 // Функция для создания формы добавления поста
 export function createPostForm() {
-  const container = document.querySelector(".cards-container");
+  const container = document.querySelector(".posts-container");
   if (!container) return;
 
   // Создаем модальное окно для формы
@@ -149,20 +149,20 @@ async function createPostWithFormData(postData) {
 
     if (!response.ok) throw new Error("Ошибка при создании поста");
 
-    const newPost = await response.json();
+    const newPost = await response.json(); //newpost это ортвет
     console.log("Пост создан:", newPost);
 
     // Импортируем createEmptyPostCard и создаем карточку
     const { createEmptyPostCard } = await import("./ModelCard.js");
     createEmptyPostCard(
       postData.title,
-      newPost.text,
+      postData.text,
       newPost.guidId,
       newPost.likedByUser,
       newPost.userId,
     );
   } catch (error) {
-    console.error("Ошибка при создании поста:", error);
+    console.error("Ошибка при создании карточки:", error);
   }
 }
 
@@ -182,4 +182,52 @@ export function togglePostForm() {
   if (modal.style.display === "flex") {
     document.getElementById("post-text").focus();
   }
+}
+
+// Функция для создания кнопки добавления поста
+export function createAddPostButton() {
+  const container = document.querySelector(".action-buttons-container");
+  if (!container) {
+    console.error("Контейнер .action-buttons-container не найден");
+    return null;
+  }
+
+  // Создаем кнопку добавления поста
+  const addPostButton = document.createElement("button");
+  addPostButton.className = "add-post-btn";
+  addPostButton.textContent = "Добавить пост";
+
+  // Обработчик клика для открытия формы создания поста
+  addPostButton.addEventListener("click", function () {
+    togglePostForm();
+  });
+
+  // Добавляем кнопку в контейнер
+  container.appendChild(addPostButton);
+
+  return addPostButton;
+}
+
+// Функция для создания кнопки "На главную"
+export function createMainPageButton() {
+  const container = document.querySelector(".action-buttons-container");
+  if (!container) {
+    console.error("Контейнер .action-buttons-container не найден");
+    return null;
+  }
+
+  // Создаем кнопку "На главную"
+  const mainPageButton = document.createElement("button");
+  mainPageButton.className = "main-page-btn";
+  mainPageButton.textContent = "На главную";
+
+  // Обработчик клика для перехода на главную страницу
+  mainPageButton.addEventListener("click", function () {
+    window.location.href = "/index.html";
+  });
+
+  // Добавляем кнопку в контейнер
+  container.appendChild(mainPageButton);
+
+  return mainPageButton;
 }
