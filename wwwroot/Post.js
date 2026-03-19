@@ -3,14 +3,24 @@ import { togglePostForm } from "./CardForm.js";
 
 // Функция для получения всех постов с сервера
 async function loadAllPosts() {
+  console.log("loadAllPosts: Starting to load posts...");
   try {
-    const response = await fetch("http://192.168.1.35:3000/api/Post");
-    if (!response.ok) throw new Error("Ошибка при получении постов");
+    // Используем относительный URL вместо абсолютного
+    const response = await fetch("/api/Post");
+    console.log("loadAllPosts: Response status:", response.status);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("loadAllPosts: Error response:", errorText);
+      throw new Error(`Ошибка при получении постов: ${response.status}`);
+    }
 
     const posts = await response.json();
+    console.log("loadAllPosts: Received posts:", posts);
 
     // Для каждого поста создаем карточку
     posts.forEach((post) => {
+      console.log("loadAllPosts: Creating card for post:", post);
       createEmptyPostCard(
         post.title,
         post.text,
@@ -20,6 +30,8 @@ async function loadAllPosts() {
         post.likesCount, // Добавляем количество лайков
       );
     });
+    
+    console.log("loadAllPosts: All cards created successfully");
   } catch (error) {
     console.error("Ошибка loadAllPosts:", error);
   }
@@ -28,7 +40,7 @@ async function loadAllPosts() {
 // Функция создания поста на сервере
 async function createPost() {
   try {
-    const response = await fetch("http://192.168.1.35:3000/api/Post", {
+    const response = await fetch("/api/Post", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -75,5 +87,9 @@ loadAllPosts();
   //     newPost.userId,
   //   );
   // }
+
+
+// Экспортируем функции для использования в других модулях
+export { loadAllPosts, createPost, createEmptyPostCard };
 
 

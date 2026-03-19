@@ -15,8 +15,16 @@ export function createEmptyPostCard(
     userId,
   );
 
-  const container = document.querySelector(".cards-container"); //====> находим контейнер для карточек
-  if (!container) return;
+  const cardsContainer = document.querySelector(".cards-container"); //====> находим контейнер для карточек
+  const postsContainer = document.querySelector(".posts-container"); //====> находим контейнер для постов
+  
+  console.log("createEmptyPostCard: cardsContainer found:", !!cardsContainer);
+  console.log("createEmptyPostCard: postsContainer found:", !!postsContainer);
+  
+  if (!cardsContainer && !postsContainer) {
+    console.error("createEmptyPostCard: No containers found!");
+    return;
+  }
 
   const card = document.createElement("div");
   card.classList.add("card");
@@ -96,5 +104,14 @@ export function createEmptyPostCard(
   card.appendChild(textBlock);
   card.appendChild(buttonsBottom);
 
-  container.prepend(card);
+  // Добавляем карточку в оба контейнера, если они существуют
+  if (cardsContainer) {
+    const cardForCardsContainer = card.cloneNode(true);
+    cardsContainer.prepend(cardForCardsContainer);
+  }
+  
+  if (postsContainer) {
+    const cardForPostsContainer = card.cloneNode(true);
+    postsContainer.prepend(cardForPostsContainer); // Используем prepend для обратного порядка
+  }
 }
