@@ -1,6 +1,10 @@
 // Функция для создания формы добавления поста
 export function createPostForm() {
-  const container = document.querySelector(".posts-container");
+  // Ищем контейнер для карточек или постов
+  let container = document.querySelector(".posts-container");
+  if (!container) {
+    container = document.querySelector(".cards-container");
+  }
   if (!container) return;
 
   // Создаем модальное окно для формы

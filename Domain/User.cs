@@ -1,6 +1,13 @@
 namespace Testing3;
 public class User
 {
+    // для отображения профиля
+    public string Username { get; set; }
+    // public string? AvatarUrl { get; set; }
+    public string? Header { get; set; }
+    // public string? Location { get; set; }
+    public string? Description { get; set; }
+    // остальное -->
     public bool IsGuest { get; set; }
     public Guid UserId { get; set; } = Guid.NewGuid();
     public string Name { get; set; }

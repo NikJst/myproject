@@ -23,10 +23,13 @@ public class LikeService : ILikeService
 
     public async Task SetLikePost(Guid userId, Guid postId)
     {
-        if (await _context.Likes.AnyAsync(l => l.UserId == userId && l.PostId == postId))
+        var exists = await _context.Likes.AnyAsync(l => l.UserId == userId && l.PostId == postId);
+        if (exists)
         {
             _logger.LogWarning($"Лайк уже существует для пользователя {userId} и поста {postId}");
+
             throw new InvalidOperationException("Лайк уже существует");
+
         }
         var like = new Like(userId, postId);
 
@@ -37,9 +40,13 @@ public class LikeService : ILikeService
 
     public async Task RemoveLikePost(Guid userId, Guid postId)
     {
-        if (await _context.Likes.AnyAsync(l => l.UserId == userId && l.PostId == postId))
+        var exists = await _context.Likes.AnyAsync(l => l.UserId == userId && l.PostId == postId);
+        if (!exists)
+        {
+            _logger.LogWarning($"Лайк не найден для пользователя {userId} и поста {postId}");
             return;
-
+        }
+        _logger.LogWarning($"RemoveLikePost | Лайк будет удален");
         var like = await _context.Likes.FirstOrDefaultAsync(l => l.UserId == userId && l.PostId == postId);
         _context.Likes.Remove(like);//Remove(like) – просто помечает объект для удаления. Это не асинхронная операция.
         await _context.SaveChangesAsync();// асинхронно отправляет все изменения (удаление, добавление, обновление) в базу данных.

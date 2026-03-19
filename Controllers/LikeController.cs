@@ -8,11 +8,13 @@ public class LikeController : ControllerBase
 {
     private readonly ILikeService _likePost;
     private readonly IUserService _userService;
+    private readonly ILogger<LikeController> _logger;
 
-    public LikeController(ILikeService likePost, IUserService userService)
+    public LikeController(ILikeService likePost, IUserService userService, ILogger<LikeController> logger)
     {
         _likePost = likePost;
         _userService = userService;
+        _logger = logger;
     }
 
     [HttpPost]
@@ -26,6 +28,7 @@ public class LikeController : ControllerBase
         }
         catch (InvalidOperationException)
         {
+            _logger.LogWarning("Удаляем лайк");
             await _likePost.RemoveLikePost(user.UserId, dto.PostId);
         }
 

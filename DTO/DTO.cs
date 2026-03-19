@@ -39,3 +39,24 @@ public class ViewUsersListDto //для отображения списка по�
     public List<ViewUserCardDto> Users { get; set; } = [];
     public int UsersCount { get; set; }
 }
+
+
+public class ProfileDto //DTO for displaying profile
+{
+    public string Username { get; set; }
+    //     public Guid UserId { get; set; } //---------для проверки прав доступа
+    //     public string? AvatarUrl { get; set; }
+    public string? Header { get; set; }
+    //     public string? Location { get; set; }
+    public string? Description { get; set; }
+
+    //     public bool IsGuest { get; set; }
+    public bool IsMine { get; set; } // флаг: для отображения другим пользователям или себе
+    //     // public Guid GuidId { get; set; }
+    //     public int PostCount { get; set; }
+    //     public int LikeCount { get; set; }
+    //     public DateTime CreatedAt { get; set; }
+    //     public bool IsOnline { get; set; } = false;
+    //     public List<Post> Posts { get; set; } = [];
+    //     public List<Like> Likes { get; set; } = []; // пока не уверен
+}
