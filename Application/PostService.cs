@@ -44,6 +44,7 @@ public class PostService : IPostService
 
         var posts = _dbcontext.Posts
         .Include(p => p.Likes) // включить связанные объекты
+        .Include(p => p.User) // включить данные пользователя
         .Select(p => new ViewPostsDto // мы выбираем что отдавать клиенту
         {
             UserId = p.UserId,
@@ -51,7 +52,8 @@ public class PostService : IPostService
             Text = p.Text,
             Title = p.Title,
             LikedByUser = p.Likes.Any(l => l.UserId == userId), //измененный и правильный вариант
-            LikesCount = p.Likes.Count  // Добавляем подсчет лайков
+            LikesCount = p.Likes.Count,  // Добавляем подсчет лайков
+            Username = p.User.Username  // Добавляем имя автора
 
             //то что было LikedByUser = _dbcontext.Likes.Any(l => l.UserId == userId && l.PostId == p.PostId)
 

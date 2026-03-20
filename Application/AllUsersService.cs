@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Testing3.DTO;
 namespace Testing3;
 
 public interface IUserService
 {
     Task<User> GetOrCreateUser(HttpContext context);
-    Task<List<User>> GetAllUsers();
+    Task<ViewUsersListDto> GetAllUsers();
 }
 public class UserService : IUserService
 {
@@ -31,12 +32,12 @@ public class UserService : IUserService
             }
         }
 
-        var guestName = "Guest_" + Guid.NewGuid().ToString()[..5];
+        var newUserId = Guid.NewGuid();
         var user = new User(string.Empty)
         {
-            UserId = Guid.NewGuid(),
-            Name = guestName,
-            Username = guestName, // Добавляем Username как обязательное условие
+            UserId = newUserId,//одинаковые id 
+            Name = newUserId.ToString(), // одинаковые id 
+            Username = "User_" + newUserId.ToString().Substring(0, Math.Min(5, newUserId.ToString().Length)),
             IsGuest = true,
             CreatedAt = DateTime.UtcNow
         };
@@ -51,13 +52,31 @@ public class UserService : IUserService
     }
 
 
-    public async Task<List<User>> GetAllUsers()
+    public async Task<ViewUsersListDto> GetAllUsers()
     {
         var users = await dbcontext.Users
         .OrderBy(u => u.Name)//нет индекса по имени, но в тесте не жалко
         .ToListAsync();
         var count = await dbcontext.Users.CountAsync();
         logger.LogInformation($"Получено {count} пользователей");
-        return users;
+
+        // Преобразуем User в ViewUserCardDto
+        var userCards = users.Select(u => new ViewUserCardDto
+        {
+            UserId = u.UserId,
+            Username = u.Username,
+            Name = u.Name,
+            Description = u.Description,
+            PostCount = u.PostCount,
+            LikeCount = u.LikeCount,
+            CreatedAt = u.CreatedAt,
+            IsOnline = u.IsOnline
+        }).ToList();
+
+        return new ViewUsersListDto
+        {
+            Users = userCards,
+            UsersCount = count
+        };
     }
 }

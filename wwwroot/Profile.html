@@ -129,6 +129,9 @@
       
       // Импортируем навигационные кнопки
       import { createNavigationButtons } from "./NavigationButtons.js";
+      
+      // Импортируем функции профиля
+      import { loadProfileData, getCurrentUsername } from "./Profile.js";
 
       // Создаем кнопки при загрузке страницы
       document.addEventListener("DOMContentLoaded", function () {
@@ -137,6 +140,13 @@
         createAddPostButton();
         createPostForm();
         createNavigationButtons();
+        
+        // Загружаем данные профиля
+        loadProfileData().then(() => {
+          console.log("Profile data loaded");
+        }).catch(error => {
+          console.error("Failed to load profile data:", error);
+        });
         
         // Делаем функцию доступной глобально для других скриптов
         window.createEmptyPostCard = createEmptyPostCard;

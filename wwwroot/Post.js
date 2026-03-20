@@ -28,6 +28,7 @@ async function loadAllPosts() {
         post.likedByUser,
         post.userId,
         post.likesCount, // Добавляем количество лайков
+        post.username // Передаем имя автора
       );
     });
     
@@ -61,6 +62,7 @@ async function createPost() {
       newPost.likedByUser,
       newPost.userId,
       0, // Новый пост всегда имеет 0 лайков
+      newPost.username // Передаем имя автора
     );
   } catch (error) {
     console.error(error);

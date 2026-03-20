@@ -7,6 +7,7 @@ public class ViewPostsDto //DTO for displaying posts
     public Guid UserId { get; set; }
     public bool LikedByUser { get; set; }
     public int LikesCount { get; set; }  // Добавляем счетчик лайков
+    public string? Username { get; set; } // Добавляем имя автора
 }
 
 public class CreatePostDto //DTO for creating posts
@@ -26,8 +27,11 @@ public class LikePostDto //DTO for toggling like on a post
 public class ViewUserCardDto // это карточки с пользователяи, пока рано
 {
     public bool IsGuest { get; set; }
+    public Guid UserId { get; set; } // добавляем UserId
+    public string? Username { get; set; } // добавляем Username
     public Guid GuidId { get; set; }
     public string Name { get; set; }
+    public string? Description { get; set; } // добавляем Description
     public int PostCount { get; set; }
     public int LikeCount { get; set; }
     public DateTime CreatedAt { get; set; }
@@ -52,8 +56,8 @@ public class ProfileDto //DTO for displaying profile
 
     //     public bool IsGuest { get; set; }
     public bool IsMine { get; set; } // флаг: для отображения другим пользователям или себе
+    public int PostCount { get; set; } // добавляем счетчик постов
     //     // public Guid GuidId { get; set; }
-    //     public int PostCount { get; set; }
     //     public int LikeCount { get; set; }
     //     public DateTime CreatedAt { get; set; }
     //     public bool IsOnline { get; set; } = false;

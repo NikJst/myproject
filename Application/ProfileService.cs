@@ -62,40 +62,33 @@ public class ProfileService : IProfileService
 
         if (user.UserId == usernameUser.UserId)
         {
+            // Считаем посты пользователя
+            var postCount = await dbContext.Posts.CountAsync(p => p.UserId == user.UserId);
+            user.PostCount = postCount;//счетчик постов как значение в бд. Денормализация для отображения в профиле
+            await dbContext.SaveChangesAsync();
+
+
             var UserProfileDto = new ProfileDto
             {
                 Username = user.Username,
-                // Header = user.Header,
-                // Description = user.Description,
-                // Location = user.Location,
-                // IsGuest = user.IsGuest,
-                // UserId = user.UserId,
-                // PostCount = user.PostCount,
-                // LikeCount = user.LikeCount,
-                // CreatedAt = user.CreatedAt,
-                // IsOnline = user.IsOnline,
-                // Posts = user.Posts,
-                // Likes = user.Likes, // пока не уверен
-                IsMine = true
+                Header = user.Header,
+                Description = user.Description,
+                IsMine = true,
+                PostCount = postCount
             };
             return UserProfileDto;
         }
 
+        // Считаем посты для чужого профиля
+        var postCountPublic = await dbContext.Posts.CountAsync(p => p.UserId == usernameUser.UserId);
+
         var PublicProfileDto = new ProfileDto
         {
             Username = usernameUser.Username,
-            // Header = usernameUser.Header,
-            // Description = usernameUser.Description,
-            // // Location = usernameUser.Location,
-            // // IsGuest = usernameUser.IsGuest,
-            // // GuidId = usernameUser.UserId,
-            // PostCount = usernameUser.PostCount,
-            // LikeCount = usernameUser.LikeCount,
-            // CreatedAt = usernameUser.CreatedAt,
-            // IsOnline = usernameUser.IsOnline,
-            // Posts = usernameUser.Posts,
-            // Likes = usernameUser.Likes // пока не уверен
-            IsMine = false
+            Header = usernameUser.Header,
+            Description = usernameUser.Description,
+            IsMine = false,
+            PostCount = postCountPublic
         };
         return PublicProfileDto;
     }

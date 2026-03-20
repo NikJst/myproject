@@ -5,6 +5,7 @@ export function createEmptyPostCard(
   likedByUser,
   userId,
   likesCount = 0, // Добавляем параметр для счетчика лайков
+  username = "Автор", // Добавляем параметр для имени автора
 ) {
   console.log(
     "createEmptyPostCard вызван с postId:",
@@ -103,7 +104,19 @@ export function createEmptyPostCard(
   // card.appendChild(closeBtn);
   card.appendChild(textBlock);
   card.appendChild(buttonsBottom);
-
+  
+  // Добавляем имя автора внизу карточки
+  if (username && username !== "Автор") {
+    const authorDiv = document.createElement("div");
+    authorDiv.classList.add("author-info");
+    authorDiv.style.fontSize = "12px";
+    authorDiv.style.color = "#666";
+    authorDiv.style.marginTop = "8px";
+    authorDiv.textContent = `Автор: ${username}`;
+    
+    card.appendChild(authorDiv);
+  }
+  
   // Добавляем карточку в оба контейнера, если они существуют
   if (cardsContainer) {
     const cardForCardsContainer = card.cloneNode(true);
@@ -113,5 +126,6 @@ export function createEmptyPostCard(
   if (postsContainer) {
     const cardForPostsContainer = card.cloneNode(true);
     postsContainer.prepend(cardForPostsContainer); // Используем prepend для обратного порядка
+    console.log("Карточка добавлена в posts-container");
   }
 }

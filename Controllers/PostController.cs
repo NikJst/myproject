@@ -52,6 +52,13 @@ public class PostController : ControllerBase
     }
 
 
+    [HttpGet("user/{userId}")]
+    public async Task<IActionResult> GetUserPosts(Guid userId)
+    {
+        var dto = await _postService.GetAllPostsForUserAsync(userId);
+        return Ok(dto);
+    }
+
     [HttpDelete("{postId}")]
     public IActionResult DeletePost(Guid postId)
     {
