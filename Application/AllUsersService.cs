@@ -31,10 +31,12 @@ public class UserService : IUserService
             }
         }
 
+        var guestName = "Guest_" + Guid.NewGuid().ToString()[..5];
         var user = new User(string.Empty)
         {
             UserId = Guid.NewGuid(),
-            Name = "Guest_" + Guid.NewGuid().ToString()[..5],
+            Name = guestName,
+            Username = guestName, // Добавляем Username как обязательное условие
             IsGuest = true,
             CreatedAt = DateTime.UtcNow
         };

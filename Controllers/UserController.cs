@@ -12,15 +12,17 @@ public class UserController : Controller
     }
 
     [HttpGet]
-    public IActionResult GetOrCreateUser()
+    public async Task<IActionResult> GetOrCreateUser()
     {
-        return Ok(_userService.GetOrCreateUser(HttpContext));
+        var user = await _userService.GetOrCreateUser(HttpContext);
+        return Ok(user);
     }
 
     [HttpGet("allUsers")]
-    public IActionResult GetAllUsers()
+    public async Task<IActionResult> GetAllUsers()
     {
-        return Ok(_userService.GetAllUsers());
+        var users = await _userService.GetAllUsers();
+        return Ok(users);
     }
 
 }
