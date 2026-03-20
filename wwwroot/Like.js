@@ -35,18 +35,22 @@ document.addEventListener("click", async (e) => {
       throw new Error("Ошибка при постановке Like");
     }
 
-    const data = await response.json(); // { LikesCount: ... }
+    const data = await response.json(); // { likesCount: ..., likedByUser: ... }
     
     // Проверяем структуру ответа
-    if (!data || typeof data.likesCount === 'undefined') {
+    if (!data || typeof data.likesCount === 'undefined' || typeof data.likedByUser === 'undefined') {
       console.error("Некорректный ответ сервера:", data);
       throw new Error("Некорректный ответ сервера");
     }
 
-    likeButton.classList.toggle("liked");
-    likeIcon.src = likeButton.classList.contains("liked")
-      ? "image/like+.png"
-      : "image/like.png";
+    // Обновляем состояние на основе ответа от сервера
+    if (data.likedByUser) {
+      likeButton.classList.add("liked");
+      likeIcon.src = "image/like+.png";
+    } else {
+      likeButton.classList.remove("liked");
+      likeIcon.src = "image/like.png";
+    }
     
     // Обновляем счетчик лайков
     const likeCount = document.getElementById(`like-count-${postId}`);

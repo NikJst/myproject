@@ -32,8 +32,9 @@ public class LikeController : ControllerBase
             await _likePost.RemoveLikePost(user.UserId, dto.PostId);
         }
 
-        var count = _likePost.GetLikeCount(dto.PostId);
-        return Ok(new { likesCount = count }); // Изменено на нижний регистр для соответствия фронтенду
+        var count = await _likePost.GetLikeCount(dto.PostId);
+        var likedByUser = await _likePost.IsLikedByUser(user.UserId, dto.PostId);
+        return Ok(new { likesCount = count, likedByUser = likedByUser }); // Добавляем информацию о состоянии лайка
     }
 
     [HttpGet("post/{postId}")]
@@ -41,9 +42,9 @@ public class LikeController : ControllerBase
     {
         var user = await _userService.GetOrCreateUser(HttpContext);
 
-        var likedByUser = _likePost.IsLikedByUser(user.UserId, postId);
+        var likedByUser = await _likePost.IsLikedByUser(user.UserId, postId);
 
-        var count = _likePost.GetLikeCount(postId);
+        var count = await _likePost.GetLikeCount(postId);
 
         return Ok(new
         {
