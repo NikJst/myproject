@@ -46,16 +46,16 @@
         background: #555;
       }
 
-      .post-card {
+      /* .post-card {
         transition:
           transform 0.2s ease-in-out,
           box-shadow 0.2s ease-in-out;
-      }
+      } */
 
-      .post-card:hover {
+      /* .post-card:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      }
+      } */
     </style>
   </head>
   <body class="bg-gray-50 min-h-screen">
@@ -154,10 +154,10 @@
         
         // Загружаем данные профиля
         const username = getCurrentUsername();
-        loadProfileData(username).then(() => {
+        loadProfileData(username).then((profileData) => {
           console.log("Profile data loaded");
           // После загрузки данных профиля загружаем посты пользователя
-          return loadUserPosts();
+          return loadUserPosts(profileData.username);
         }).then(() => {
           console.log("User posts loaded");
         }).catch(error => {

@@ -18,20 +18,8 @@ public class ProfileController : ControllerBase
         this.profileService = profileService;
     }
 
-
-    // [HttpGet]
-    // [Route("{username}/profile")] // маршрут для получения данных профиля по username
-    // public async Task<IActionResult> GetUserProfileByUsername([FromRoute] string username)
-    // {
-    //     //предположим что пользователь уже авторизован
-    //     var user = await userService.GetOrCreateUser(HttpContext);
-
-    //     var profileInfo = await profileService.GetProfileInfo(username, user);
-    //     return Ok(profileInfo);
-    // }
-
     [HttpPatch]
-    [Route("info")] //username может изменяться далее так что лучше не использовать его в пути
+    [Route("edit")] //username может изменяться далее так что лучше не использовать его в пути
     public async Task<IActionResult> PatchInfo([FromBody] ProfileInfoDto profileDto)
     {
         //предположим что пользователь уже авторизован
@@ -63,4 +51,18 @@ public class ProfileController : ControllerBase
         var userPosts = await profileService.GetUserPosts(username, user);
         return Ok(userPosts);
     }
+    //дальше по аналогии лайки, закладки и пр. 
+    //к прмимеру
+    /* 
+    [Authorize] // только авторизованные
+    [HttpGet("{username}/likes/drafts")]
+    public async Task<IActionResult> GetLikes([FromRoute] string username)
+    {
+        //предположим что пользователь уже авторизован
+        var user = await userService.GetOrCreateUser(HttpContext);
+
+        var likes = await profileService.GetLikes(username, user);
+        return Ok(likes);
+    }
+    */
 }

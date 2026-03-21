@@ -171,15 +171,11 @@ export async function updateProfileInfo(profileData) {
 }
 
 // Загрузка постов пользователя
-export async function loadUserPosts(username) {
+export async function loadUserPosts(profileUsername) {
   try {
-    // Если username не передан, получаем текущего пользователя
-    if (!username) {
-      const currentUser = await getCurrentUser();
-      username = currentUser.username || currentUser.name;
-    }
+    console.log('loadUserPosts: Использую username из профиля:', profileUsername);
     
-    const response = await fetch(`/api/Profile/${username}/posts`);
+    const response = await fetch(`/api/Profile/${profileUsername}/posts`);
     console.log('получаем посты пользователя:', response.status);
     if (!response.ok) {
       console.error('Ошибка загрузки постов пользователя');

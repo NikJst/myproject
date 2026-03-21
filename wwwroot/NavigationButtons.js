@@ -9,7 +9,7 @@ export function createIndexButton() {
   // Создаем кнопку перехода на главную
   const indexButton = document.createElement("button");
   indexButton.className = "index-btn";
-  indexButton.textContent = "На главную";
+  indexButton.textContent = "Главная";
 
   // Обработчик клика для перехода на главную страницу
   indexButton.addEventListener("click", function () {

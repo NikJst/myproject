@@ -35,6 +35,8 @@ app.UseStaticFiles();
 
 app.MapControllers();
 
+//добавиь отдельный middlewere для проверки пользователя на авторизацию
+
 app.Run();
 
 
