@@ -78,12 +78,16 @@
     <script type="module">
       import { createAddPostButton, createPostForm, togglePostForm } from "./CardForm.js";
       import { createNavigationButtons } from "./NavigationButtons.js";
+      import { loadAllPosts } from "./Post.js";
       
       // Создаем кнопки при загрузке страницы
       document.addEventListener("DOMContentLoaded", function () {
         createAddPostButton();
         createPostForm();
         createNavigationButtons();
+        
+        // Загружаем все посты при загрузке главной страницы
+        loadAllPosts();
       });
     </script>
   </body>

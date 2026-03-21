@@ -124,8 +124,8 @@
         createPostForm,
       } from "./CardForm.js";
       
-      // Импортируем функцию создания карточек и загрузки постов
-      import { createEmptyPostCard, loadAllPosts } from "./Post.js";
+      // Импортируем функцию создания карточек
+      import { createEmptyPostCard } from "./Post.js";
       
       // Импортируем навигационные кнопки
       import { createNavigationButtons } from "./NavigationButtons.js";
@@ -150,14 +150,6 @@
         
         // Делаем функцию доступной глобально для других скриптов
         window.createEmptyPostCard = createEmptyPostCard;
-        
-        // Загружаем все посты при загрузке профиля
-        console.log("Calling loadAllPosts...");
-        loadAllPosts().then(() => {
-          console.log("loadAllPosts completed");
-        }).catch(error => {
-          console.error("loadAllPosts failed:", error);
-        });
       });
 
       // Добавление интерактивности для кнопок лайков (включая динамически созданные)

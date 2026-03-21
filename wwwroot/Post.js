@@ -76,9 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
     addPostBtn.addEventListener("click", togglePostForm); // используем новую функцию формы
   }
 });
-
-// Загружаем все посты при загрузке страницы
-loadAllPosts();
   // const newPost = await createPostOnServer(text);
   // if (newPost) {
   //   createEmptyPostCard(
