@@ -5,10 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Профиль пользователя</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+    <script>
+      tailwind.config = {
+        corePlugins: {
+          fontFamily: true,
+        },
+        theme: {
+          extend: {
+            fontFamily: {
+              'sans': ['Roboto', 'Arial', 'sans-serif'],
+              'serif': ['Roboto', 'Arial', 'sans-serif'],
+              'mono': ['Roboto', 'Arial', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
     <link rel="stylesheet" href="Styles.css" />
     <style>
       .posts-container {
@@ -68,7 +80,7 @@
             <button
               class="px-6 py-0.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
             >
-              <i class="fas fa-edit"></i>Изменить
+              ✏️ Изменить
             </button>
             <!-- <button
               class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium"
@@ -105,8 +117,7 @@
         <!-- Заголовок секции постов -->
         <div class="px-6 py-4 border-b border-gray-200">
           <h2 class="text-xl font-semibold text-gray-800">
-            <i class="fas fa-newspaper mr-2 text-blue-600"></i>
-            Мои карточки
+            📰 Мои карточки
           </h2>
         </div>
 
@@ -131,7 +142,7 @@
       import { createNavigationButtons } from "./NavigationButtons.js";
       
       // Импортируем функции профиля
-      import { loadProfileData, getCurrentUsername } from "./Profile.js";
+      import { loadProfileData, getCurrentUsername, loadUserPosts } from "./Profile.js";
 
       // Создаем кнопки при загрузке страницы
       document.addEventListener("DOMContentLoaded", function () {
@@ -142,10 +153,15 @@
         createNavigationButtons();
         
         // Загружаем данные профиля
-        loadProfileData().then(() => {
+        const username = getCurrentUsername();
+        loadProfileData(username).then(() => {
           console.log("Profile data loaded");
+          // После загрузки данных профиля загружаем посты пользователя
+          return loadUserPosts();
+        }).then(() => {
+          console.log("User posts loaded");
         }).catch(error => {
-          console.error("Failed to load profile data:", error);
+          console.error("Failed to load profile data or posts:", error);
         });
         
         // Делаем функцию доступной глобально для других скриптов

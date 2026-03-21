@@ -19,6 +19,17 @@ public class ProfileController : ControllerBase
     }
 
 
+    // [HttpGet]
+    // [Route("{username}/profile")] // маршрут для получения данных профиля по username
+    // public async Task<IActionResult> GetUserProfileByUsername([FromRoute] string username)
+    // {
+    //     //предположим что пользователь уже авторизован
+    //     var user = await userService.GetOrCreateUser(HttpContext);
+
+    //     var profileInfo = await profileService.GetProfileInfo(username, user);
+    //     return Ok(profileInfo);
+    // }
+
     [HttpPatch]
     [Route("info")] //username может изменяться далее так что лучше не использовать его в пути
     public async Task<IActionResult> PatchInfo([FromBody] ProfileInfoDto profileDto)
@@ -29,9 +40,10 @@ public class ProfileController : ControllerBase
         return Ok(updatedProfile);
     }
 
+    //------------>
     [HttpGet]
-    [Route("{username}/info")] // должен вернуть кнопку редактирования если это наш профиль
-    public async Task<IActionResult> GetUserProfile([FromRoute] string username)
+    [Route("{username}")]
+    public async Task<IActionResult> GetUserProfileDirect([FromRoute] string username)
     {
         //предположим что пользователь уже авторизован
         var user = await userService.GetOrCreateUser(HttpContext);

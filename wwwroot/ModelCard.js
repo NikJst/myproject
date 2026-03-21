@@ -112,7 +112,8 @@ export function createEmptyPostCard(
     authorDiv.style.fontSize = "12px";
     authorDiv.style.color = "#666";
     authorDiv.style.marginTop = "8px";
-    authorDiv.textContent = `Автор: ${username}`;
+    
+    authorDiv.innerHTML = `Автор: <a href="/Profile.html?user=${username}" style="color: #666; text-decoration: none;">${username}</a>`;
     
     card.appendChild(authorDiv);
   }

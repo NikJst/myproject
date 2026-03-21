@@ -7,7 +7,7 @@ export async function loadProfileData(username) {
       username = currentUser.username || currentUser.name;
     }
     
-    const response = await fetch(`/api/Profile/${username}/info`);
+    const response = await fetch(`/api/Profile/${username}`);
     if (!response.ok) {
       throw new Error('Ошибка загрузки профиля');
     }
@@ -102,18 +102,28 @@ function updateProfileStats(profileData) {
   });
 }
 
-// Получение username из URL или текущего пользователя
+// Получение username из URL параметра user
 export function getCurrentUsername() {
-  // Можно получить из URL параметров или из куки
+  // Получаем параметры из URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const userParam = urlParams.get('user');
+  
+  if (userParam) {
+    console.log('Найден параметр user в URL:', userParam);
+    return userParam;
+  }
+  
+  // Если параметра user нет, пробуем старый способ
   const pathParts = window.location.pathname.split('/');
   const usernameIndex = pathParts.indexOf('profile') + 1;
   
   if (usernameIndex > 0 && pathParts[usernameIndex]) {
+    console.log('Найден username в пути:', pathParts[usernameIndex]);
     return pathParts[usernameIndex];
   }
   
-  // Если username в URL нет, используем текущего пользователя
-  return null; // Будет определено в loadProfileData
+  console.log('Username не найден');
+  return null;
 }
 
 // Получение данных текущего пользователя
@@ -210,55 +220,28 @@ function updatePostsUI(posts) {
     return;
   }
   
-  // Создаем HTML для каждого поста
+  // Создаем карточки для каждого поста
+  // createPostElement() сама добавляет карточки в DOM через createEmptyPostCard()
   posts.forEach(post => {
-    const postElement = createPostElement(post);
-    postsContainer.appendChild(postElement);
+    createPostElement(post);
   });
 }
 
 // Создание элемента поста
 function createPostElement(post) {
-  const postDiv = document.createElement('div');
-  postDiv.className = 'bg-white rounded-lg shadow-md p-6 mb-4 border border-gray-200';
+  // Используем существующую функцию создания карточки
+  createEmptyPostCard(
+    post.title || '',
+    post.text || '',
+    post.postId,
+    post.likedByUser || false,
+    post.userId,
+    post.likesCount || 0,
+    post.username || 'Автор'
+  );
   
-  postDiv.innerHTML = `
-    <div class="flex justify-between items-start mb-4">
-      <div class="flex items-center">
-        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold mr-3">
-          ${post.username ? post.username[0].toUpperCase() : 'U'}
-        </div>
-        <div>
-          <h3 class="font-semibold text-gray-900">${post.username || 'Unknown User'}</h3>
-          <p class="text-sm text-gray-500">@${post.username || 'unknown'}</p>
-        </div>
-      </div>
-      <div class="flex items-center space-x-2">
-        ${post.likedByUser ? 
-          `<button class="text-red-500 hover:text-red-600 transition-colors" onclick="toggleLike('${post.postId}')">
-            <i class="fas fa-heart"></i>
-          </button>` :
-          `<button class="text-gray-400 hover:text-red-500 transition-colors" onclick="toggleLike('${post.postId}')">
-            <i class="far fa-heart"></i>
-          </button>`
-        }
-        ${post.isGuest ? '<span class="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded">Гость</span>' : ''}
-      </div>
-    </div>
-    
-    ${post.title ? `<h2 class="text-xl font-bold text-gray-900 mb-3">${post.title}</h2>` : ''}
-    
-    <div class="text-gray-700 whitespace-pre-wrap">${post.text || ''}</div>
-    
-    <div class="mt-4 pt-4 border-t border-gray-100">
-      <div class="flex justify-between items-center text-sm text-gray-500">
-        <span>ID: ${post.postId}</span>
-        <span>UserID: ${post.userId}</span>
-      </div>
-    </div>
-  `;
-  
-  return postDiv;
+  // Возвращаем null, так как createEmptyPostCard сама добавляет карточку в DOM
+  return null;
 }
 
 // Функция для переключения лайка (заглушка, нужно реализовать)
