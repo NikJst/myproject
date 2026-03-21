@@ -18,26 +18,37 @@ public class ProfileController : ControllerBase
         this.profileService = profileService;
     }
 
+
     [HttpPatch]
-    [Route("{username}")] //для создания профиля. В будущем должно быть переброшено на страницу регистрации
-    public async Task<IActionResult> PatchBio([FromBody] ProfileDto profileDto)
+    [Route("info")] //username может изменяться далее так что лучше не использовать его в пути
+    public async Task<IActionResult> PatchInfo([FromBody] ProfileInfoDto profileDto)
     {
         //предположим что пользователь уже авторизован
         var user = await userService.GetOrCreateUser(HttpContext);
-        var updatedProfile = await profileService.PatchBio(user.UserId, profileDto);
+        var updatedProfile = await profileService.PatchInfo(profileDto, user);
         return Ok(updatedProfile);
     }
 
     [HttpGet]
-    [Route("{username}/content")] //для получения контента профиля
+    [Route("{username}/info")] // должен вернуть кнопку редактирования если это наш профиль
     public async Task<IActionResult> GetUserProfile([FromRoute] string username)
     {
         //предположим что пользователь уже авторизован
-        var user = await userService.GetOrCreateUser(HttpContext);//здесь наше все (гостевое)
-        // user.UserId;
-        // вызываем метод публичного отображения
-        //username в дальнейшем используется для поиска id пользователя в бд
-        var Content = await profileService.GetProfileContent(username, user);
-        return Ok(Content);
+        var user = await userService.GetOrCreateUser(HttpContext);
+
+        var profileInfo = await profileService.GetProfileInfo(username, user);
+        return Ok(profileInfo);
+    }
+
+    //------------>
+    [HttpGet]
+    [Route("{username}/posts")]
+    public async Task<IActionResult> GetUserPosts([FromRoute] string username)
+    {
+        //предположим что пользователь уже авторизован
+        var user = await userService.GetOrCreateUser(HttpContext);
+
+        var userPosts = await profileService.GetUserPosts(username, user);
+        return Ok(userPosts);
     }
 }

@@ -27,9 +27,7 @@ public class UserService : IUserService
             var findUser = await dbcontext.Users
             .FirstOrDefaultAsync(u => u.UserId == userId);
             if (findUser != null)
-            {
                 return findUser;
-            }
         }
 
         var newUserId = Guid.NewGuid();
@@ -51,7 +49,7 @@ public class UserService : IUserService
 
     }
 
-
+    //----не помню делал ли я сам 
     public async Task<ViewUsersListDto> GetAllUsers()
     {
         var users = await dbcontext.Users

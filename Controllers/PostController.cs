@@ -24,7 +24,7 @@ public class PostController : ControllerBase
         {
             var user = await _userService.GetOrCreateUser(HttpContext);
             var post = await _postService.CreatePostAsync(request.Text, request.Title, user.UserId);
-
+            System.Console.WriteLine(post.PostId.ToString());
 
             _logger.LogInformation($"Post создан with user ID: {user.UserId}");
 

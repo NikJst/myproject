@@ -4,8 +4,9 @@ namespace Testing3.Application;
 
 public interface IProfileService
 {
-    Task<ProfileDto> PatchBio(Guid userId, ProfileDto profileDto);
-    Task<ProfileDto> GetProfileContent(string username, User user);
+    Task<ProfileInfoDto> PatchInfo(ProfileInfoDto profileDto, User user);
+    Task<ProfileInfoDto> GetProfileInfo(string username, User user);
+    Task<List<UserPostDto>> GetUserPosts(string username, User user);
     // Task<ProfileDto> GetUserProfileContent(Guid userId);
 }
 
@@ -18,78 +19,127 @@ public class ProfileService : IProfileService
         this.dbContext = dbContext;
         this.logger = logger;
     }
-    public async Task<ProfileDto> PatchBio(Guid userId, ProfileDto profileDto)
+    public async Task<ProfileInfoDto> PatchInfo(ProfileInfoDto profileDto, User user)
     {
-        try
+
+        var userinfo = await dbContext.Users.FindAsync(user);
+        if (userinfo != null)
         {
-            var user = await dbContext.Users.FindAsync(userId);
-            if (user == null) throw new Exception("User not found");
-            logger.LogError("User found: {UserId}", user.UserId);
-
-            user.Username = profileDto.Username;
-            user.Header = profileDto.Header;
-            user.Description = profileDto.Description;
-            // user.Location = profileDto.Location;
-
+            userinfo.Username = profileDto.Username;
+            userinfo.Header = profileDto.Header;
+            userinfo.Description = profileDto.Description;
             await dbContext.SaveChangesAsync();
+
             logger.LogWarning($"Profile обновлен в бд");
-            return new ProfileDto
+            var profileInfo = new ProfileInfoDto
             {
-                Username = user.Username,
-                Header = user.Header,
-                Description = user.Description,
-                // Location = user.Location
+                UserId = userinfo.UserId,
+                Username = userinfo.Username,
+                Header = userinfo.Header,
+                Description = userinfo.Description,
+                /* 
+                тут добавить поля которые хотим изменить
+                */
             };
+            logger.LogWarning($"Profile обновлен в бд");
+            return profileInfo;
         }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error updating profile");
-            throw;
-        }
-        //дописать дату и др обязательные поля потом 
+        throw new Exception("Ошибка обновления профиля");
     }
 
 
     //-------->
-    public async Task<ProfileDto> GetProfileContent(string username, User user)
+    public async Task<ProfileInfoDto> GetProfileInfo(string username, User user)
     // таким образом получается что у нас один объект ProfileDto для всех операций, но с разным содержимым
     {
         var usernameUser = await dbContext.Users
         .FirstOrDefaultAsync(u => u.Username == username);
 
-        if (usernameUser == null) throw new Exception("User not found");
-        logger.LogWarning("User found: " + usernameUser);
-
-        if (user.UserId == usernameUser.UserId)
+        if (usernameUser != null)
         {
-            // Считаем посты пользователя
-            var postCount = await dbContext.Posts.CountAsync(p => p.UserId == user.UserId);
-            user.PostCount = postCount;//счетчик постов как значение в бд. Денормализация для отображения в профиле
-            await dbContext.SaveChangesAsync();
 
-
-            var UserProfileDto = new ProfileDto
+            if (user.UserId == usernameUser.UserId) // если это наш профиль
             {
-                Username = user.Username,
-                Header = user.Header,
-                Description = user.Description,
-                IsMine = true,
-                PostCount = postCount
+                // Считаем посты пользователя
+                var postCountMe = await dbContext.Posts
+                .Where(p => p.UserId == user.UserId)
+                .CountAsync();
+
+                var userProfileInfo = new ProfileInfoDto
+                {
+                    UserId = user.UserId,// тебе нужен
+                    Username = user.Username,
+                    Header = user.Header,
+                    Description = user.Description,
+                    PostCount = postCountMe
+                    /* 
+                    тут можно добавить другие поля, которые нужны только для нашего профиля
+                    Например: 
+                    счетчики подписчиков, подписок, лайков и т.д.
+
+                    также поля для управления (редактирование, удаление и т.д.)
+                    */
+                };
+                logger.LogWarning($"Profile получен для нашего профиля");
+                return userProfileInfo;
+            }
+
+            // Считаем посты для отображения на чужом профиле
+            var postCountAlien = await dbContext.Posts
+            .Where(p => p.UserId == usernameUser.UserId)
+            .CountAsync();
+
+            var alienProfileInfo = new ProfileInfoDto
+            {
+                // тебе не нужны эти данные для чужого профиля
+                // UserId = usernameUser.UserId,
+                Username = usernameUser.Username,
+                Header = usernameUser.Header,
+                Description = usernameUser.Description,
+                /* 
+                тут можно добавить другие поля чужого профиля
+                */
+                PostCount = postCountAlien
             };
-            return UserProfileDto;
+            logger.LogWarning($"Profile получен для чужого профиля");
+            return alienProfileInfo;
         }
-
-        // Считаем посты для чужого профиля
-        var postCountPublic = await dbContext.Posts.CountAsync(p => p.UserId == usernameUser.UserId);
-
-        var PublicProfileDto = new ProfileDto
+        else
         {
-            Username = usernameUser.Username,
-            Header = usernameUser.Header,
-            Description = usernameUser.Description,
-            IsMine = false,
-            PostCount = postCountPublic
-        };
-        return PublicProfileDto;
+            logger.LogWarning("Владелец профиля - {username} не найден", username);
+            throw new Exception("Владелец профиля не найден");
+        }
+    }
+
+    //--------------->  получение собственных постов пользователя
+    public async Task<List<UserPostDto>> GetUserPosts(string username, User user)
+    {
+        var usernameUser = await dbContext.Users
+        .FirstOrDefaultAsync(u => u.Username == username);
+
+        if (usernameUser != null)
+        {
+            var userPosts = await dbContext.Posts //при обращении к бд он уже коллекция
+            .Where(p => p.UserId == usernameUser.UserId)
+            .Select(p => new UserPostDto
+            {
+                UserId = p.UserId,
+                Username = usernameUser.Username,
+                PostId = p.PostId,
+                Text = p.Text,
+                Title = p.Title,
+                LikedByUser = dbContext.Likes.Any(l => l.PostId == p.PostId && l.UserId == user.UserId),
+                // IsGuest = false
+                // CreatedAt = p.CreatedAt
+            })
+            .ToListAsync(); //оборачиваем в список
+            logger.LogWarning($"Посты пользователя ({username}) получены");
+            return userPosts;
+        }
+        else
+        {
+            logger.LogWarning("Владелец профиля - {username} не найден", username);
+            throw new Exception("Владелец профиля не найден");
+        }
     }
 }

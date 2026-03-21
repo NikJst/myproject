@@ -18,7 +18,6 @@ public class User
     public List<Post> Posts { get; private set; } = []; // навигация к Post 
     public List<Like> Likes { get; private set; } = []; // навигация к Like
                                                         // Parameterless constructor for EF
-    public User() { }
     public User(string name)
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));
