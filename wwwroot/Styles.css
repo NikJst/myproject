@@ -15,9 +15,8 @@
   /* Стили как у кнопок */
   background-color: #ccc; /* светло-серый фон */
   border: none; /* без рамки */
-  padding: 8px 16px; /* внутренние отступы */
+  /* padding: 8px 16px; */
   border-radius: 32px; /* скругленные углы */
-  
   /* Для плавности */
   transition: background-color 0.3s; /* плавное изменение фона */
 }
@@ -90,10 +89,10 @@ body {
 
 header {
   position: relative; /* чтобы потом позиционировать кнопку внутри */
-
+  box-shadow: -1px 20px 80px rgba(228, 228, 228, 1);
   background-color: #ffffff;
   color: white;
-  padding: 1rem;
+  padding: 2rem;
   text-align: center;
 }
 .settings-btn {
@@ -109,9 +108,9 @@ header {
 /* Основной блок с прокруткой */
 .cards-container {
   flex: 1; /*здесь занимает всё доступное пространство между header и footer */
-  overflow-y: auto;
+  /* overflow-y: auto; */
   padding: 1rem;
-  background-color: #fafafa;
+  /* background-color: #fafafa; */
   display: flex;
   flex-direction: column;
   align-items: center; /* центрируем карточки по горизонтали */

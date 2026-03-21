@@ -63,3 +63,84 @@ document.addEventListener("click", async (e) => {
     console.log("Постановка Like завершена");
   }
 });
+
+// Настройка наблюдателей для динамически создаваемых кнопок лайков
+export function setupLikeObservers() {
+  // Наблюдаем за изменениями в контейнере постов
+  const postsContainer = document.querySelector(".posts-container");
+  if (postsContainer) {
+    const observer = new MutationObserver(() => {
+      console.log("Posts container changed, checking for new like buttons");
+    });
+    
+    observer.observe(postsContainer, {
+      childList: true,
+      subtree: true
+    });
+  }
+  
+  // Наблюдаем за изменениями в cards-container
+  const cardsContainer = document.querySelector(".cards-container");
+  if (cardsContainer) {
+    const observer = new MutationObserver(() => {
+      console.log("Cards container changed, checking for new like buttons");
+    });
+    
+    observer.observe(cardsContainer, {
+      childList: true,
+      subtree: true
+    });
+  }
+}
+
+// Функция для отправки запроса на сервер (для совместимости)
+export async function toggleLikeOnServer(postId, buttonElement) {
+  try {
+    const response = await fetch("/api/Like", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ postId: postId })
+    });
+    
+    if (response.ok) {
+      const result = await response.json();
+      // Обновляем интерфейс на основе ответа от сервера
+      updateLikeButton(buttonElement, result.likedByUser, result.likesCount);
+      return result;
+    } else {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Error toggling like:", error);
+    throw error;
+  }
+}
+
+// Функция для обновления кнопки лайка на основе ответа сервера
+export function updateLikeButton(buttonElement, isLiked, likesCount) {
+  // Для Font Awesome иконок (posts-container)
+  const icon = buttonElement.querySelector("i");
+  if (icon) {
+    if (isLiked) {
+      icon.classList.remove("far");
+      icon.classList.add("fas", "text-red-600");
+    } else {
+      icon.classList.remove("fas", "text-red-600");
+      icon.classList.add("far");
+    }
+    buttonElement.innerHTML = `<i class="${icon.className} mr-1"></i>${likesCount}`;
+  }
+  
+  // Для img иконок (cards-container)
+  const img = buttonElement.querySelector('img');
+  if (img) {
+    img.src = isLiked ? 'image/like+.png' : 'image/like.png';
+    // Обновляем счетчик лайков
+    const likeCount = buttonElement.querySelector('.like-count');
+    if (likeCount) {
+      likeCount.textContent = likesCount;
+    }
+  }
+}

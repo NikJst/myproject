@@ -44,14 +44,19 @@ export function createEmptyPostCard(
   // Блок текста
   const textBlock = document.createElement("div");
   textBlock.classList.add("text-block");
+  // textBlock.style.color = "#666";
+
 
   // Заголовок
   const h2 = document.createElement("h2");
   h2.textContent = title;
+  h2.style.color = "#2e2e2e";
+
 
   // Текст
   const p = document.createElement("p");
   p.textContent = text;
+  p.style.color = "#4a4a4a";
 
   textBlock.appendChild(h2);
   textBlock.appendChild(p);

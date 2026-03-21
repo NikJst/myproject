@@ -241,25 +241,25 @@ function createPostElement(post) {
 }
 
 // Функция для переключения лайка (заглушка, нужно реализовать)
-async function toggleLike(postId) {
-  try {
-    const response = await fetch('/api/Posts/like', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ postId: postId })
-    });
+// async function toggleLike(postId) {
+//   try {
+//     const response = await fetch('/api/Posts/like', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({ postId: postId })
+//     });
     
-    if (!response.ok) {
-      throw new Error('Ошибка переключения лайка');
-    }
+//     if (!response.ok) {
+//       throw new Error('Ошибка переключения лайка');
+//     }
     
-    // Перезагружаем посты для обновления состояния лайков
-    const currentUsername = getCurrentUsername();
-    await loadUserPosts(currentUsername);
+//     // Перезагружаем посты для обновления состояния лайков
+//     const currentUsername = getCurrentUsername();
+//     await loadUserPosts(currentUsername);
     
-  } catch (error) {
-    console.error('Ошибка при переключении лайка:', error);
-  }
-}
+//   } catch (error) {
+//     console.error('Ошибка при переключении лайка:', error);
+//   }
+// }

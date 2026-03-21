@@ -69,8 +69,7 @@
               <h1 class="text-3xl font-bold text-gray-800 mb-1">Иван Петров</h1>
               <p class="text-gray-600 mb-2">@ivan_petrov</p>
               <p class="text-gray-700 text-sm max-w-md">
-                Веб-разработчик, увлекаюсь фотографиями и путешествиями. Люблю
-                делиться интересными моментами из жизни.
+                Веб-разработчик
               </p>
             </div>
           </div>
@@ -117,7 +116,7 @@
         <!-- Заголовок секции постов -->
         <div class="px-6 py-4 border-b border-gray-200">
           <h2 class="text-xl font-semibold text-gray-800">
-            📰 Мои карточки
+            Посты 
           </h2>
         </div>
 
@@ -129,156 +128,15 @@
     </main>
 
     <script type="module">
-      // Импортируем функции создания кнопок и формы добавления поста
-      import {
-        createAddPostButton,
-        createPostForm,
-      } from "./CardForm.js";
-      
-      // Импортируем функцию создания карточек
-      import { createEmptyPostCard } from "./Post.js";
-      
-      // Импортируем навигационные кнопки
+      // Импортируем инициализацию профиля
+      import { initializeProfile } from "./Init.js";
       import { createNavigationButtons } from "./NavigationButtons.js";
       
-      // Импортируем функции профиля
-      import { loadProfileData, getCurrentUsername, loadUserPosts } from "./Profile.js";
-
-      // Создаем кнопки при загрузке страницы
-      document.addEventListener("DOMContentLoaded", function () {
-        console.log("Profile page loaded");
-        
-        createAddPostButton();
-        createPostForm();
-        createNavigationButtons();
-        
-        // Загружаем данные профиля
-        const username = getCurrentUsername();
-        loadProfileData(username).then((profileData) => {
-          console.log("Profile data loaded");
-          // После загрузки данных профиля загружаем посты пользователя
-          return loadUserPosts(profileData.username);
-        }).then(() => {
-          console.log("User posts loaded");
-        }).catch(error => {
-          console.error("Failed to load profile data or posts:", error);
-        });
-        
-        // Делаем функцию доступной глобально для других скриптов
-        window.createEmptyPostCard = createEmptyPostCard;
-      });
-
-      // Добавление интерактивности для кнопок лайков (включая динамически созданные)
-      function setupLikeButtons() {
-        document.querySelectorAll(".buttons-bottom button").forEach((button) => {
-          // Проверяем, что это кнопка лайка (содержит img или i с heart)
-          const isLikeButton = button.querySelector('img[src*="like"], .fa-heart');
-          
-          if (isLikeButton && !button.hasAttribute('data-like-setup')) {
-            button.setAttribute('data-like-setup', 'true');
-            button.addEventListener("click", function (e) {
-              e.preventDefault();
-              e.stopPropagation();
-              
-              // Получаем postId из data-атрибута
-              const postId = this.dataset.postId;
-              if (postId) {
-                // Отправляем запрос на сервер для переключения лайка
-                toggleLikeOnServer(postId, this);
-              }
-            });
-          }
-        });
-      }
-
-      // Функция для отправки запроса на сервер
-      async function toggleLikeOnServer(postId, buttonElement) {
-        try {
-          const response = await fetch("/api/Like", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ postId: postId })
-          });
-          
-          if (response.ok) {
-            const result = await response.json();
-            // Обновляем интерфейс на основе ответа от сервера
-            updateLikeButton(buttonElement, result.likedByUser, result.likesCount);
-          }
-        } catch (error) {
-          console.error("Error toggling like:", error);
-        }
-      }
-
-      // Функция для обновления кнопки лайка на основе ответа сервера
-      function updateLikeButton(buttonElement, isLiked, likesCount) {
-        // Для Font Awesome иконок (posts-container)
-        const icon = buttonElement.querySelector("i");
-        if (icon) {
-          if (isLiked) {
-            icon.classList.remove("far");
-            icon.classList.add("fas", "text-red-600");
-          } else {
-            icon.classList.remove("fas", "text-red-600");
-            icon.classList.add("far");
-          }
-          buttonElement.innerHTML = `<i class="${icon.className} mr-1"></i>${likesCount}`;
-        }
-        
-        // Для img иконок (cards-container)
-        const img = buttonElement.querySelector('img');
-        if (img) {
-          img.src = isLiked ? 'image/like+.png' : 'image/like.png';
-          // Обновляем счетчик лайков
-          const likeCount = buttonElement.querySelector('.like-count');
-          if (likeCount) {
-            likeCount.textContent = likesCount;
-          }
-        }
-      }
-
-      // Наблюдаем за изменениями в контейнере постов для настройки новых кнопок лайков
-      const postsContainer = document.querySelector(".posts-container");
-      if (postsContainer) {
-        const observer = new MutationObserver(() => {
-          setupLikeButtons();
-        });
-        
-        observer.observe(postsContainer, {
-          childList: true,
-          subtree: true
-        });
-      }
+      // Вызываем инициализацию
+      initializeProfile();
       
-      // Наблюдаем за изменениями в cards-container
-      const cardsContainer = document.querySelector(".cards-container");
-      if (cardsContainer) {
-        const observer = new MutationObserver(() => {
-          setupLikeButtons();
-        });
-        
-        observer.observe(cardsContainer, {
-          childList: true,
-          subtree: true
-        });
-      }
-      
-      // Начальная настройка
-      setupLikeButtons();
-
-      // Плавная прокрутка
-      const postsContainerScroll = document.querySelector(".posts-container");
-      if (postsContainerScroll) {
-        postsContainerScroll.addEventListener("scroll", function () {
-          if (this.scrollTop > 50) {
-            this.classList.add("scrolled");
-          } else {
-            this.classList.remove("scrolled");
-          }
-        });
-      }
+      // Создаем навигационные кнопки
+      createNavigationButtons();
     </script>
   </body>
 </html>
