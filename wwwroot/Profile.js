@@ -105,9 +105,15 @@ function updateProfileStats(profileData) {
 
 // Получение username из URL параметра user
 export function getCurrentUsername() {
+  console.log('Текущий URL:', window.location.href);
+  console.log('Pathname:', window.location.pathname);
+  console.log('Search:', window.location.search);
+  
   // Получаем параметры из URL
   const urlParams = new URLSearchParams(window.location.search);
   const userParam = urlParams.get('user');
+  
+  console.log('Параметр user из URL:', userParam);
   
   if (userParam) {
     console.log('Найден параметр user в URL:', userParam);
@@ -123,7 +129,7 @@ export function getCurrentUsername() {
     return pathParts[usernameIndex];
   }
   
-  console.log('Username не найден');
+  console.log('Username не найден в URL параметрах или пути');
   return null;
 }
 
@@ -172,15 +178,20 @@ export async function updateProfileInfo(profileData) {
 }
 
 // Загрузка постов пользователя
-export async function loadUserPosts(profileUsername) {
+export async function loadUserPosts(username) {
   try {
-    console.log('loadUserPosts: Использую username из профиля:', profileUsername);
+    console.log('loadUserPosts: Использую username из профиля:', username);
     
-    const response = await fetch(`/api/Profile/${profileUsername}/posts`);
+    if (!username) {
+      throw new Error('Username не указан');
+    }
+    
+    const response = await fetch(`/api/Profile/${username}/posts`);
     console.log('получаем посты пользователя:', response.status);
+    
     if (!response.ok) {
-      console.error('Ошибка загрузки постов пользователя');
-      throw new Error('Ошибка загрузки постов пользователя');
+      console.error('Ошибка загрузки постов пользователя:', response.status, response.statusText);
+      throw new Error(`Ошибка загрузки постов пользователя: ${response.status}`);
     }
     
     const userPosts = await response.json();
@@ -192,6 +203,11 @@ export async function loadUserPosts(profileUsername) {
     return userPosts;
   } catch (error) {
     console.error('Ошибка при загрузке постов:', error);
+    // Показываем сообщение об ошибке в интерфейсе
+    const postsContainer = document.querySelector('.posts-container');
+    if (postsContainer) {
+      postsContainer.innerHTML = `<p class="text-red-500 text-center">Ошибка загрузки постов: ${error.message}</p>`;
+    }
     throw error;
   }
 }
@@ -224,8 +240,130 @@ function updatePostsUI(posts) {
   });
 }
 
+// Загрузка понравившихся постов
+export async function loadUserLikes(username) {
+  try {
+    console.log('loadUserLikes: Использую username из профиля:', username);
+    
+    if (!username) {
+      throw new Error('Username не указан');
+    }
+    
+    const response = await fetch(`/api/Profile/${username}/likes`);
+    console.log('получаем понравившиеся посты:', response.status);
+    
+    if (!response.ok) {
+      console.error('Ошибка загрузки понравившихся постов:', response.status, response.statusText);
+      throw new Error(`Ошибка загрузки понравившихся постов: ${response.status}`);
+    }
+    
+    const likedPosts = await response.json();
+    console.log('Понравившиеся посты:', likedPosts);
+    
+    // Обновляем интерфейс с понравившимися постами
+    updateLikesUI(likedPosts);
+    
+    return likedPosts;
+  } catch (error) {
+    console.error('Ошибка при загрузке понравившихся постов:', error);
+    // Показываем сообщение об ошибке в интерфейсе
+    const likesContainer = document.querySelector('.likes-container');
+    if (likesContainer) {
+      likesContainer.innerHTML = `<p class="text-red-500 text-center">Ошибка загрузки понравившихся постов: ${error.message}</p>`;
+    }
+    throw error;
+  }
+}
+
+// Загрузка избранных постов
+export async function loadUserFavorites(username) {
+  try {
+    console.log('loadUserFavorites: Использую username из профиля:', username);
+    
+    if (!username) {
+      throw new Error('Username не указан');
+    }
+    
+    const response = await fetch(`/api/Profile/${username}/favorites`);
+    console.log('получаем избранные посты:', response.status);
+    
+    if (!response.ok) {
+      console.error('Ошибка загрузки избранных постов:', response.status, response.statusText);
+      throw new Error(`Ошибка загрузки избранных постов: ${response.status}`);
+    }
+    
+    const favoritePosts = await response.json();
+    console.log('Избранные посты:', favoritePosts);
+    
+    // Обновляем интерфейс с избранными постами
+    updateFavoritesUI(favoritePosts);
+    
+    return favoritePosts;
+  } catch (error) {
+    console.error('Ошибка при загрузке избранных постов:', error);
+    // Показываем сообщение об ошибке в интерфейсе
+    const favoritesContainer = document.querySelector('.favorites-container');
+    if (favoritesContainer) {
+      favoritesContainer.innerHTML = `<p class="text-red-500 text-center">Ошибка загрузки избранных постов: ${error.message}</p>`;
+    }
+    throw error;
+  }
+}
+
+// Обновление интерфейса с понравившимися постами
+function updateLikesUI(posts) {
+  console.log('Updating likes UI with:', posts);
+  
+  // Находим контейнер для понравившихся постов
+  const likesContainer = document.querySelector('.likes-container');
+  
+  if (!likesContainer) {
+    console.warn('Контейнер для понравившихся постов не найден');
+    return;
+  }
+  
+  // Очищаем контейнер
+  likesContainer.innerHTML = '';
+  
+  if (!posts || posts.length === 0) {
+    likesContainer.innerHTML = '<p class="text-gray-500 text-center">Понравившихся постов пока нет</p>';
+    return;
+  }
+  
+  // Создаем карточки для каждого поста
+  posts.forEach(post => {
+    createPostElement(post, '.likes-container');
+  });
+}
+
+// Обновление интерфейса с избранными постами
+function updateFavoritesUI(posts) {
+  console.log('Updating favorites UI with:', posts);
+  
+  // Находим контейнер для избранных постов
+  const favoritesContainer = document.querySelector('.favorites-container');
+  
+  if (!favoritesContainer) {
+    console.warn('Контейнер для избранных постов не найден');
+    return;
+  }
+  
+  // Очищаем контейнер
+  favoritesContainer.innerHTML = '';
+  
+  if (!posts || posts.length === 0) {
+    favoritesContainer.innerHTML = '<p class="text-gray-500 text-center">Избранных постов пока нет</p>';
+    return;
+  }
+  
+  // Создаем карточки для каждого поста
+  posts.forEach(post => {
+    createPostElement(post, '.favorites-container');
+  });
+}
+
 // Создание элемента поста
-function createPostElement(post) {
+function createPostElement(post, containerSelector = '.posts-container') {
   // Используем существующую функцию создания карточки
   createEmptyPostCard(
     post.title || '',
@@ -234,7 +372,8 @@ function createPostElement(post) {
     post.likedByUser || false,
     post.userId,
     post.likesCount || 0,
-    post.username || 'Автор'
+    post.username || 'Автор',
+    containerSelector
   );
   
   // Возвращаем null, так как createEmptyPostCard сама добавляет карточку в DOM

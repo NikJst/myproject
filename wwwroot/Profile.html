@@ -112,17 +112,53 @@
 
     <!-- Контейнер с постами -->
     <main class="container mx-auto px-4 py-8">
+      <!-- Вкладки -->
+      <div class="bg-white rounded-lg shadow-md mb-6">
+        <div class="border-b border-gray-200">
+          <nav class="flex space-x-8 px-6" aria-label="Tabs">
+            <button class="tab-button py-4 px-1 border-b-2 border-blue-600 text-blue-600 font-medium text-sm" data-tab="posts">
+              Посты
+            </button>
+            <button class="tab-button py-4 px-1 border-b-2 border-transparent text-gray-600 hover:text-gray-800 font-medium text-sm" data-tab="likes">
+              Понравившиеся
+            </button>
+            <button class="tab-button py-4 px-1 border-b-2 border-transparent text-gray-600 hover:text-gray-800 font-medium text-sm" data-tab="favorites">
+              Избранное
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Контент вкладок -->
       <div class="bg-white rounded-lg shadow-md">
-        <!-- Заголовок секции постов -->
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h2 class="text-xl font-semibold text-gray-800">
-            Посты 
-          </h2>
+        <!-- Посты -->
+        <div id="posts-content" class="tab-content">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-800">Посты</h2>
+          </div>
+          <div class="posts-container p-6">
+            <!-- Посты будут добавлены динамически -->
+          </div>
         </div>
 
-        <!-- Контейнер с прокруткой для постов -->
-        <div class="posts-container p-6">
-          <!-- Посты будут добавлены динамически -->
+        <!-- Понравившиеся -->
+        <div id="likes-content" class="tab-content hidden">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-800">Понравившиеся посты</h2>
+          </div>
+          <div class="likes-container p-6">
+            <!-- Понравившиеся посты будут добавлены динамически -->
+          </div>
+        </div>
+
+        <!-- Избранное -->
+        <div id="favorites-content" class="tab-content hidden">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-800">Избранные посты</h2>
+          </div>
+          <div class="favorites-container p-6">
+            <!-- Избранные посты будут добавлены динамически -->
+          </div>
         </div>
       </div>
     </main>
