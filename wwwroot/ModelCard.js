@@ -6,6 +6,7 @@ export function createEmptyPostCard(
   userId,
   likesCount = 0, // Добавляем параметр для счетчика лайков
   username = "Автор", // Добавляем параметр для имени автора
+  containerSelector = null // Добавляем параметр для выбора контейнера
 ) {
   console.log(
     "createEmptyPostCard вызван с postId:",
@@ -14,16 +15,25 @@ export function createEmptyPostCard(
     likedByUser,
     "userId:",
     userId,
+    "containerSelector:",
+    containerSelector
   );
 
-  const cardsContainer = document.querySelector(".cards-container"); //====> находим контейнер для карточек
-  const postsContainer = document.querySelector(".posts-container"); //====> находим контейнер для постов
+  // Определяем, в какой контейнер добавлять карточку
+  let targetContainer;
+  if (containerSelector) {
+    targetContainer = document.querySelector(containerSelector);
+  } else {
+    // Если контейнер не указан, используем старую логику
+    const cardsContainer = document.querySelector(".cards-container");
+    const postsContainer = document.querySelector(".posts-container");
+    targetContainer = postsContainer || cardsContainer;
+  }
   
-  console.log("createEmptyPostCard: cardsContainer found:", !!cardsContainer);
-  console.log("createEmptyPostCard: postsContainer found:", !!postsContainer);
+  console.log("createEmptyPostCard: targetContainer found:", !!targetContainer);
   
-  if (!cardsContainer && !postsContainer) {
-    console.error("createEmptyPostCard: No containers found!");
+  if (!targetContainer) {
+    console.error("createEmptyPostCard: No target container found!");
     return;
   }
 
@@ -123,15 +133,7 @@ export function createEmptyPostCard(
     card.appendChild(authorDiv);
   }
   
-  // Добавляем карточку в оба контейнера, если они существуют
-  if (cardsContainer) {
-    const cardForCardsContainer = card.cloneNode(true);
-    cardsContainer.prepend(cardForCardsContainer);
-  }
-  
-  if (postsContainer) {
-    const cardForPostsContainer = card.cloneNode(true);
-    postsContainer.prepend(cardForPostsContainer); // Используем prepend для обратного порядка
-    console.log("Карточка добавлена в posts-container");
-  }
+  // Добавляем карточку в целевой контейнер
+  targetContainer.prepend(card); // Используем prepend для обратного порядка
+  console.log(`Карточка добавлена в контейнер: ${containerSelector || 'default'}`);
 }

@@ -165,16 +165,17 @@ public class ProfileService : IProfileService
 
         if (usernameUser != null)
         {
-            var likedPosts = await dbContext.Posts //коллекция постов
-            .Where(p => p.UserId == usernameUser.UserId)
+            var likedPosts = await dbContext.Likes //начинаем с таблицы лайков
+            .Where(l => l.UserId == usernameUser.UserId) //лайки пользователя
+            .Select(l => l.Post) //получаем посты через связь
             .Select(p => new UserPostDto
             {
                 UserId = p.UserId,
-                Username = usernameUser.Username,
+                Username = p.User.Username,
                 PostId = p.PostId,
                 Text = p.Text,
                 Title = p.Title,
-                LikedByUser = dbContext.Likes.Any(l => l.PostId == p.PostId && l.UserId == user.UserId),
+                LikedByUser = true, //пользователь точно лайкнул этот пост
                 // IsGuest = false
                 // CreatedAt = p.CreatedAt
             })
