@@ -36,8 +36,24 @@ export function createProfileButton() {
   profileButton.textContent = "Профиль";
 
   // Обработчик клика для перехода на страницу профиля
-  profileButton.addEventListener("click", function () {
-    window.location.href = "/Profile.html";
+  profileButton.addEventListener("click", async function () {
+    try {
+      // Получаем текущего пользователя
+      const response = await fetch("/User");
+      if (response.ok) {
+        const user = await response.json();
+        const username = user.username || user.name;
+        // Переходим на профиль с параметром user
+        window.location.href = `/Profile.html?user=${username}`;
+      } else {
+        // Если не удалось получить пользователя, переходим без параметра
+        window.location.href = "/Profile.html";
+      }
+    } catch (error) {
+      console.error("Ошибка при получении текущего пользователя:", error);
+      // В случае ошибки переходим без параметра
+      window.location.href = "/Profile.html";
+    }
   });
 
   // Добавляем кнопку в контейнер
