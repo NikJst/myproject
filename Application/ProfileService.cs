@@ -167,14 +167,13 @@ public class ProfileService : IProfileService
         {
             var likedPosts = await dbContext.Likes //начинаем с таблицы лайков
             .Where(l => l.UserId == usernameUser.UserId) //лайки пользователя
-            .Select(l => l.Post) //получаем посты через связь
             .Select(p => new UserPostDto
             {
                 UserId = p.UserId,
                 Username = p.User.Username,
                 PostId = p.PostId,
-                Text = p.Text,
-                Title = p.Title,
+                Text = p.Post.Text,
+                Title = p.Post.Title,
                 LikedByUser = true, //пользователь точно лайкнул этот пост
                 // IsGuest = false
                 // CreatedAt = p.CreatedAt
