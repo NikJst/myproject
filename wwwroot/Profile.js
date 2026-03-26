@@ -72,6 +72,7 @@ function updateProfileUI(profileData) {
 // Обновление статистики профиля
 function updateProfileStats(profileData) {
   console.log('Updating profile stats with postCount:', profileData.postCount);
+  console.log('Updating profile stats with likesCount:', profileData.likesCount);
   
   // Находим элементы по тексту в дочерних элементах для большей надежности
   const statsContainers = document.querySelectorAll('.text-center');
@@ -91,8 +92,8 @@ function updateProfileStats(profileData) {
         console.log('Updated posts count to:', value.textContent);
         break;
       case 'Понравившиеся':
-        // Заглушка, можно добавить likeCount в ProfileDto
-        value.textContent = '14';
+        value.textContent = profileData.likesCount || '0';
+        console.log('Updated likes count to:', value.textContent);
         break;
       case 'Избранное':
         // Заглушка

@@ -17,18 +17,6 @@ public class ProfileController : ControllerBase
         this.logger = logger;
         this.profileService = profileService;
     }
-
-    [HttpPatch]
-    [Route("edit")] //username может изменяться далее так что лучше не использовать его в пути
-    public async Task<IActionResult> PatchInfo([FromBody] ProfileInfoDto profileDto)
-    {
-        //предположим что пользователь уже авторизован
-        var user = await userService.GetOrCreateUser(HttpContext);
-        var updatedProfile = await profileService.PatchInfo(profileDto, user);
-        return Ok(updatedProfile);
-    }
-
-    //------------>
     [HttpGet]
     [Route("{username}")]
     public async Task<IActionResult> GetUserProfileDirect([FromRoute] string username)
@@ -40,7 +28,17 @@ public class ProfileController : ControllerBase
         return Ok(profileInfo);
     }
 
-    //------------>
+    [HttpPatch]
+    [Route("edit")] //username может изменяться далее так что лучше не использовать его в пути
+    public async Task<IActionResult> PatchInfo([FromBody] ProfileInfoDto profileDto)
+    {
+        //предположим что пользователь уже авторизован
+        var user = await userService.GetOrCreateUser(HttpContext);
+        var updatedProfile = await profileService.PatchInfo(profileDto, user);
+        return Ok(updatedProfile);
+    }
+
+    //===================>
     [HttpGet]
     [Route("{username}/posts")]
     public async Task<IActionResult> GetUserPosts([FromRoute] string username)
@@ -51,18 +49,31 @@ public class ProfileController : ControllerBase
         var userPosts = await profileService.GetUserPosts(username, user);
         return Ok(userPosts);
     }
-    //дальше по аналогии лайки, закладки и пр. 
-    //к прмимеру
-    /* 
-    [Authorize] // только авторизованные
-    [HttpGet("{username}/likes/drafts")]
+
+
+
+    //===================>
+    // [Authorize] только авторизованные
+    [HttpGet]
+    [Route("{username}/likes")]
     public async Task<IActionResult> GetLikes([FromRoute] string username)
     {
         //предположим что пользователь уже авторизован
         var user = await userService.GetOrCreateUser(HttpContext);
 
-        var likes = await profileService.GetLikes(username, user);
+        var likedPosts = await profileService.GetLikesPosts(username, user);
+        return Ok(likedPosts);
+    }
+
+
+    [HttpGet("{username}/favorites")]
+    public async Task<IActionResult> GetFavorites([FromRoute] string username)
+    {
+        //предположим что пользователь уже авторизован
+        var user = await userService.GetOrCreateUser(HttpContext);
+
+        var likes = await profileService.GetFavoritesPosts(username, user);
         return Ok(likes);
     }
-    */
+
 }

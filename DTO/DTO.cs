@@ -45,9 +45,9 @@ public class ViewUsersListDto //для отображения списка по�
 }
 
 
-public class ProfileInfoDto //DTO for displaying profile
+public class ProfileInfoDto //DTO для отображения профиля
 {
-    public string Username { get; set; }
+    public required string Username { get; set; }
     public Guid UserId { get; set; } //---------для проверки прав доступа
     //     public string? AvatarUrl { get; set; }
     public string? Header { get; set; }
@@ -56,10 +56,10 @@ public class ProfileInfoDto //DTO for displaying profile
 
     // public bool IsGuest { get; set; } 
     public int PostCount { get; set; } // добавляем счетчик постов
-                                       //     // public Guid GuidId { get; set; }
-                                       //     public int LikeCount { get; set; }
-                                       //     public DateTime CreatedAt { get; set; }
-                                       //     public bool IsOnline { get; set; } = false;
+    public int LikesCount { get; set; } // добавляем счетчик лайков
+                                        //     // public Guid GuidId { get; set; }
+                                        //     // public DateTime CreatedAt { get; set; }
+                                        //     public bool IsOnline { get; set; } = false;
     public List<Post> Posts { get; set; } = [];
     //     public List<Like> Likes { get; set; } = []; // пока не уверен
 }
