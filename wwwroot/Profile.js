@@ -213,8 +213,8 @@ export async function loadUserPosts(username) {
 }
 
 // Обновление интерфейса с постами
-function updatePostsUI(posts) {
-  console.log('Updating posts UI with:', posts);
+function updatePostsUI(postsResponse) {
+  console.log('Updating posts UI with:', postsResponse);
   
   // Находим контейнер для постов
   const postsContainer = document.querySelector('.posts-container') || 
@@ -227,6 +227,9 @@ function updatePostsUI(posts) {
   
   // Очищаем контейнер
   postsContainer.innerHTML = '';
+  
+  // Получаем массив постов из PagedResponse
+  const posts = postsResponse.items || postsResponse;
   
   if (!posts || posts.length === 0) {
     postsContainer.innerHTML = '<p class="text-gray-500 text-center">У пользователя пока нет постов</p>';

@@ -18,11 +18,11 @@ public class UserController : Controller
         return Ok(user);
     }
 
-    [HttpGet("allUsers")]
+    /* [HttpGet("allUsers")]
     public async Task<IActionResult> GetAllUsers()
     {
         var users = await _userService.GetAllUsers();
         return Ok(users);
-    }
+    }*/
 
 }

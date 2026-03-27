@@ -19,18 +19,18 @@ public class ProfileController : ControllerBase
     }
     [HttpGet]
     [Route("{username}")]
-    public async Task<IActionResult> GetUserProfileDirect([FromRoute] string username)
+    public async Task<IActionResult> GetTargetProfile([FromRoute] string username)
     {
         //предположим что пользователь уже авторизован
         var user = await userService.GetOrCreateUser(HttpContext);
 
-        var profileInfo = await profileService.GetProfileInfo(username, user);
+        var profileInfo = await profileService.GetTargetProfile(username, user);
         return Ok(profileInfo);
     }
 
     [HttpPatch]
-    [Route("edit")] //username может изменяться далее так что лучше не использовать его в пути
-    public async Task<IActionResult> PatchInfo([FromBody] ProfileInfoDto profileDto)
+    [Route("{username}/edit")] //username может изменяться далее так что лучше не использовать его в пути
+    public async Task<IActionResult> PatchInfo([FromRoute] string username, [FromBody] ProfileInfoDto profileDto)
     {
         //предположим что пользователь уже авторизован
         var user = await userService.GetOrCreateUser(HttpContext);
@@ -46,7 +46,7 @@ public class ProfileController : ControllerBase
         //предположим что пользователь уже авторизован
         var user = await userService.GetOrCreateUser(HttpContext);
 
-        var userPosts = await profileService.GetUserPosts(username, user);
+        var userPosts = await profileService.GetTargetUserPosts(username, user);
         return Ok(userPosts);
     }
 
@@ -66,14 +66,14 @@ public class ProfileController : ControllerBase
     }
 
 
-    [HttpGet("{username}/favorites")]
-    public async Task<IActionResult> GetFavorites([FromRoute] string username)
-    {
-        //предположим что пользователь уже авторизован
-        var user = await userService.GetOrCreateUser(HttpContext);
+    // [HttpGet("{username}/favorites")]
+    // public async Task<IActionResult> GetFavorites([FromRoute] string username)
+    // {
+    //     //предположим что пользователь уже авторизован
+    //     var user = await userService.GetOrCreateUser(HttpContext);
 
-        var likes = await profileService.GetFavoritesPosts(username, user);
-        return Ok(likes);
-    }
+    //     var likes = await profileService.GetFavoritesPosts(username, user);
+    //     return Ok(likes);
+    // }
 
 }

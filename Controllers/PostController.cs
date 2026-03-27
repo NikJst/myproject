@@ -17,23 +17,26 @@ public class PostController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreatePost([FromBody] CreatePostDto request)
+    public async Task<IActionResult> CreatePost([FromBody] ViewPostsDto request)
     {
 
         try
         {
             var user = await _userService.GetOrCreateUser(HttpContext);
             var post = await _postService.CreatePostAsync(request.Text, request.Title, user.UserId);
-            System.Console.WriteLine(post.PostId.ToString());
 
             _logger.LogInformation($"Post создан with user ID: {user.UserId}");
 
-            return Ok(new CreatePostDto
+            return Ok(new ViewPostsDto
             {
                 Text = request.Text,
                 PostId = post.PostId,
                 Title = request.Title,
                 UserId = user.UserId,// взяли id из сессии
+                Username = user.Username,
+                LikedByUser = false, // Только что созданный пост не может быть лайкнут тем же пользователем
+                LikesCount = 0, // У нового поста 0 лайков
+                // IsGuest = user.Username.StartsWith("Guest_") // Определяем гость ли пользователь
             });
         }
         catch (Exception ex)

@@ -47,7 +47,9 @@ async function createPost() {
       body: JSON.stringify({
         title: "Новый пост",
         text: "Пример текста поста",
-        // userId не указываем, сервер сам подставит текущего гостя из куков
+        userId: null, // Будет заполнено на сервере
+        username: null, // Будет заполнено на сервере
+        // likedByUser и likesCount не нужны при создании
       }),
     });
 
@@ -61,7 +63,7 @@ async function createPost() {
       newPost.postId,//==
       newPost.likedByUser,
       newPost.userId,
-      0, // Новый пост всегда имеет 0 лайков
+      newPost.likesCount, // Используем значение из ответа сервера
       newPost.username // Передаем имя автора
     );
   } catch (error) {

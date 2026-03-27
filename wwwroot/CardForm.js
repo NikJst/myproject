@@ -147,7 +147,9 @@ async function createPostWithFormData(postData) {
       body: JSON.stringify({
         title: postData.title,
         text: postData.text,
-        // userId не указываем, сервер сам подставит текущего гостя из куков
+        // userId: postData.userId || null, // Будет заполнено на сервере
+        // username: postData.username || null, // Будет заполнено на сервере
+        // likedByUser и likesCount не нужны при создании
       }),
     });
 
@@ -155,16 +157,42 @@ async function createPostWithFormData(postData) {
 
     const newPost = await response.json(); //newpost это ортвет
     console.log("Пост создан:", newPost);
+    console.log("Поля ответа:", {
+      postId: newPost.postId,
+      title: newPost.title,
+      text: newPost.text,
+      likedByUser: newPost.likedByUser,
+      userId: newPost.userId,
+      likesCount: newPost.likesCount,
+      username: newPost.username
+    });
 
     // Импортируем createEmptyPostCard и создаем карточку
     const { createEmptyPostCard } = await import("./ModelCard.js");
-    createEmptyPostCard(
-      postData.title,
-      postData.text,
-      newPost.guidId,
-      newPost.likedByUser,
-      newPost.userId,
-    );
+    
+    try {
+      createEmptyPostCard(
+        postData.title,
+        postData.text,
+        newPost.postId,
+        newPost.likedByUser,
+        newPost.userId,
+        newPost.likesCount, // Используем значение из ответа сервера
+        newPost.username
+      );
+      console.log("Карточка поста успешно создана");
+    } catch (cardError) {
+      console.error("Ошибка при создании карточки:", cardError);
+      console.error("Параметры для createEmptyPostCard:", {
+        title: postData.title,
+        text: postData.text,
+        postId: newPost.postId,
+        likedByUser: newPost.likedByUser,
+        userId: newPost.userId,
+        likesCount: newPost.likesCount,
+        username: newPost.username
+      });
+    }
   } catch (error) {
     console.error("Ошибка при создании карточки:", error);
   }
