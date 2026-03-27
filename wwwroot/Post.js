@@ -1,12 +1,17 @@
 import { createEmptyPostCard } from "./ModelCard.js";
 import { togglePostForm } from "./CardForm.js";
 
-// Функция для получения всех постов с сервера
-async function loadAllPosts() {
+// Глобальные переменные для пагинации
+let currentPage = 1;
+let pageSize = 10;
+let totalPages = 1;
+
+// Функция для получения всех постов с сервера с пагинацией
+async function loadAllPosts(pageNumber = 1, pageSizeParam = 10) {
   console.log("loadAllPosts: Starting to load posts...");
   try {
-    // Используем относительный URL вместо абсолютного
-    const response = await fetch("/api/Post");
+    // Используем query параметры для пагинации
+    const response = await fetch(`/api/Post?PageNumber=${pageNumber}&PageSize=${pageSizeParam}`);
     console.log("loadAllPosts: Response status:", response.status);
     
     if (!response.ok) {
@@ -15,22 +20,35 @@ async function loadAllPosts() {
       throw new Error(`Ошибка при получении постов: ${response.status}`);
     }
 
-    const posts = await response.json();
-    console.log("loadAllPosts: Received posts:", posts);
+    const pagedResponse = await response.json();
+    console.log("loadAllPosts: Received paged response:", pagedResponse);
+
+    // Обновляем глобальные переменные пагинации
+    currentPage = pagedResponse.meta.pageNumber;
+    totalPages = Math.ceil(pagedResponse.meta.totalCount / pagedResponse.meta.pageSize);
+    
+    // Очищаем контейнер перед загрузкой новых постов
+    const cardsContainer = document.querySelector(".cards-container");
+    if (cardsContainer) {
+      cardsContainer.innerHTML = '';
+    }
 
     // Для каждого поста создаем карточку
-    posts.forEach((post) => {
+    pagedResponse.items.forEach((post) => {
       console.log("loadAllPosts: Creating card for post:", post);
       createEmptyPostCard(
         post.title,
         post.text,
-        post.postId,//==
+        post.postId,
         post.likedByUser,
         post.userId,
-        post.likesCount, // Добавляем количество лайков
-        post.username // Передаем имя автора
+        post.likesCount,
+        post.username
       );
     });
+    
+    // Обновляем кнопки пагинации
+    updatePaginationControls();
     
     console.log("loadAllPosts: All cards created successfully");
   } catch (error) {
@@ -90,7 +108,60 @@ document.addEventListener("DOMContentLoaded", () => {
   // }
 
 
+// Функция для обновления кнопок пагинации
+function updatePaginationControls() {
+  const paginationContainer = document.querySelector(".pagination-container");
+  if (!paginationContainer) return;
+
+  paginationContainer.innerHTML = '';
+
+  // Кнопка "Предыдущая"
+  const prevButton = document.createElement("button");
+  prevButton.textContent = "← Предыдущая";
+  prevButton.className = "pagination-btn";
+  prevButton.disabled = currentPage <= 1;
+  prevButton.addEventListener("click", () => {
+    if (currentPage > 1) {
+      loadAllPosts(currentPage - 1, pageSize);
+    }
+  });
+
+  // Информация о странице
+  const pageInfo = document.createElement("span");
+  pageInfo.className = "pagination-info";
+  pageInfo.textContent = `Страница ${currentPage} из ${totalPages}`;
+
+  // Кнопка "Следующая"
+  const nextButton = document.createElement("button");
+  nextButton.textContent = "Следующая →";
+  nextButton.className = "pagination-btn";
+  nextButton.disabled = currentPage >= totalPages;
+  nextButton.addEventListener("click", () => {
+    if (currentPage < totalPages) {
+      loadAllPosts(currentPage + 1, pageSize);
+    }
+  });
+
+  paginationContainer.appendChild(prevButton);
+  paginationContainer.appendChild(pageInfo);
+  paginationContainer.appendChild(nextButton);
+}
+
+// Функция для создания контейнера пагинации
+function createPaginationContainer() {
+  const cardsContainer = document.querySelector(".cards-container");
+  if (!cardsContainer) return;
+
+  // Проверяем, существует ли уже контейнер пагинации
+  let paginationContainer = document.querySelector(".pagination-container");
+  if (!paginationContainer) {
+    paginationContainer = document.createElement("div");
+    paginationContainer.className = "pagination-container";
+    cardsContainer.parentNode.insertBefore(paginationContainer, cardsContainer.nextSibling);
+  }
+}
+
 // Экспортируем функции для использования в других модулях
-export { loadAllPosts, createPost, createEmptyPostCard };
+export { loadAllPosts, createPost, createEmptyPostCard, updatePaginationControls, createPaginationContainer };
 
 

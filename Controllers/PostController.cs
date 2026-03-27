@@ -46,20 +46,20 @@ public class PostController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllPosts()
+    public async Task<IActionResult> GetAllPosts([FromQuery] int? PageNumber, [FromQuery] int? PageSize)
     {
         var user = await _userService.GetOrCreateUser(HttpContext);
 
-        var dto = await _postService.GetAllPostsForUserAsync(user.UserId);
+        var dto = _postService.GetAllPosts(PageNumber ?? 1, PageSize ?? 10, user.UserId);
         return Ok(dto);
     }
 
 
     [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetUserPosts(Guid userId, [FromQuery] int skip = 0, [FromQuery] int take = 10)
+    public async Task<IActionResult> GetUserPosts(Guid userId)
     {
-        var dto = await _postService.GetAllPostsForUserAsync(userId);
-        return Ok(dto);
+        var pagedResult = await _postService.GetAllPostsForUserAsync(userId);
+        return Ok(pagedResult);
     }
 
     [HttpDelete("{postId}")]

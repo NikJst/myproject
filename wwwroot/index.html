@@ -67,6 +67,9 @@
         </div>
       </div>
     </div>
+    
+    <!-- контейнер для пагинации -->
+    <div class="pagination-container"></div>
     <!-- контейнер для кнопок действий -->
     <div class="action-buttons-container"></div>
     <script src="script.js"></script>
@@ -78,13 +81,14 @@
     <script type="module">
       import { createAddPostButton, createPostForm, togglePostForm } from "./CardForm.js";
       import { createNavigationButtons } from "./NavigationButtons.js";
-      import { loadAllPosts } from "./Post.js";
+      import { loadAllPosts, createPaginationContainer } from "./Post.js";
       
       // Создаем кнопки при загрузке страницы
       document.addEventListener("DOMContentLoaded", function () {
         createAddPostButton();
         createPostForm();
         createNavigationButtons();
+        createPaginationContainer();
         
         // Загружаем все посты при загрузке главной страницы
         loadAllPosts();

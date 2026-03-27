@@ -1,13 +1,15 @@
 namespace Testing3;
 using Testing3.DTO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Components.Forms;
 
 public interface IPostService
 {
     Task<Post> CreatePostAsync(string text, string? title = null, Guid? userId = null); // дописать dto на проверку гостя для черновика
     void DeletePost(Guid postId);
     Post? GetPost(Guid postId);
-    List<Post> GetAllPosts();
+    PagedResponse<ViewPostsDto> GetAllPosts(int PageNumber, int PageSize, Guid? userId = null);
     Task<List<ViewPostsDto>> GetAllPostsForUserAsync(Guid userId);
 }
 public class PostService : IPostService
@@ -33,10 +35,37 @@ public class PostService : IPostService
         return _dbcontext.Posts.FirstOrDefault(p => p.PostId == postId);
     }
 
-    public List<Post> GetAllPosts()
+    public PagedResponse<ViewPostsDto> GetAllPosts(int PageNumber, int PageSize, Guid? userId = null)
     {
         _logger.LogInformation("Getting all posts");
-        return _dbcontext.Posts.ToList();
+
+        var items = _dbcontext.Posts
+        .Select(p => new ViewPostsDto
+        {
+            UserId = p.UserId,
+            PostId = p.PostId,
+            Text = p.Text,
+            Title = p.Title,
+            LikedByUser = p.Likes.Any(l => l.UserId == userId),
+            LikesCount = p.Likes.Count,
+            Username = p.User.Username
+        })
+        // .GroupBy(p => p.UserId) вот так можно сгруппировать по пользователю
+        .Skip((PageNumber - 1) * PageSize)
+        .Take(PageSize)
+        .ToList();
+
+        return new PagedResponse<ViewPostsDto>
+        {
+            Items = items,
+            Meta = new MetaData
+            {
+                TotalCount = _dbcontext.Posts.Count(),
+                PageNumber = PageNumber,
+                PageSize = PageSize
+            }
+
+        };
     }
 
     public Task<List<ViewPostsDto>> GetAllPostsForUserAsync(Guid userId)
@@ -55,9 +84,6 @@ public class PostService : IPostService
             LikesCount = p.Likes.Count,  // Добавляем подсчет лайков
             Username = p.User.Username  // Добавляем имя автора
 
-            //то что было LikedByUser = _dbcontext.Likes.Any(l => l.UserId == userId && l.PostId == p.PostId)
-
-            // ===> то что стало | теперь мы обращаемся к посту, заходим в его в лайки, потом находим соответствие если среди этих лайков тот, который поставил определённый пользователь(userid == userid) 
             // Мы больше не лезем в _dbcontext.Likes вручную!
             // Мы спрашиваем СУБЪЕКТИВНО у поста: "Есть ли среди ТВОИХ лайков мой?
         })

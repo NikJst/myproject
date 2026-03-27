@@ -418,3 +418,129 @@ footer {
 .cancel-btn:hover {
   background-color: #545b62;
 }
+
+/* Стили для пагинации */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 1rem;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  background-color: #ccc;
+  color: #000000;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 32px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: "Roboto", Arial, sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+  min-width: 120px;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.pagination-btn:disabled {
+  background-color: #e0e0e0;
+  color: #999999;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.pagination-info {
+  font-size: 16px;
+  color: #666666;
+  font-family: "Roboto", Arial, sans-serif;
+  padding: 0 1rem;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .pagination-container {
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding: 0.5rem;
+  }
+  
+  .pagination-btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    min-width: 100px;
+  }
+  
+  .pagination-info {
+    font-size: 14px;
+    padding: 0 0.5rem;
+  }
+}
+
+/* Стили для пагинации */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 1rem;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  background-color: #ccc;
+  color: #000000;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 32px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: "Roboto", Arial, sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+  min-width: 120px;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.pagination-btn:disabled {
+  background-color: #e0e0e0;
+  color: #999999;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.pagination-info {
+  font-size: 16px;
+  color: #666666;
+  font-family: "Roboto", Arial, sans-serif;
+  padding: 0 1rem;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .pagination-container {
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding: 0.5rem;
+  }
+  
+  .pagination-btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    min-width: 100px;
+  }
+  
+  .pagination-info {
+    font-size: 14px;
+    padding: 0 0.5rem;
+  }
+}
