@@ -56,7 +56,7 @@ public class PostController : ControllerBase
 
 
     [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetUserPosts(Guid userId)
+    public async Task<IActionResult> GetUserPosts(Guid userId, [FromQuery] int skip = 0, [FromQuery] int take = 10)
     {
         var dto = await _postService.GetAllPostsForUserAsync(userId);
         return Ok(dto);
