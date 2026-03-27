@@ -115,9 +115,13 @@ function updatePaginationControls() {
 
   paginationContainer.innerHTML = '';
 
+  // Создаем внутренний контейнер для кнопок пагинации
+  const innerContainer = document.createElement("div");
+  innerContainer.className = "pagination-controls-inner";
+
   // Кнопка "Предыдущая"
   const prevButton = document.createElement("button");
-  prevButton.textContent = "← Предыдущая";
+  prevButton.textContent = "<=";
   prevButton.className = "pagination-btn";
   prevButton.disabled = currentPage <= 1;
   prevButton.addEventListener("click", () => {
@@ -129,11 +133,11 @@ function updatePaginationControls() {
   // Информация о странице
   const pageInfo = document.createElement("span");
   pageInfo.className = "pagination-info";
-  pageInfo.textContent = `Страница ${currentPage} из ${totalPages}`;
+  pageInfo.textContent = `${currentPage} из ${totalPages}`;
 
   // Кнопка "Следующая"
   const nextButton = document.createElement("button");
-  nextButton.textContent = "Следующая →";
+  nextButton.textContent = "=>";
   nextButton.className = "pagination-btn";
   nextButton.disabled = currentPage >= totalPages;
   nextButton.addEventListener("click", () => {
@@ -142,9 +146,13 @@ function updatePaginationControls() {
     }
   });
 
-  paginationContainer.appendChild(prevButton);
-  paginationContainer.appendChild(pageInfo);
-  paginationContainer.appendChild(nextButton);
+  // Добавляем кнопки во внутренний контейнер
+  innerContainer.appendChild(prevButton);
+  innerContainer.appendChild(pageInfo);
+  innerContainer.appendChild(nextButton);
+
+  // Добавляем внутренний контейнер в основной контейнер пагинации
+  paginationContainer.appendChild(innerContainer);
 }
 
 // Функция для создания контейнера пагинации

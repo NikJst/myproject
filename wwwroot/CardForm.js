@@ -227,7 +227,7 @@ export function createAddPostButton() {
   // Создаем кнопку добавления поста
   const addPostButton = document.createElement("button");
   addPostButton.className = "add-post-btn";
-  addPostButton.textContent = "+ Пост";
+  addPostButton.textContent = "Пост";
 
   // Обработчик клика для открытия формы создания поста
   addPostButton.addEventListener("click", function () {
