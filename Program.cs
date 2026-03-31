@@ -1,6 +1,6 @@
 ﻿using Testing3;
 using Testing3.Application;
-using Microsoft.OpenApi;
+using Testing3.ApplicatOnline;
 using Serilog;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +21,10 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILikeService, LikeService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
+
+builder.Services.AddScoped<IOnlineService, OnlineService>();
+
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

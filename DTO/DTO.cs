@@ -9,6 +9,7 @@ public class ViewPostsDto //для отображения всех постов
     public int LikesCount { get; set; }  // счетчик для каждой карточки
     // public bool IsGuest { get; set; }
     public string? Username { get; set; } // Добавляем имя автора
+    public bool IsOnline { get; set; } = false;
 }
 // public class CreatePostDto //для создания постов
 // {

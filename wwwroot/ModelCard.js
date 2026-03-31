@@ -6,6 +6,7 @@ export function createEmptyPostCard(
   userId,
   likesCount = 0, // Добавляем параметр для счетчика лайков
   username = "Автор", // Добавляем параметр для имени автора
+  isOnline = false, // Добавляем параметр для онлайн-статуса
   containerSelector = null // Добавляем параметр для выбора контейнера
 ) {
   console.log(
@@ -15,6 +16,8 @@ export function createEmptyPostCard(
     likedByUser,
     "userId:",
     userId,
+    "isOnline:",
+    isOnline,
     "containerSelector:",
     containerSelector
   );
@@ -120,15 +123,42 @@ export function createEmptyPostCard(
   card.appendChild(textBlock);
   card.appendChild(buttonsBottom);
   
-  // Добавляем имя автора внизу карточки
+  // Добавляем имя автора и онлайн-статус внизу карточки
   if (username && username !== "Автор") {
     const authorDiv = document.createElement("div");
     authorDiv.classList.add("author-info");
     authorDiv.style.fontSize = "12px";
     authorDiv.style.color = "#666";
     authorDiv.style.marginTop = "8px";
+    authorDiv.style.display = "flex";
+    authorDiv.style.alignItems = "center";
+    authorDiv.style.gap = "5px";
     
-    authorDiv.innerHTML = `Автор: <a href="/Profile.html?user=${username}" style="color: #666; text-decoration: none;">${username}</a>`;
+    // Создаем индикатор онлайн-статуса
+    const onlineIndicator = document.createElement("span");
+    onlineIndicator.style.width = "8px";
+    onlineIndicator.style.height = "8px";
+    onlineIndicator.style.borderRadius = "50%";
+    onlineIndicator.style.display = "inline-block";
+    
+    if (isOnline) {
+      onlineIndicator.style.backgroundColor = "#4CAF50"; // Зеленый для онлайн
+      onlineIndicator.title = "В сети";
+    } else {
+      onlineIndicator.style.backgroundColor = "#9E9E9E"; // Серый для оффлайн
+      onlineIndicator.title = "Не в сети";
+    }
+    
+    authorDiv.appendChild(onlineIndicator);
+    
+    // Добавляем ссылку на профиль автора
+    const authorLink = document.createElement("a");
+    authorLink.href = `/Profile.html?user=${username}`;
+    authorLink.style.color = "#666";
+    authorLink.style.textDecoration = "none";
+    authorLink.textContent = username;
+    
+    authorDiv.appendChild(authorLink);
     
     card.appendChild(authorDiv);
   }

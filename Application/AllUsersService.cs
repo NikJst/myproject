@@ -6,6 +6,7 @@ namespace Testing3;
 public interface IUserService
 {
     Task<User> GetOrCreateUser(HttpContext context);
+    Guid? GetUserIdFromCookie(HttpContext context);
     // Task<ViewUsersListDto> GetAllUsers();
 }
 public class UserService : IUserService
@@ -47,6 +48,16 @@ public class UserService : IUserService
 
         return user; //целый обьект для использования в других методах
 
+    }
+
+    public Guid? GetUserIdFromCookie(HttpContext httpcontext)
+    {
+        var cookie = httpcontext.Request.Cookies["GuestId"];
+        if (cookie != null && Guid.TryParse(cookie, out var userId))
+        {
+            return userId;
+        }
+        return null;
     }
 
     //----не помню делал ли я сам 
