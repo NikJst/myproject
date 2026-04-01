@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Testing3;
 public class User
 {

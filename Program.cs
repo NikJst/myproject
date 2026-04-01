@@ -1,6 +1,5 @@
 ﻿using Testing3;
 using Testing3.Application;
-using Testing3.ApplicatOnline;
 using Serilog;
 using Microsoft.EntityFrameworkCore;
 

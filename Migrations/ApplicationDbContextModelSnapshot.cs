@@ -38,7 +38,7 @@ namespace Testing3.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Likes");
+                    b.ToTable("Likes", (string)null);
                 });
 
             modelBuilder.Entity("Testing3.Post", b =>
@@ -64,7 +64,7 @@ namespace Testing3.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("Testing3.User", b =>
@@ -104,7 +104,7 @@ namespace Testing3.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Testing3.Like", b =>

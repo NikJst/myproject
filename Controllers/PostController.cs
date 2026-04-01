@@ -36,6 +36,7 @@ public class PostController : ControllerBase
                 Username = user.Username,
                 LikedByUser = false, // Только что созданный пост не может быть лайкнут тем же пользователем
                 LikesCount = 0, // У нового поста 0 лайков
+                CreatedAt = post.CreatedAt,
                 // IsGuest = user.Username.StartsWith("Guest_") // Определяем гость ли пользователь
             });
         }

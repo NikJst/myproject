@@ -7,6 +7,7 @@ export function createEmptyPostCard(
   likesCount = 0, // Добавляем параметр для счетчика лайков
   username = "Автор", // Добавляем параметр для имени автора
   isOnline = false, // Добавляем параметр для онлайн-статуса
+  createdAt = null, // Добавляем параметр для даты создания
   containerSelector = null // Добавляем параметр для выбора контейнера
 ) {
   console.log(
@@ -18,6 +19,8 @@ export function createEmptyPostCard(
     userId,
     "isOnline:",
     isOnline,
+    "createdAt:",
+    createdAt,
     "containerSelector:",
     containerSelector
   );
@@ -123,29 +126,19 @@ export function createEmptyPostCard(
   card.appendChild(textBlock);
   card.appendChild(buttonsBottom);
   
-  // Добавляем имя автора и онлайн-статус внизу карточки
+  // Добавляем имя автора, онлайн-статус и дату создания внизу карточки
   if (username && username !== "Автор") {
     const authorDiv = document.createElement("div");
     authorDiv.classList.add("author-info");
-    authorDiv.style.fontSize = "12px";
-    authorDiv.style.color = "#666";
-    authorDiv.style.marginTop = "8px";
-    authorDiv.style.display = "flex";
-    authorDiv.style.alignItems = "center";
-    authorDiv.style.gap = "5px";
     
     // Создаем индикатор онлайн-статуса
     const onlineIndicator = document.createElement("span");
-    onlineIndicator.style.width = "8px";
-    onlineIndicator.style.height = "8px";
-    onlineIndicator.style.borderRadius = "50%";
-    onlineIndicator.style.display = "inline-block";
-    
+    onlineIndicator.classList.add("online-indicator");
     if (isOnline) {
-      onlineIndicator.style.backgroundColor = "#4CAF50"; // Зеленый для онлайн
+      onlineIndicator.classList.add("online");
       onlineIndicator.title = "В сети";
     } else {
-      onlineIndicator.style.backgroundColor = "#9E9E9E"; // Серый для оффлайн
+      onlineIndicator.classList.add("offline");
       onlineIndicator.title = "Не в сети";
     }
     
@@ -154,16 +147,42 @@ export function createEmptyPostCard(
     // Добавляем ссылку на профиль автора
     const authorLink = document.createElement("a");
     authorLink.href = `/Profile.html?user=${username}`;
-    authorLink.style.color = "#666";
-    authorLink.style.textDecoration = "none";
     authorLink.textContent = username;
     
     authorDiv.appendChild(authorLink);
     
+    // Добавляем дату создания, если она есть
+    if (createdAt) {
+      const dateSpan = document.createElement("span");
+      dateSpan.classList.add("post-date");
+      
+      // Форматируем дату
+      const date = new Date(createdAt);
+      const now = new Date();
+      const diffTime = Math.abs(now - date);
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays === 0) {
+        // Сегодня
+        dateSpan.textContent = `сегодня в ${date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}`;
+      } else if (diffDays === 1) {
+        // Вчера
+        dateSpan.textContent = `вчера в ${date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}`;
+      } else if (diffDays < 7) {
+        // На этой неделе
+        dateSpan.textContent = `${diffDays} дней назад`;
+      } else {
+        // Старые посты
+        dateSpan.textContent = date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: '2-digit' });
+      }
+      
+      authorDiv.appendChild(dateSpan);
+    }
+    
     card.appendChild(authorDiv);
   }
-  
   // Добавляем карточку в целевой контейнер
   targetContainer.prepend(card); // Используем prepend для обратного порядка
+  // targetContainer.appendChild(card); // Используем appendChild для добавления в конец
   console.log(`Карточка добавлена в контейнер: ${containerSelector || 'default'}`);
 }

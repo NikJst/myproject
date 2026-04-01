@@ -77,6 +77,7 @@
     <script type="module" src="CardForm.js"></script>
     <script type="module" src="Post.js"></script>
     <script type="module" src="Like.js"></script>
+    <script src="OnlineStatus.js"></script>
     <!-- Подключите скрипт на странице -->
     <script type="module">
       import { createAddPostButton, createPostForm, togglePostForm } from "./CardForm.js";
@@ -89,9 +90,12 @@
         createPostForm();
         createNavigationButtons();
         createPaginationContainer();
+        // Выполняем ping сервера при загрузке страницы
+        pingServer();
         
         // Загружаем все посты при загрузке главной страницы
         loadAllPosts();
+        
       });
     </script>
   </body>

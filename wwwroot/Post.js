@@ -43,7 +43,9 @@ async function loadAllPosts(pageNumber = 1, pageSizeParam = 10) {
         post.likedByUser,
         post.userId,
         post.likesCount,
-        post.username
+        post.username,
+        post.isOnline,
+        post.createdAt
       );
     });
     
@@ -82,7 +84,9 @@ async function createPost() {
       newPost.likedByUser,
       newPost.userId,
       newPost.likesCount, // Используем значение из ответа сервера
-      newPost.username // Передаем имя автора
+      newPost.username, // Передаем имя автора
+      newPost.isOnline,
+      newPost.createdAt
     );
   } catch (error) {
     console.error(error);

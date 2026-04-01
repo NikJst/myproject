@@ -16,6 +16,7 @@ public class PostService : IPostService
 {
     private readonly ILogger<PostService> _logger;
     private readonly ApplicationDbContext _dbcontext;
+
     public PostService(ApplicationDbContext dbContext, ILogger<PostService> logger)
     {
         _dbcontext = dbContext;
@@ -40,6 +41,8 @@ public class PostService : IPostService
         _logger.LogInformation("Getting all posts");
 
         var items = _dbcontext.Posts
+        .OrderBy(p => p.CreatedAt)
+        .Include(p => p.User)
         .Select(p => new ViewPostsDto
         {
             UserId = p.UserId,
@@ -48,7 +51,8 @@ public class PostService : IPostService
             Title = p.Title,
             LikedByUser = p.Likes.Any(l => l.UserId == userId),
             LikesCount = p.Likes.Count,
-            Username = p.User.Username
+            Username = p.User.Username,
+            CreatedAt = p.CreatedAt
         })
         // .GroupBy(p => p.UserId) вот так можно сгруппировать по пользователю
         .Skip((PageNumber - 1) * PageSize)
@@ -68,10 +72,12 @@ public class PostService : IPostService
         };
     }
 
-    public Task<List<ViewPostsDto>> GetAllPostsForUserAsync(Guid userId)
+    public async Task<List<ViewPostsDto>> GetAllPostsForUserAsync(Guid userId)
     {
 
-        var posts = _dbcontext.Posts
+        var posts = await _dbcontext.Posts
+        .Where(p => p.UserId == userId)
+        .OrderBy(p => p.CreatedAt)
         .Include(p => p.Likes) // включить связанные объекты
         .Include(p => p.User) // включить данные пользователя
         .Select(p => new ViewPostsDto // мы выбираем что отдавать клиенту
@@ -82,12 +88,13 @@ public class PostService : IPostService
             Title = p.Title,
             LikedByUser = p.Likes.Any(l => l.UserId == userId), //измененный и правильный вариант
             LikesCount = p.Likes.Count,  // Добавляем подсчет лайков
-            Username = p.User.Username  // Добавляем имя автора
-
+            Username = p.User.Username,  // Добавляем имя автора
+            CreatedAt = p.CreatedAt
             // Мы больше не лезем в _dbcontext.Likes вручную!
             // Мы спрашиваем СУБЪЕКТИВНО у поста: "Есть ли среди ТВОИХ лайков мой?
         })
         .ToListAsync();
+
         return posts;
 
     }

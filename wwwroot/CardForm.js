@@ -178,7 +178,9 @@ async function createPostWithFormData(postData) {
         newPost.likedByUser,
         newPost.userId,
         newPost.likesCount, // Используем значение из ответа сервера
-        newPost.username
+        newPost.username,
+        newPost.isOnline,
+        newPost.createdAt
       );
       console.log("Карточка поста успешно создана");
     } catch (cardError) {

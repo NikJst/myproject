@@ -7,9 +7,9 @@ public class ViewPostsDto //для отображения всех постов
     public string? Title { get; set; }
     public bool LikedByUser { get; set; }
     public int LikesCount { get; set; }  // счетчик для каждой карточки
-    // public bool IsGuest { get; set; }
     public string? Username { get; set; } // Добавляем имя автора
     public bool IsOnline { get; set; } = false;
+    public DateTime CreatedAt { get; set; }
 }
 // public class CreatePostDto //для создания постов
 // {
@@ -39,8 +39,8 @@ public class ProfileInfoDto //Для информации о профиле
     // public bool IsGuest { get; set; } 
     public int PostCount { get; set; } // счетчик перенести в META
     public int LikesCount { get; set; } // счетчик лайков перенести в META
-    //     // public DateTime CreatedAt { get; set; }
-    //     public bool IsOnline { get; set; } = false;
+                                        //     // public DateTime CreatedAt { get; set; }
+    public bool IsOnline { get; set; } = false;
 }
 
 

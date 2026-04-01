@@ -29,11 +29,31 @@ export async function loadProfileData(username) {
 function updateProfileUI(profileData) {
   console.log('Updating profile UI with data:', profileData);
   
+  // Сохраняем ID пользователя в data-атрибуте для онлайн статуса
+  if (profileData.userId) {
+    document.body.dataset.profileUserId = profileData.userId;
+  }
+  
   // Обновляем имя пользователя
   const usernameElement = document.querySelector('h1');
   if (usernameElement) {
     usernameElement.textContent = profileData.username || 'Пользователь';
     console.log('Updated username:', usernameElement.textContent);
+  }
+  
+  // Обновляем онлайн-статус
+  const onlineIndicator = document.getElementById('online-indicator');
+  if (onlineIndicator) {
+    if (profileData.isOnline) {
+      onlineIndicator.classList.remove('offline');
+      onlineIndicator.classList.add('online');
+      onlineIndicator.title = 'В сети';
+    } else {
+      onlineIndicator.classList.remove('online');
+      onlineIndicator.classList.add('offline');
+      onlineIndicator.title = 'Не в сети';
+    }
+    console.log('Updated online status:', profileData.isOnline);
   }
   
   // Обновляем username (с @)
@@ -376,6 +396,8 @@ function createPostElement(post, containerSelector = '.posts-container') {
     post.userId,
     post.likesCount || 0,
     post.username || 'Автор',
+    post.isOnline || false,
+    post.createdAt,
     containerSelector
   );
   

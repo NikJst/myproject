@@ -17,10 +17,13 @@ public class ProfileService : IProfileService
 {
     private readonly ApplicationDbContext dbContext;
     private readonly ILogger<ProfileService> logger;
-    public ProfileService(ApplicationDbContext dbContext, ILogger<ProfileService> logger)
+    private readonly IOnlineService onlineService;
+
+    public ProfileService(ApplicationDbContext dbContext, ILogger<ProfileService> logger, IOnlineService onlineService)
     {
         this.dbContext = dbContext;
         this.logger = logger;
+        this.onlineService = onlineService;
     }
     public async Task<ProfileInfoDto> PatchInfo(ProfileInfoDto profileDto, User user)
     {
@@ -79,6 +82,7 @@ public class ProfileService : IProfileService
                     Username = user.Username,
                     Header = user.Header,
                     Description = user.Description,
+                    IsOnline = onlineService.IsUserOnline(user.UserId.ToString()),
                     PostCount = postCountMe,
                     LikesCount = likesCountMe
                     /* 
@@ -110,6 +114,7 @@ public class ProfileService : IProfileService
                 Username = usernameUser.Username,
                 Header = usernameUser.Header,
                 Description = usernameUser.Description,
+                IsOnline = onlineService.IsUserOnline(usernameUser.UserId.ToString()),
                 /* 
                 тут можно добавить другие поля чужого профиля
                 */
