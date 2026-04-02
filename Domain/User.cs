@@ -11,7 +11,7 @@ public class User
     public string? Description { get; set; }
     // остальное -->
     public bool IsGuest { get; set; }
-    public Guid UserId { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; } = Guid.NewGuid();
     public string Name { get; set; }
     public int PostCount { get; set; }
     public int LikeCount { get; set; }

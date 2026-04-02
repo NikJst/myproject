@@ -26,7 +26,7 @@ public class UserService : IUserService
         if (cookie != null && Guid.TryParse(cookie, out var userId))
         {
             var findUser = await dbcontext.Users
-            .FirstOrDefaultAsync(u => u.UserId == userId);
+            .FirstOrDefaultAsync(u => u.Id == userId);
             if (findUser != null)
                 return findUser;
         }
@@ -34,7 +34,7 @@ public class UserService : IUserService
         var newUserId = Guid.NewGuid();
         var user = new User(string.Empty)
         {
-            UserId = newUserId,//одинаковые id 
+            Id = newUserId,//одинаковые id 
             Name = newUserId.ToString(), // одинаковые id 
             Username = "User_" + newUserId.ToString().Substring(0, Math.Min(5, newUserId.ToString().Length)),
             IsGuest = true,
@@ -43,7 +43,7 @@ public class UserService : IUserService
 
         await dbcontext.Users.AddAsync(user);
         await dbcontext.SaveChangesAsync();
-        httpcontext.Response.Cookies.Append("GuestId", user.UserId.ToString());
+        httpcontext.Response.Cookies.Append("GuestId", user.Id.ToString());
         logger.LogInformation("Создаем нового и отдаем cookie клиенту");
 
         return user; //целый обьект для использования в других методах

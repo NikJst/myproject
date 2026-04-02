@@ -141,7 +141,7 @@ export function createPostForm() {
 // Функция для создания поста с данными из формы
 async function createPostWithFormData(postData) {
   try {
-    const response = await fetch("http://192.168.1.35:3000/api/Post", {
+    const response = await fetch("/api/Post", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

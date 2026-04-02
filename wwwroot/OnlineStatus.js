@@ -34,12 +34,19 @@ async function updateStatuses() {
         // 3. Обновляем классы в HTML
         for (const [id, isActive] of Object.entries(statuses)) {
             const indicator = document.querySelector(`#status-dot-${id}`);
+            console.log(`Processing indicator for ID ${id}:`, indicator);
             if (indicator) {
                 if (isActive) {
                     indicator.classList.add('online');
+                    indicator.classList.remove('offline');
+                    console.log(`Set user ${id} to ONLINE`);
                 } else {
                     indicator.classList.remove('online');
+                    indicator.classList.add('offline');
+                    console.log(`Set user ${id} to OFFLINE`);
                 }
+            } else {
+                console.log(`No indicator found for ID ${id}`);
             }
         }
     }

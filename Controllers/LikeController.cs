@@ -24,16 +24,16 @@ public class LikeController : ControllerBase
 
         try
         {
-            await _likePost.SetLikePost(user.UserId, dto.PostId);
+            await _likePost.SetLikePost(user.Id, dto.PostId);
         }
         catch (InvalidOperationException)
         {
             _logger.LogWarning("Удаляем лайк");
-            await _likePost.RemoveLikePost(user.UserId, dto.PostId);
+            await _likePost.RemoveLikePost(user.Id, dto.PostId);
         }
 
         var count = await _likePost.GetLikeCount(dto.PostId);
-        var likedByUser = await _likePost.IsLikedByUser(user.UserId, dto.PostId);
+        var likedByUser = await _likePost.IsLikedByUser(user.Id, dto.PostId);
         return Ok(new { likesCount = count, likedByUser = likedByUser }); // Добавляем информацию о состоянии лайка
     }
 
@@ -42,7 +42,7 @@ public class LikeController : ControllerBase
     {
         var user = await _userService.GetOrCreateUser(HttpContext);
 
-        var likedByUser = await _likePost.IsLikedByUser(user.UserId, postId);
+        var likedByUser = await _likePost.IsLikedByUser(user.Id, postId);
 
         var count = await _likePost.GetLikeCount(postId);
 

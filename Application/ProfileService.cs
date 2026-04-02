@@ -39,7 +39,7 @@ public class ProfileService : IProfileService
             logger.LogWarning($"Profile обновлен в бд");
             var profileInfo = new ProfileInfoDto
             {
-                UserId = userinfo.UserId,
+                UserId = userinfo.Id,
                 Username = userinfo.Username,
                 Header = userinfo.Header,
                 Description = userinfo.Description,
@@ -64,21 +64,21 @@ public class ProfileService : IProfileService
         if (usernameUser != null)
         {
 
-            if (user.UserId == usernameUser.UserId) // если это наш профиль
+            if (user.Id == usernameUser.Id) // если это наш профиль
             {
                 // Считаем посты пользователя
                 var postCountMe = await dbContext.Posts
-                .Where(p => p.UserId == user.UserId)
+                .Where(p => p.UserId == user.Id)
                 .CountAsync();
 
                 // Считаем созданные лайки пользователя
                 var likesCountMe = await dbContext.Likes
-                .Where(l => l.UserId == user.UserId)
+                .Where(l => l.UserId == user.Id)
                 .CountAsync();
 
                 var userProfileInfo = new ProfileInfoDto
                 {
-                    UserId = user.UserId,// тебе нужен
+                    UserId = user.Id,// тебе нужен
                     Username = user.Username,
                     Header = user.Header,
                     Description = user.Description,
@@ -99,18 +99,18 @@ public class ProfileService : IProfileService
 
             // Считаем посты для отображения на чужом профиле
             var postCountAlien = await dbContext.Posts
-            .Where(p => p.UserId == usernameUser.UserId)
+            .Where(p => p.UserId == usernameUser.Id)
             .CountAsync();
 
             // Считаем созданные лайки чужого пользователя
             var likesCountAlien = await dbContext.Likes
-            .Where(l => l.UserId == usernameUser.UserId)
+            .Where(l => l.UserId == usernameUser.Id)
             .CountAsync();
 
             var alienProfileInfo = new ProfileInfoDto
             {
                 // тебе не нужны эти данные для чужого профиля
-                // UserId = usernameUser.UserId,
+                UserId = usernameUser.Id,
                 Username = usernameUser.Username,
                 Header = usernameUser.Header,
                 Description = usernameUser.Description,
@@ -140,16 +140,16 @@ public class ProfileService : IProfileService
         if (targetUser != null)
         {
             var query = dbContext.Posts
-            .Where(p => p.UserId == targetUser.UserId) //среди всех постов находим таргетный
+            .Where(p => p.UserId == targetUser.Id) //среди всех постов находим таргетный
             .Select(p => new ViewPostsDto
             {
                 UserId = p.UserId,
                 Username = targetUser.Username,
-                PostId = p.PostId,
+                PostId = p.Id,
                 Text = p.Text,
                 Title = p.Title,
-                LikedByUser = dbContext.Likes.Any(l => l.PostId == p.PostId && l.UserId == user.UserId),
-                LikesCount = dbContext.Likes.Count(l => l.PostId == p.PostId)
+                LikedByUser = dbContext.Likes.Any(l => l.PostId == p.Id && l.UserId == user.Id),
+                LikesCount = dbContext.Likes.Count(l => l.PostId == p.Id)
             });
             var response = await query.Skip(0).Take(10).ToListAsync(); //оборачиваем в список
             logger.LogWarning($"Посты пользователя ({username}) получены");
@@ -170,14 +170,14 @@ public class ProfileService : IProfileService
         if (usernameUser != null)
         {
             var likedPosts = await dbContext.Likes //начинаем с таблицы лайков
-            .Where(l => l.UserId == usernameUser.UserId) //лайки пользователя
-            .Select(p => new ViewPostsDto
+            .Where(l => l.UserId == usernameUser.Id) //лайки пользователя
+            .Select(l => new ViewPostsDto
             {
-                UserId = p.UserId,
-                Username = p.User.Username,
-                PostId = p.PostId,
-                Text = p.Post.Text,
-                Title = p.Post.Title,
+                UserId = l.UserId,
+                Username = l.User.Username,
+                PostId = l.Id,
+                Text = l.Post.Text,
+                Title = l.Post.Title,
                 LikedByUser = true, //пользователь точно лайкнул этот пост
                 // IsGuest = false
                 // CreatedAt = p.CreatedAt
@@ -192,36 +192,4 @@ public class ProfileService : IProfileService
             throw new Exception("Владелец профиля не найден");
         }
     }
-
-    /*  public async Task<List<UserPostDto>> GetFavoritesPosts(string username, User user)
-      {
-          var usernameUser = await dbContext.Users
-          .FirstOrDefaultAsync(u => u.Username == username);
-
-          if (usernameUser != null)
-          {
-              var userPosts = await dbContext.Posts //при обращении к бд он уже коллекция
-              .Where(p => p.UserId == usernameUser.UserId)
-              .Select(p => new UserPostDto
-              {
-                  UserId = p.UserId,
-                  Username = usernameUser.Username,
-                  PostId = p.PostId,
-                  Text = p.Text,
-                  Title = p.Title,
-                  LikedByUser = dbContext.Likes.Any(l => l.PostId == p.PostId && l.UserId == user.UserId),
-                  // IsGuest = false
-                  // CreatedAt = p.CreatedAt
-              })
-              .ToListAsync(); //оборачиваем в список
-              logger.LogWarning($"Посты пользователя ({username}) получены");
-              return userPosts;
-          }
-          else
-          {
-              logger.LogWarning("Владелец профиля - {username} не найден", username);
-              throw new Exception("Владелец профиля не найден");
-          }
-      }
-  }*/
 }

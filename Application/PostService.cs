@@ -1,8 +1,7 @@
-namespace Testing3;
+namespace Testing3.Application;
 using Testing3.DTO;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 public interface IPostService
 {
@@ -33,7 +32,7 @@ public class PostService : IPostService
     public Post? GetPost(Guid postId)
     {
         _logger.LogInformation($"Getting post with ID: {postId}");
-        return _dbcontext.Posts.FirstOrDefault(p => p.PostId == postId);
+        return _dbcontext.Posts.FirstOrDefault(p => p.Id == postId);
     }
 
     public PagedResponse<ViewPostsDto> GetAllPosts(int PageNumber, int PageSize, Guid? userId = null)
@@ -41,12 +40,12 @@ public class PostService : IPostService
         _logger.LogInformation("Getting all posts");
 
         var items = _dbcontext.Posts
-        .OrderBy(p => p.CreatedAt)
+        .OrderByDescending(p => p.CreatedAt)
         .Include(p => p.User)
         .Select(p => new ViewPostsDto
         {
             UserId = p.UserId,
-            PostId = p.PostId,
+            PostId = p.Id,
             Text = p.Text,
             Title = p.Title,
             LikedByUser = p.Likes.Any(l => l.UserId == userId),
@@ -77,13 +76,13 @@ public class PostService : IPostService
 
         var posts = await _dbcontext.Posts
         .Where(p => p.UserId == userId)
-        .OrderBy(p => p.CreatedAt)
+        .OrderByDescending(p => p.CreatedAt)
         .Include(p => p.Likes) // включить связанные объекты
         .Include(p => p.User) // включить данные пользователя
         .Select(p => new ViewPostsDto // мы выбираем что отдавать клиенту
         {
             UserId = p.UserId,
-            PostId = p.PostId,  // Изменено с GuidId на PostId
+            PostId = p.Id,  // Изменено с GuidId на PostId
             Text = p.Text,
             Title = p.Title,
             LikedByUser = p.Likes.Any(l => l.UserId == userId), //измененный и правильный вариант
@@ -101,7 +100,7 @@ public class PostService : IPostService
     public void DeletePost(Guid postId)
     {
         _logger.LogInformation($"Deleting post with ID: {postId}");
-        var post = _dbcontext.Posts.FirstOrDefault(p => p.PostId == postId);
+        var post = _dbcontext.Posts.FirstOrDefault(p => p.Id == postId);
         if (post != null)
         {
             _dbcontext.Posts.Remove(post);

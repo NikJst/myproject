@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Testing3;
 using Testing3.DTO;
+using Testing3.Application;
 [ApiController]
 [Route("api/[controller]")]
 public class PostController : ControllerBase
@@ -23,22 +24,23 @@ public class PostController : ControllerBase
         try
         {
             var user = await _userService.GetOrCreateUser(HttpContext);
-            var post = await _postService.CreatePostAsync(request.Text, request.Title, user.UserId);
+            var post = await _postService.CreatePostAsync(request.Text, request.Title, user.Id);
 
-            _logger.LogInformation($"Post создан with user ID: {user.UserId}");
+            _logger.LogInformation("Post создан с ID: {PostId} для пользователя с ID: {UserId}", post.Id, user.Id);
 
-            return Ok(new ViewPostsDto
+            var responseDto = new ViewPostsDto
             {
-                Text = request.Text,
-                PostId = post.PostId,
-                Title = request.Title,
-                UserId = user.UserId,// взяли id из сессии
+                PostId = post.Id,
+                Title = post.Title,
+                Text = post.Text,
+                UserId = post.UserId,
                 Username = user.Username,
-                LikedByUser = false, // Только что созданный пост не может быть лайкнут тем же пользователем
-                LikesCount = 0, // У нового поста 0 лайков
-                CreatedAt = post.CreatedAt,
-                // IsGuest = user.Username.StartsWith("Guest_") // Определяем гость ли пользователь
-            });
+                LikedByUser = false,
+                LikesCount = 0,
+                CreatedAt = post.CreatedAt
+            };
+
+            return Ok(responseDto);
         }
         catch (Exception ex)
         {
@@ -51,7 +53,7 @@ public class PostController : ControllerBase
     {
         var user = await _userService.GetOrCreateUser(HttpContext);
 
-        var dto = _postService.GetAllPosts(PageNumber ?? 1, PageSize ?? 10, user.UserId);
+        var dto = _postService.GetAllPosts(PageNumber ?? 1, PageSize ?? 10, user.Id);
         return Ok(dto);
     }
 
