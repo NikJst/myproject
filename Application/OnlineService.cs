@@ -7,7 +7,7 @@ public interface IOnlineService
 {
     // Task<bool> IsUserOnlineAsync(string userId);
     void SetUserOnline(string userId);
-    bool IsUserOnline(string userId);
+    // bool IsUserOnline(string userId);
     Dictionary<string, bool> GetOnlineUsers(IEnumerable<string> postIds);
     // Task<IEnumerable<string>> GetOnlineUsersAsync();
 }
@@ -27,27 +27,28 @@ public class OnlineService : IOnlineService
     {
         var options = new MemoryCacheEntryOptions()
              .SetAbsoluteExpiration(TimeSpan.FromSeconds(10)); // Удалить через 10 сек автоматически
-        _logger.LogInformation("User {UserId} is online at {Time}", userId, DateTime.UtcNow);
+
         _cache.Set(userId, true, options); // true - пользователь онлайн; options - настройки кэша
-        _logger.LogInformation("User {UserId} cached as online", userId);
+        _logger.LogInformation("User {UserId} is online at {Time}", userId, DateTime.UtcNow);
     }
 
-    public bool IsUserOnline(string userId)
-    {
-        return _cache.TryGetValue(userId, out _); //out_ - не используем значение, только проверяем наличие
-    }
+    // public bool IsUserOnline(string userId)
+    // {
+
+    //     return _cache.TryGetValue(userId, out _); //out_ - не используем значение, только проверяем наличие
+    // }
 
     public Dictionary<string, bool> GetOnlineUsers(IEnumerable<string> postIds)
     {
         var result = new Dictionary<string, bool>();
 
-        foreach (var postId in postIds)
+        foreach (var id in postIds)
         {
             // Проверяем онлайн статус для пользователя связанного с постом
             // Используем postId как userId (предполагаем что они совпадают)
-            var isOnline = _cache.TryGetValue(postId, out _);
-            result[postId] = isOnline;
-            _logger.LogInformation("User {UserId} online status: {IsOnline}", postId, isOnline);
+            var isOnline = _cache.TryGetValue(id, out _);
+            result[id] = isOnline;
+            _logger.LogInformation("User {UserId} online status: {IsOnline}", id, isOnline);
         }
         return result;
     }

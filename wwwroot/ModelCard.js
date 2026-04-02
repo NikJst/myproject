@@ -47,6 +47,7 @@ export function createEmptyPostCard(
   card.classList.add("card");
 
   if (postId) card.dataset.postId = postId; //====> сохраняем id поста если он предан
+  if (userId) card.dataset.userId = userId; //====> сохраняем id пользователя если он передан
 
   // // Кнопка закрытия
   // const closeBtn = document.createElement("button");
@@ -134,6 +135,7 @@ export function createEmptyPostCard(
     // Создаем индикатор онлайн-статуса
     const onlineIndicator = document.createElement("span");
     onlineIndicator.classList.add("online-indicator");
+    onlineIndicator.id = `status-dot-${userId}`; // Добавляем ID для обновления через JavaScript
     if (isOnline) {
       onlineIndicator.classList.add("online");
       onlineIndicator.title = "В сети";

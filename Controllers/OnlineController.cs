@@ -28,32 +28,42 @@ public class OnlineController : ControllerBase
     {
         logger.LogInformation("Ping endpoint called");
 
-        var userId = Request.Cookies["UserId"];
+        var userId = Request.Cookies["GuestId"];
         logger.LogInformation("UserId from cookie: {UserId}", userId);
 
         if (string.IsNullOrEmpty(userId))
         {
             var user = _userService.GetUserIdFromCookie(HttpContext);
             userId = user.ToString();
-            logger.LogInformation("UserId from service: {UserId}", userId);
+            logger.LogWarning("UserId не был найден в куках, использован из сервиса: {UserId}", userId);
         }
 
         _onlineService.SetUserOnline(userId!);
         logger.LogInformation("User {UserId} set as online", userId);
 
-        return Ok("Online");
+        return Ok("Пинг на сервер получен");
     }
 
     [HttpGet("users")]
-    public IActionResult GetOnlineUsers([FromQuery] List<string> postIds)
+    public IActionResult GetOnlineUsers([FromQuery] string userIds)
     {
-        if (postIds == null || postIds.Count == 0)
+        if (string.IsNullOrEmpty(userIds))
         {
-            return StatusCode(500, "No post IDs provided");
+            logger.LogWarning("GetOnlineUsers: No user IDs provided");
+            return StatusCode(500, "No user IDs provided");
         }
-        var status = _onlineService.GetOnlineUsers(postIds);//отдаем словарик
-        logger.LogWarning("получены онлайн пользователи в словаре");
 
+        // Разделяем строку с запятыми на массив ID
+        var idList = userIds.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
+
+        logger.LogInformation("GetOnlineUsers: Received {Count} user IDs: {UserIds}", idList.Count, string.Join(", ", idList));
+
+        var status = _onlineService.GetOnlineUsers(idList);//отдаем словарик
+        logger.LogWarning("получены онлайн пользователи в словаре");
+        logger.LogInformation("GetOnlineUsers: Returning {Count} statuses: {Statuses}", status.Count, string.Join(", ", status.Select(kvp => $"{kvp.Key}={kvp.Value}")));
+
+        // Добавляем свой заголовок (обычно начинаются с X-)
+        // Response.Headers.Append("X-Debug-Message", "Online users retrieved successfully:" + " количество: " + status.Count);
 
         return Ok(status);
     }

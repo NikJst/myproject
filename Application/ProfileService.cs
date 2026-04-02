@@ -82,7 +82,7 @@ public class ProfileService : IProfileService
                     Username = user.Username,
                     Header = user.Header,
                     Description = user.Description,
-                    IsOnline = onlineService.IsUserOnline(user.UserId.ToString()),
+                    IsOnline = false,
                     PostCount = postCountMe,
                     LikesCount = likesCountMe
                     /* 
@@ -114,7 +114,7 @@ public class ProfileService : IProfileService
                 Username = usernameUser.Username,
                 Header = usernameUser.Header,
                 Description = usernameUser.Description,
-                IsOnline = onlineService.IsUserOnline(usernameUser.UserId.ToString()),
+                IsOnline = false,
                 /* 
                 тут можно добавить другие поля чужого профиля
                 */

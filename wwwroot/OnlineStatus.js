@@ -17,16 +17,19 @@ async function pingServer() {
 
 async function updateStatuses() {
     // 1. Обновляем онлайн статус для постов
-    const postIds = Array.from(document.querySelectorAll('.post-card'))
-                         .filter(el => el.dataset.postId)
-                         .map(el => el.dataset.postId);
+    const userIds = Array.from(document.querySelectorAll('.card'))
+                         .filter(el => el.dataset.userId)
+                         .map(el => el.dataset.userId);
 
-    if (postIds.length > 0) {
+    console.log('updateStatuses: Found user IDs:', userIds);
+
+    if (userIds.length > 0) {
         // 2. Спрашиваем у быстрого эндпоинта (который смотрит только в кэш)
-        const response = await fetch('/api/online/users?postIds=' + postIds.join(','), {
+        const response = await fetch('/api/online/users?userIds=' + userIds.join(','), {
             method: 'GET'
         });
-        const statuses = await response.json(); // Придет { "42": true, "43": false }
+        const statuses = await response.json(); // Придет { "userId": true, "userId2": false }
+        console.log('updateStatuses: Received statuses:', statuses);
 
         // 3. Обновляем классы в HTML
         for (const [id, isActive] of Object.entries(statuses)) {
@@ -63,7 +66,7 @@ async function updateProfileOnlineStatus() {
     console.log('Updating online status for profile user:', profileUserId);
     
     try {
-        const response = await fetch(`/api/online/users?postIds=${profileUserId}`, {
+        const response = await fetch(`/api/online/users?userIds=${profileUserId}`, {
             method: 'GET'
         });
         
