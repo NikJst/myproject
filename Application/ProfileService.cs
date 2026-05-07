@@ -173,7 +173,7 @@ public class ProfileService : IProfileService
             .Where(l => l.UserId == usernameUser.Id) //лайки пользователя
             .Select(l => new ViewPostsDto
             {
-                UserId = l.UserId,
+                UserId = l.Id,
                 Username = l.User.Username,
                 PostId = l.Id,
                 Text = l.Post.Text,

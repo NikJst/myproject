@@ -22,6 +22,7 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 
 builder.Services.AddScoped<IOnlineService, OnlineService>();
+builder.Services.AddScoped<ISearch, Search>();
 
 builder.Services.AddMemoryCache();
 

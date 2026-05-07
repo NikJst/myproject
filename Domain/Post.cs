@@ -21,7 +21,7 @@ public class Post
     public string? Title { get; private set; } = null;
     public DateTime CreatedAt { get; private set; }
     public bool IsPublished { get; set; } // true = видимо всем, false = черновик
-    // public NpgsqlTsVector? SearchVector { get; set; }
+    // public NpgsqlTsVector? search_vector { get; set; }
     public List<Like> Likes { get; private set; } = [];
 
     // Навигационное свойство для entity framework

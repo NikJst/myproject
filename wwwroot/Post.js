@@ -9,6 +9,13 @@ let totalPages = 1;
 // Функция для получения всех постов с сервера с пагинацией
 async function loadAllPosts(pageNumber = 1, pageSizeParam = 10) {
   console.log("loadAllPosts: Starting to load posts...");
+  
+  // Показываем индикатор загрузки
+  const cardsContainer = document.querySelector(".cards-container");
+  if (cardsContainer) {
+    cardsContainer.innerHTML = '<div class="loading-indicator">Загрузка постов...</div>';
+  }
+  
   try {
     // Используем query параметры для пагинации
     const response = await fetch(`/api/Post?PageNumber=${pageNumber}&PageSize=${pageSizeParam}`);
@@ -31,6 +38,15 @@ async function loadAllPosts(pageNumber = 1, pageSizeParam = 10) {
     const cardsContainer = document.querySelector(".cards-container");
     if (cardsContainer) {
       cardsContainer.innerHTML = '';
+    }
+
+    // Проверяем, есть ли посты
+    if (!pagedResponse.items || pagedResponse.items.length === 0) {
+      const cardsContainer = document.querySelector(".cards-container");
+      if (cardsContainer) {
+        cardsContainer.innerHTML = '<div class="no-posts-message">Постов пока нет. Создайте первый пост!</div>';
+      }
+      return;
     }
 
     // Для каждого поста создаем карточку

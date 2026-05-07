@@ -45,6 +45,9 @@ export function createEmptyPostCard(
 
   const card = document.createElement("div");
   card.classList.add("card");
+  
+  // Add hover effect class
+  card.classList.add("card-hover");
 
   if (postId) card.dataset.postId = postId; //====> сохраняем id поста если он предан
   if (userId) card.dataset.userId = userId; //====> сохраняем id пользователя если он передан

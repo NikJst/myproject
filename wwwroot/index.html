@@ -67,7 +67,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- контейнер для пагинации -->
     <div class="pagination-container"></div>
     <!-- контейнер для кнопок действий -->
@@ -77,13 +77,18 @@
     <script type="module" src="CardForm.js"></script>
     <script type="module" src="Post.js"></script>
     <script type="module" src="Like.js"></script>
+    <script type="module" src="Search.js"></script>
     <script src="OnlineStatus.js"></script>
     <!-- Подключите скрипт на странице -->
     <script type="module">
-      import { createAddPostButton, createPostForm, togglePostForm } from "./CardForm.js";
+      import {
+        createAddPostButton,
+        createPostForm,
+        togglePostForm,
+      } from "./CardForm.js";
       import { createNavigationButtons } from "./NavigationButtons.js";
       import { loadAllPosts, createPaginationContainer } from "./Post.js";
-      
+
       // Создаем кнопки при загрузке страницы
       document.addEventListener("DOMContentLoaded", function () {
         createAddPostButton();
@@ -92,13 +97,12 @@
         createPaginationContainer();
         // Выполняем ping сервера при загрузке страницы
         pingServer();
-        
+
         // Запускаем периодическое отслеживание онлайн статуса
         onlineStatus.start();
-        
+
         // Загружаем все посты при загрузке главной страницы
         loadAllPosts();
-        
       });
     </script>
   </body>
