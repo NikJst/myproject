@@ -65,6 +65,19 @@ public class ProfileController : ControllerBase
         return Ok(likedPosts);
     }
 
+    //===================>
+    // [Authorize] только авторизованные
+    [HttpGet]
+    [Route("{username}/drafts")]
+    public async Task<IActionResult> GetDrafts([FromRoute] string username)
+    {
+        //предположим что пользователь уже авторизован
+        var user = await userService.GetOrCreateUser(HttpContext);
+
+        var draftPosts = await profileService.GetDraftsPosts(username, user);
+        return Ok(draftPosts);
+    }
+
 
     // [HttpGet("{username}/favorites")]
     // public async Task<IActionResult> GetFavorites([FromRoute] string username)

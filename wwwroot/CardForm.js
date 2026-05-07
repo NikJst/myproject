@@ -83,12 +83,18 @@ export function createPostForm() {
   submitBtn.textContent = "Создать пост";
   submitBtn.classList.add("submit-btn");
 
+  const draftBtn = document.createElement("button");
+  draftBtn.type = "button";
+  draftBtn.textContent = "Сохранить как черновик";
+  draftBtn.classList.add("draft-btn");
+
   const cancelBtn = document.createElement("button");
   cancelBtn.type = "button";
   cancelBtn.textContent = "Отмена";
   cancelBtn.classList.add("cancel-btn");
 
   buttonGroup.appendChild(submitBtn);
+  buttonGroup.appendChild(draftBtn);
   buttonGroup.appendChild(cancelBtn);
 
   // Сборка формы
@@ -111,6 +117,26 @@ export function createPostForm() {
     const postData = {
       title: formData.get("title") || null,
       text: formData.get("text"),
+      isPublished: true, // По умолчанию пост публикуется
+    };
+
+    // Вызываем функцию создания поста с данными из формы
+    await createPostWithFormData(postData);
+
+    // Закрываем форму и очищаем
+    modal.style.display = "none";
+    form.reset();
+  });
+
+  // Обработчик кнопки черновика
+  draftBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const postData = {
+      title: formData.get("title") || null,
+      text: formData.get("text"),
+      isPublished: false, // Сохраняем как черновик
     };
 
     // Вызываем функцию создания поста с данными из формы
@@ -147,6 +173,7 @@ async function createPostWithFormData(postData) {
       body: JSON.stringify({
         title: postData.title,
         text: postData.text,
+        IsPublished: postData.isPublished,
         // userId: postData.userId || null, // Будет заполнено на сервере
         // username: postData.username || null, // Будет заполнено на сервере
         // likedByUser и likesCount не нужны при создании

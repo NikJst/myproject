@@ -1,6 +1,6 @@
 // Импортируем необходимые функции
 import { createEmptyPostCard } from "./Post.js";
-import { loadProfileData, getCurrentUsername, loadUserPosts, loadUserLikes, loadUserFavorites } from "./Profile.js";
+import { loadProfileData, getCurrentUsername, loadUserPosts, loadUserLikes, loadUserFavorites, loadUserDrafts } from "./Profile.js";
 import { setupScrollEffect } from "./ScrollUtils.js";
 import { setupLikeObservers, toggleLikeOnServer, updateLikeButton } from "./Like.js";
 
@@ -97,6 +97,9 @@ async function loadTabData(targetTab, username) {
         break;
       case 'favorites':
         await loadUserFavorites(username);
+        break;
+      case 'drafts':
+        await loadUserDrafts(username);
         break;
       case 'posts':
       default:

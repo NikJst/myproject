@@ -1,12 +1,25 @@
+# Build outputs
 bin/
+obj/
 Debug/
 Release/
-obj/
+bin */
+obj */
+
+# IDE files
 .vs/
 .vscode/
-.DS_Store
 *.user
 *.suo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Dependencies
 node_modules/
-.dll
-.pdb
+
+# Build artifacts
+*.dll
+*.pdb
+*.exe

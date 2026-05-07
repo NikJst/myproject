@@ -9,6 +9,7 @@ public interface IProfileService
     Task<PagedResponse<ViewPostsDto>> GetTargetUserPosts(string username, User user);
     // Task<ProfileDto> GetUserProfileContent(Guid userId);
     Task<List<ViewPostsDto>> GetLikesPosts(string username, User user);
+    Task<List<ViewPostsDto>> GetDraftsPosts(string username, User user);
     // Task<List<UserPostDto>> GetFavoritesPosts(string username, User user);
 }
 
@@ -185,6 +186,44 @@ public class ProfileService : IProfileService
             .ToListAsync(); //оборачиваем в список
             logger.LogWarning($"Посты которые лайкнул пользователь ({username}) получены");
             return likedPosts;
+        }
+        else
+        {
+            logger.LogWarning("Владелец профиля - {username} не найден", username);
+            throw new Exception("Владелец профиля не найден");
+        }
+    }
+
+    public async Task<List<ViewPostsDto>> GetDraftsPosts(string username, User user)
+    {
+        var usernameUser = await dbContext.Users
+        .FirstOrDefaultAsync(u => u.Username == username);
+
+        if (usernameUser != null)
+        {
+            // Проверяем, что это свой профиль (черновики может видеть только автор)
+            if (user.Id != usernameUser.Id)
+            {
+                throw new Exception("Доступ к черновикам запрещен");
+            }
+
+            var draftPosts = await dbContext.Posts
+            .Where(p => p.UserId == usernameUser.Id && !p.IsPublished) //неопубликованные посты пользователя
+            .Select(p => new ViewPostsDto
+            {
+                UserId = p.UserId,
+                Username = usernameUser.Username,
+                PostId = p.Id,
+                Text = p.Text,
+                Title = p.Title,
+                LikedByUser = dbContext.Likes.Any(l => l.PostId == p.Id && l.UserId == user.Id),
+                LikesCount = dbContext.Likes.Count(l => l.PostId == p.Id),
+                IsPublished = p.IsPublished,
+                CreatedAt = p.CreatedAt
+            })
+            .ToListAsync(); //оборачиваем в список
+            logger.LogWarning($"Черновики пользователя ({username}) получены");
+            return draftPosts;
         }
         else
         {

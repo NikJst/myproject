@@ -5,11 +5,12 @@ using NpgsqlTypes;
 namespace Testing3;
 public class Post
 {
-    public Post(string text, Guid userId, string? title = null)
+    public Post(string text, Guid userId, bool isPublished, string? title = null)
     {
         Text = text ?? throw new ArgumentNullException(nameof(text));
         UserId = userId;
         Title = title;
+        IsPublished = isPublished;
         Id = Guid.NewGuid();
         CreatedAt = DateTime.UtcNow;
     }
@@ -21,7 +22,8 @@ public class Post
     public string? Title { get; private set; } = null;
     public DateTime CreatedAt { get; private set; }
     public bool IsPublished { get; set; } // true = видимо всем, false = черновик
-    // public NpgsqlTsVector? search_vector { get; set; }
+                                          // public NpgsqlTsVector? search_vector { get; set; }
+                                          // public bool Saved { get; private set; }
     public List<Like> Likes { get; private set; } = [];
 
     // Навигационное свойство для entity framework

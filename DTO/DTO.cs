@@ -10,6 +10,7 @@ public class ViewPostsDto //для отображения всех постов
     public string? Username { get; set; } // Добавляем имя автора
     public bool IsOnline { get; set; } = false;
     public DateTime CreatedAt { get; set; }
+    public bool? IsPublished { get; set; }
 }
 // public class CreatePostDto //для создания постов
 // {

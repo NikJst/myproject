@@ -29,7 +29,7 @@ public class OnlineService : IOnlineService
              .SetAbsoluteExpiration(TimeSpan.FromSeconds(10)); // Удалить через 10 сек автоматически
 
         _cache.Set(userId, true, options); // true - пользователь онлайн; options - настройки кэша
-        _logger.LogInformation("User {UserId} is online at {Time}", userId, DateTime.UtcNow);
+        // _logger.LogInformation("User {UserId} is online at {Time}", userId, DateTime.UtcNow);
     }
 
     // public bool IsUserOnline(string userId)
@@ -48,7 +48,7 @@ public class OnlineService : IOnlineService
             // Используем postId как userId (предполагаем что они совпадают)
             var isOnline = _cache.TryGetValue(id, out _);
             result[id] = isOnline;
-            _logger.LogInformation("User {UserId} online status: {IsOnline}", id, isOnline);
+            // _logger.LogInformation("User {UserId} online status: {IsOnline}", id, isOnline);
         }
         return result;
     }

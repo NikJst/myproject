@@ -104,15 +104,6 @@ export function createEmptyPostCard(
       btn.dataset.postId = postId;
       btn.id = `like-btn-${postId}`; // уникальный id для кнопки LIKE а не только люббой кнопки в картчоке - (like-btn-{postId})
 
-      // Создаем счетчик лайков
-      const likeCount = document.createElement("span");
-      likeCount.classList.add("like-count");
-      likeCount.textContent = likesCount;
-      likeCount.id = `like-count-${postId}`;
-      
-      // Добавляем счетчик после кнопки
-      btn.appendChild(likeCount);
-
       console.log(
         "Лайк-кнопка получила postId:",
         postId,
@@ -123,6 +114,18 @@ export function createEmptyPostCard(
       );
     }
     buttonsBottom.appendChild(btn);
+    
+    // Для лайк-кнопки добавляем счетчик справа от кнопки
+    if (icon === "like.png" && postId) {
+      // Создаем счетчик лайков
+      const likeCount = document.createElement("span");
+      likeCount.classList.add("like-count");
+      likeCount.textContent = likesCount;
+      likeCount.id = `like-count-${postId}`;
+      
+      // Добавляем счетчик после кнопки
+      buttonsBottom.appendChild(likeCount);
+    }
   });
 
   // Сборка карточки

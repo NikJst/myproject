@@ -1,10 +1,9 @@
 // Search.js - Модуль для полнотекстового поиска
+import { createEmptyPostCard } from './ModelCard.js';
 
 class SearchModule {
     constructor() {
-        this.searchContainer = null;
         this.searchInput = null;
-        this.searchResults = null;
         this.isSearchVisible = false;
         this.init();
     }
@@ -15,47 +14,30 @@ class SearchModule {
     }
 
     createSearchElements() {
-        // Создаем контейнер для поиска
-        this.searchContainer = document.createElement('div');
-        this.searchContainer.className = 'search-container';
-        this.searchContainer.innerHTML = `
-            <div class="search-header">
-                <button class="search-toggle-btn" id="searchToggleBtn">
-                    <img src="image/message.png" alt="Поиск" />
-                </button>
-                <div class="search-box" id="searchBox">
-                    <input 
-                        type="text" 
-                        id="searchInput" 
-                        placeholder="Поиск по постам..." 
-                        autocomplete="off"
-                    />
-                    <button class="search-close-btn" id="searchCloseBtn">
-                        <img src="image/close.png" alt="Закрыть" />
-                    </button>
-                </div>
-            </div>
-            <div class="search-results" id="searchResults"></div>
-        `;
-
-        // Добавляем контейнер в начало body
-        document.body.insertBefore(this.searchContainer, document.body.firstChild);
-        
-        // Получаем ссылки на элементы
+        // Находим существующее поле ввода для поиска
         this.searchInput = document.getElementById('searchInput');
-        this.searchResults = document.getElementById('searchResults');
-        this.searchToggleBtn = document.getElementById('searchToggleBtn');
-        this.searchCloseBtn = document.getElementById('searchCloseBtn');
-        this.searchBox = document.getElementById('searchBox');
+        
+        // Если поле поиска не существует, создаем простое поле ввода
+        if (!this.searchInput) {
+            this.searchInput = document.createElement('input');
+            this.searchInput.type = 'text';
+            this.searchInput.id = 'searchInput';
+            this.searchInput.placeholder = 'Поиск по постам...';
+            this.searchInput.style.cssText = `
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                margin: 10px;
+                width: 300px;
+            `;
+            
+            // Добавляем в начало body или в существующий контейнер
+            const existingContainer = document.querySelector('.search-container') || document.body;
+            existingContainer.insertBefore(this.searchInput, existingContainer.firstChild);
+        }
     }
 
     bindEvents() {
-        // Кнопка открытия поиска
-        this.searchToggleBtn.addEventListener('click', () => this.toggleSearch());
-        
-        // Кнопка закрытия поиска
-        this.searchCloseBtn.addEventListener('click', () => this.hideSearch());
-        
         // Поиск при вводе текста (с debounce)
         let searchTimeout;
         this.searchInput.addEventListener('input', (e) => {
@@ -64,52 +46,15 @@ class SearchModule {
                 this.performSearch(e.target.value);
             }, 300);
         });
-
-        // Закрытие поиска по Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.isSearchVisible) {
-                this.hideSearch();
-            }
-        });
-
-        // Закрытие поиска при клике вне контейнера
-        document.addEventListener('click', (e) => {
-            if (this.isSearchVisible && !this.searchContainer.contains(e.target)) {
-                this.hideSearch();
-            }
-        });
     }
 
-    toggleSearch() {
-        if (this.isSearchVisible) {
-            this.hideSearch();
-        } else {
-            this.showSearch();
-        }
-    }
-
-    showSearch() {
-        this.isSearchVisible = true;
-        this.searchBox.style.display = 'flex';
-        this.searchInput.focus();
-        this.searchContainer.classList.add('search-active');
-    }
-
-    hideSearch() {
-        this.isSearchVisible = false;
-        this.searchBox.style.display = 'none';
-        this.searchInput.value = '';
-        this.searchResults.innerHTML = '';
-        this.searchContainer.classList.remove('search-active');
-    }
 
     async performSearch(query) {
         if (!query.trim()) {
-            this.searchResults.innerHTML = '';
+            // Очищаем контейнер с карточками при пустом запросе
+            this.clearSearchResults();
             return;
         }
-
-        this.searchResults.innerHTML = '<div class="search-loading">Поиск...</div>';
 
         try {
             const response = await fetch(`/api/GIN?query=${encodeURIComponent(query)}`, {
@@ -126,53 +71,47 @@ class SearchModule {
             const data = await response.json();
             this.displaySearchResults(data);
         } catch (error) {
-            console.error('Erreur de recherche:', error);
-            this.searchResults.innerHTML = '<div class="search-error">Erreur lors de la recherche. Veuillez réessayer.</div>';
+            console.error('Ошибка поиска:', error);
+            this.clearSearchResults();
         }
     }
 
     displaySearchResults(posts) {
+        // Сначала очищаем предыдущие результаты поиска
+        this.clearSearchResults();
+        
         if (!posts || posts.length === 0) {
-            this.searchResults.innerHTML = '<div class="search-no-results">Ничего не найдено</div>';
+            console.log('Ничего не найдено');
             return;
         }
 
-        const resultsHTML = posts.map(post => this.createPostCard(post)).join('');
-        this.searchResults.innerHTML = `
-            <div class="search-results-header">Найдено постов: ${posts.length}</div>
-            <div class="search-results-list">${resultsHTML}</div>
-        `;
+        // Создаем карточки для каждого найденного поста
+        posts.forEach(post => {
+            createEmptyPostCard(
+                '', // заголовок (пустой, так как в постах нет заголовка)
+                post.text,
+                post.postId,
+                post.likedByUser,
+                post.userId,
+                post.likesCount,
+                post.username,
+                post.isOnline,
+                post.createdAt,
+                '.cards-container' // указываем контейнер для карточек
+            );
+        });
     }
 
-    createPostCard(post) {
-        const date = new Date(post.createdAt).toLocaleDateString('ru-RU');
-        const likedClass = post.likedByUser ? 'liked' : '';
-        
-        return `
-            <div class="search-result-card">
-                <div class="search-result-content">
-                    <div class="search-result-header">
-                        <span class="search-result-username">${post.username || 'Аноним'}</span>
-                        <span class="search-result-date">${date}</span>
-                        ${post.isOnline ? '<span class="online-indicator">●</span>' : ''}
-                    </div>
-                    <div class="search-result-text">${this.escapeHtml(post.text)}</div>
-                </div>
-                <div class="search-result-actions">
-                    <button class="like-button ${likedClass}" data-post-id="${post.postId}">
-                        <img src="image/like.png" alt="Лайк" />
-                        <span class="likes-count">${post.likesCount}</span>
-                    </button>
-                </div>
-            </div>
-        `;
+    clearSearchResults() {
+        // Находим и удаляем все карточки, которые были добавлены в результате поиска
+        const cardsContainer = document.querySelector('.cards-container');
+        if (cardsContainer) {
+            // Можно добавить специальный класс для карточек поиска, чтобы удалять только их
+            // А пока просто очищаем весь контейнер
+            cardsContainer.innerHTML = '';
+        }
     }
 
-    escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
 }
 
 // Создаем экземпляр модуля поиска

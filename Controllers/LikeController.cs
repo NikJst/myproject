@@ -38,7 +38,7 @@ public class LikeController : ControllerBase
     }
 
     [HttpGet("post/{postId}")]
-    public async Task<IActionResult> GetLikesInfo(Guid postId) //cкорее всего для отображения количества лайков и статуса лайка для текущего 
+    public async Task<IActionResult> GetLikesInfo(Guid postId)
     {
         var user = await _userService.GetOrCreateUser(HttpContext);
 
@@ -48,7 +48,7 @@ public class LikeController : ControllerBase
 
         return Ok(new
         {
-            likesCount = count, // Изменено на нижний регистр
+            likesCount = count,
             likedByUser = likedByUser
         });
     }

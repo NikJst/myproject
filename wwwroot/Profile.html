@@ -13,13 +13,13 @@
         theme: {
           extend: {
             fontFamily: {
-              'sans': ['Roboto', 'Arial', 'sans-serif'],
-              'serif': ['Roboto', 'Arial', 'sans-serif'],
-              'mono': ['Roboto', 'Arial', 'sans-serif'],
+              sans: ["Roboto", "Arial", "sans-serif"],
+              serif: ["Roboto", "Arial", "sans-serif"],
+              mono: ["Roboto", "Arial", "sans-serif"],
             },
           },
         },
-      }
+      };
     </script>
     <link rel="stylesheet" href="Styles.css" />
     <style>
@@ -47,33 +47,42 @@
       }
 
       /* .post-card {
-        transition:
-          transform 0.2s ease-in-out,
-          box-shadow 0.2s ease-in-out;
+        transition: transform 0.2s ease-in-out;
       } */
 
       /* .post-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
       } */
     </style>
   </head>
-  <body class="bg-gray-50 min-h-screen">
+  <body
+    class="bg-gray-50 min-h-screen"
+    style="display: flex; flex-direction: column; align-items: center"
+  >
     <!-- Заголовок профиля -->
-    <header class="bg-white shadow-md border-b border-gray-200">
-      <div class="container mx-auto px-4 py-6">
+    <header class="bg-white border-b border-gray-200" style="width: 100%">
+      <div
+        style="
+          width: 100%;
+          padding: 0 16px;
+          padding-top: 24px;
+          padding-bottom: 24px;
+        "
+      >
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-6">
             <!-- Информация о пользователе -->
             <div>
               <div class="flex items-center space-x-2 mb-1">
                 <h1 class="text-3xl font-bold text-gray-800">Иван Петров</h1>
-                <span id="online-indicator" class="online-indicator offline" title="Не в сети"></span>
+                <span
+                  id="online-indicator"
+                  class="online-indicator offline"
+                  title="Не в сети"
+                ></span>
               </div>
               <p class="text-gray-600 mb-2">@ivan_petrov</p>
-              <p class="text-gray-700 text-sm max-w-md">
-                Веб-разработчик
-              </p>
+              <p class="text-gray-700 text-sm max-w-md">Веб-разработчик</p>
             </div>
           </div>
 
@@ -82,7 +91,7 @@
             <button
               class="px-6 py-0.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
             >
-              ✏️ Изменить
+              Изменить
             </button>
             <!-- <button
               class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium"
@@ -97,15 +106,27 @@
 
         <!-- Статистика -->
         <div class="flex space-x-8 mt-6 pt-6 border-t border-gray-200">
-          <div class="text-center">
+          <div
+            class="text-center"
+            style="cursor: pointer"
+            onclick="switchTab('posts')"
+          >
             <div class="text-2xl font-bold text-gray-800">15</div>
             <div class="text-gray-600 text-sm">Постов</div>
           </div>
-          <div class="text-center">
+          <div
+            class="text-center"
+            style="cursor: pointer"
+            onclick="switchTab('likes')"
+          >
             <div class="text-2xl font-bold text-gray-800">2.3K</div>
             <div class="text-gray-600 text-sm">Понравившиеся</div>
           </div>
-          <div class="text-center">
+          <div
+            class="text-center"
+            style="cursor: pointer"
+            onclick="switchTab('favorites')"
+          >
             <div class="text-2xl font-bold text-gray-800">489</div>
             <div class="text-gray-600 text-sm">Избранное</div>
           </div>
@@ -114,31 +135,43 @@
     </header>
 
     <!-- Контейнер с постами -->
-    <main class="container mx-auto px-4 py-8">
+    <main style="width: 100%; padding: 0 16px; padding-bottom: 32px">
       <!-- Вкладки -->
-      <div class="bg-white rounded-lg shadow-md mb-6">
+      <div class="bg-white rounded-lg mb-6">
         <div class="border-b border-gray-200">
-          <nav class="flex space-x-8 px-6" aria-label="Tabs">
-            <button class="tab-button py-4 px-1 border-b-2 border-blue-600 text-blue-600 font-medium text-sm" data-tab="posts">
+          <nav class="flex px-6" aria-label="Tabs">
+            <button
+              class="tab-button py-3 px-6 border-2 border-blue-600 text-blue-600 font-semibold text-base rounded-32 hover:bg-blue-50 transition-colors duration-200"
+              data-tab="posts"
+            >
               Посты
             </button>
-            <button class="tab-button py-4 px-1 border-b-2 border-transparent text-gray-600 hover:text-gray-800 font-medium text-sm" data-tab="likes">
+            <button
+              class="tab-button py-3 px-6 border-2 border-gray-300 text-gray-700 font-medium text-base rounded-32 hover:bg-gray-50 transition-colors duration-200"
+              data-tab="likes"
+            >
               Понравившиеся
             </button>
-            <button class="tab-button py-4 px-1 border-b-2 border-transparent text-gray-600 hover:text-gray-800 font-medium text-sm" data-tab="favorites">
+            <button
+              class="tab-button py-3 px-6 border-2 border-gray-300 text-gray-700 font-medium text-base rounded-32 hover:bg-gray-50 transition-colors duration-200"
+              data-tab="favorites"
+            >
               Избранное
+            </button>
+            <button
+              class="tab-button py-3 px-6 border-2 border-gray-300 text-gray-700 font-medium text-base rounded-32 hover:bg-gray-50 transition-colors duration-200"
+              data-tab="drafts"
+            >
+              Черновики
             </button>
           </nav>
         </div>
       </div>
 
       <!-- Контент вкладок -->
-      <div class="bg-white rounded-lg shadow-md">
+      <div class="bg-white rounded-lg">
         <!-- Посты -->
         <div id="posts-content" class="tab-content">
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-xl font-semibold text-gray-800">Посты</h2>
-          </div>
           <div class="posts-container p-6">
             <!-- Посты будут добавлены динамически -->
           </div>
@@ -146,9 +179,6 @@
 
         <!-- Понравившиеся -->
         <div id="likes-content" class="tab-content hidden">
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-xl font-semibold text-gray-800">Понравившиеся посты</h2>
-          </div>
           <div class="likes-container p-6">
             <!-- Понравившиеся посты будут добавлены динамически -->
           </div>
@@ -156,11 +186,15 @@
 
         <!-- Избранное -->
         <div id="favorites-content" class="tab-content hidden">
-          <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-xl font-semibold text-gray-800">Избранные посты</h2>
-          </div>
           <div class="favorites-container p-6">
             <!-- Избранные посты будут добавлены динамически -->
+          </div>
+        </div>
+
+        <!-- Черновики -->
+        <div id="drafts-content" class="tab-content hidden">
+          <div class="drafts-container p-6">
+            <!-- Черновики будут добавлены динамически -->
           </div>
         </div>
       </div>
@@ -171,16 +205,74 @@
       // Импортируем инициализацию профиля
       import { initializeProfile } from "./Init.js";
       import { createNavigationButtons } from "./NavigationButtons.js";
-      
+
       // Вызываем инициализацию
       initializeProfile();
-      
+
       // Создаем навигационные кнопки
       createNavigationButtons();
     </script>
     <script>
       // Запустить отслеживание онлайн статуса
       onlineStatus.start();
+
+      // Функция переключения вкладок
+      function switchTab(tabName) {
+        // Сначала находим соответствующую кнопку вкладки и кликаем на нее
+        const tabButton = document.querySelector(`[data-tab="${tabName}"]`);
+        if (tabButton) {
+          tabButton.click();
+        }
+      }
+
+      // Функция для обновления стилей кнопок вкладок
+      function updateTabButtons(activeTabName) {
+        // Находим все кнопки вкладок
+        const tabButtons = document.querySelectorAll(".tab-button");
+
+        // Убираем активные стили у всех кнопок (делаем их неактивными)
+        tabButtons.forEach((button) => {
+          button.classList.remove(
+            "border-blue-600",
+            "text-blue-600",
+            "font-semibold",
+          );
+          button.classList.add(
+            "border-gray-300",
+            "text-gray-700",
+            "font-medium",
+          );
+        });
+
+        // Добавляем активные стили для выбранной кнопки
+        const activeButton = document.querySelector(
+          `[data-tab="${activeTabName}"]`,
+        );
+        if (activeButton) {
+          activeButton.classList.remove(
+            "border-gray-300",
+            "text-gray-700",
+            "font-medium",
+          );
+          activeButton.classList.add(
+            "border-blue-600",
+            "text-blue-600",
+            "font-semibold",
+          );
+        }
+      }
+
+      // Добавляем обработчики кликов для кнопок вкладок
+      document.addEventListener("DOMContentLoaded", function () {
+        const tabButtons = document.querySelectorAll(".tab-button");
+
+        tabButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const tabName = this.getAttribute("data-tab");
+            updateTabButtons(tabName);
+          });
+        });
+      });
     </script>
   </body>
 </html>

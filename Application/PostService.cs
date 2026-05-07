@@ -1,15 +1,16 @@
 namespace Testing3.Application;
 using Testing3.DTO;
+using Testing3;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 public interface IPostService
 {
-    Task<Post> CreatePostAsync(string text, string? title = null, Guid? userId = null); // дописать dto на проверку гостя для черновика
+    Task<ViewPostsDto> CreatePostAsync(string text, Guid userId, string Username, bool IsPublished); // дописать dto на проверку гостя для черновика
     void DeletePost(Guid postId);
     Post? GetPost(Guid postId);
     PagedResponse<ViewPostsDto> GetAllPosts(int PageNumber, int PageSize, Guid? userId = null);
-    Task<List<ViewPostsDto>> GetAllPostsForUserAsync(Guid userId);
+    Task<List<ViewPostsDto>> GetUserPostsAsync(Guid userId);
 }
 public class PostService : IPostService
 {
@@ -21,12 +22,24 @@ public class PostService : IPostService
         _dbcontext = dbContext;
         _logger = logger;
     }
-    public async Task<Post> CreatePostAsync(string text, string? title = null, Guid? userId = null)
+    public async Task<ViewPostsDto> CreatePostAsync(string text, Guid userId, string Username, bool IsPublished)
     {
-        var post = new Post(text, userId ?? Guid.Empty, title);
+        var post = new Post(text, userId, IsPublished);
         await _dbcontext.Posts.AddAsync(post);
         await _dbcontext.SaveChangesAsync();
-        return post;
+        var responseDto = new ViewPostsDto
+        {
+            PostId = post.Id,
+            Title = post.Title,
+            Text = post.Text,
+            UserId = post.UserId,
+            Username = Username,
+            LikedByUser = false,
+            LikesCount = 0,
+            CreatedAt = post.CreatedAt,
+            IsPublished = IsPublished,
+        };
+        return responseDto;
     }
 
     public Post? GetPost(Guid postId)
@@ -37,30 +50,29 @@ public class PostService : IPostService
 
     public PagedResponse<ViewPostsDto> GetAllPosts(int PageNumber, int PageSize, Guid? userId = null)
     {
-        _logger.LogInformation("Getting all posts");
-
         var items = _dbcontext.Posts
-        .OrderByDescending(p => p.CreatedAt)
-        .Include(p => p.User)
-        .Select(p => new ViewPostsDto
-        {
-            UserId = p.UserId,
-            PostId = p.Id,
-            Text = p.Text,
-            Title = p.Title,
-            LikedByUser = p.Likes.Any(l => l.UserId == userId),
-            LikesCount = p.Likes.Count,
-            Username = p.User.Username,
-            CreatedAt = p.CreatedAt
-        })
-        // .GroupBy(p => p.UserId) вот так можно сгруппировать по пользователю
-        .Skip((PageNumber - 1) * PageSize)
-        .Take(PageSize)
-        .ToList();
+                .Where(p => p.IsPublished == true) //исключать черновики
+                .OrderByDescending(p => p.CreatedAt)
+                .Include(p => p.User)
+                .Select(p => new ViewPostsDto
+                {
+                    UserId = p.UserId,
+                    PostId = p.Id,
+                    Text = p.Text,
+                    Title = p.Title,
+                    LikedByUser = p.Likes.Any(l => l.UserId == userId), //отображаем лайк пользователя
+                    LikesCount = p.Likes.Count,
+                    Username = p.User.Username,
+                    CreatedAt = p.CreatedAt,
+                })
+                // .GroupBy(p => p.UserId) вот так можно сгруппировать по пользователю
+                .Skip((PageNumber - 1) * PageSize)
+                .Take(PageSize)
+                .ToListAsync();
 
         return new PagedResponse<ViewPostsDto>
         {
-            Items = items,
+            Items = items.Result,
             Meta = new MetaData
             {
                 TotalCount = _dbcontext.Posts.Count(),
@@ -71,26 +83,25 @@ public class PostService : IPostService
         };
     }
 
-    public async Task<List<ViewPostsDto>> GetAllPostsForUserAsync(Guid userId)
+    public async Task<List<ViewPostsDto>> GetUserPostsAsync(Guid userId)
     {
 
         var posts = await _dbcontext.Posts
-        .Where(p => p.UserId == userId)
+        .Where(p => p.UserId == userId) //посты в нашем профиле
         .OrderByDescending(p => p.CreatedAt)
-        .Include(p => p.Likes) // включить связанные объекты
-        .Include(p => p.User) // включить данные пользователя
-        .Select(p => new ViewPostsDto // мы выбираем что отдавать клиенту
+        .Include(p => p.User)
+        .Select(p => new ViewPostsDto
         {
             UserId = p.UserId,
-            PostId = p.Id,  // Изменено с GuidId на PostId
+            PostId = p.Id,
             Text = p.Text,
             Title = p.Title,
-            LikedByUser = p.Likes.Any(l => l.UserId == userId), //измененный и правильный вариант
+            LikedByUser = p.Likes.Any(l => l.UserId == userId),
             LikesCount = p.Likes.Count,  // Добавляем подсчет лайков
             Username = p.User.Username,  // Добавляем имя автора
-            CreatedAt = p.CreatedAt
-            // Мы больше не лезем в _dbcontext.Likes вручную!
-            // Мы спрашиваем СУБЪЕКТИВНО у поста: "Есть ли среди ТВОИХ лайков мой?
+            CreatedAt = p.CreatedAt,
+            IsPublished = p.IsPublished, //сообщить о черновке
+            // это dto твоих постов, тут кнопки редактирования и удаления
         })
         .ToListAsync();
 

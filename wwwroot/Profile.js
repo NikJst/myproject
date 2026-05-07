@@ -333,6 +333,41 @@ export async function loadUserFavorites(username) {
   }
 }
 
+// Загрузка черновиков
+export async function loadUserDrafts(username) {
+  try {
+    console.log('loadUserDrafts: Использую username из профиля:', username);
+    
+    if (!username) {
+      throw new Error('Username не указан');
+    }
+    
+    const response = await fetch(`/api/Profile/${username}/drafts`);
+    console.log('получаем черновики:', response.status);
+    
+    if (!response.ok) {
+      console.error('Ошибка загрузки черновиков:', response.status, response.statusText);
+      throw new Error(`Ошибка загрузки черновиков: ${response.status}`);
+    }
+    
+    const draftPosts = await response.json();
+    console.log('Черновики:', draftPosts);
+    
+    // Обновляем интерфейс с черновиками
+    updateDraftsUI(draftPosts);
+    
+    return draftPosts;
+  } catch (error) {
+    console.error('Ошибка при загрузке черновиков:', error);
+    // Показываем сообщение об ошибке в интерфейсе
+    const draftsContainer = document.querySelector('.drafts-container');
+    if (draftsContainer) {
+      draftsContainer.innerHTML = `<p class="text-red-500 text-center">Ошибка загрузки черновиков: ${error.message}</p>`;
+    }
+    throw error;
+  }
+}
+
 // Обновление интерфейса с понравившимися постами
 function updateLikesUI(posts) {
   console.log('Updating likes UI with:', posts);
@@ -382,6 +417,32 @@ function updateFavoritesUI(posts) {
   // Создаем карточки для каждого поста
   posts.forEach(post => {
     createPostElement(post, '.favorites-container');
+  });
+}
+
+// Обновление интерфейса с черновиками
+function updateDraftsUI(posts) {
+  console.log('Updating drafts UI with:', posts);
+  
+  // Находим контейнер для черновиков
+  const draftsContainer = document.querySelector('.drafts-container');
+  
+  if (!draftsContainer) {
+    console.warn('Контейнер для черновиков не найден');
+    return;
+  }
+  
+  // Очищаем контейнер
+  draftsContainer.innerHTML = '';
+  
+  if (!posts || posts.length === 0) {
+    draftsContainer.innerHTML = '<p class="text-gray-500 text-center">Черновиков пока нет</p>';
+    return;
+  }
+  
+  // Создаем карточки для каждого поста
+  posts.forEach(post => {
+    createPostElement(post, '.drafts-container');
   });
 }
 

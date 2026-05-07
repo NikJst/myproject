@@ -21,7 +21,6 @@ public class GINController : ControllerBase
         _logger.LogWarning("Запрос: {Query}", query);
         if (string.IsNullOrWhiteSpace(query))
         {
-            _logger.LogWarning("Invalid query");
             throw new ArgumentException("invalid query");
         }
         var result = await _search.SearchToWords(query);

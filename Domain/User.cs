@@ -4,7 +4,7 @@ namespace Testing3;
 public class User
 {
     // для отображения профиля
-    public string Username { get; set; }
+    public string? Username { get; set; }
     // public string? AvatarUrl { get; set; }
     public string? Header { get; set; }
     // public string? Location { get; set; }

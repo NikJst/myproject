@@ -3,7 +3,7 @@
 /* Контейнер для кнопок действий */
 .action-buttons-container {
   position: fixed;
-  bottom: 70px; /* Над контейнером пагинации (60px + 10px отступ) */
+  bottom: 10px; /* Над контейнером пагинации (60px + 10px отступ) */
   left: 50%;
   transform: translateX(-50%); /* центрирование по горизонтали */
   display: flex;
@@ -11,7 +11,7 @@
   justify-content: center; /* центрирование кнопок по горизонтали */
   gap: 10px; /* расстояние между кнопками */
   z-index: 100;
-  
+
   /* Стили как у кнопок */
   background-color: #ccc; /* светло-серый фон */
   border: none; /* без рамки */
@@ -22,7 +22,6 @@
 }
 
 .action-buttons-container:hover {
-
   color: #ffffff; /* белый текст при наведении */
 }
 
@@ -89,7 +88,6 @@ body {
 
 header {
   position: relative; /* чтобы потом позиционировать кнопку внутри */
-  box-shadow: -1px 20px 80px rgba(228, 228, 228, 1);
   background-color: #ffffff;
   color: white;
   padding: 2rem;
@@ -126,20 +124,18 @@ header {
   padding: 1rem;
   margin-bottom: 1rem;
   border-radius: 30px;
-  box-shadow: -0px 20px 28px rgba(0, 0, 0, 0.1);
   width: 85%; /* карточка занимает 100% ширины контейнера */
   max-width: 400px; /* ограничение для больших экранов */
   /*padding-top: 3rem;  внутренний отступ сверху текста внутри карточки */
   margin-top: 2rem; /* внешний отступ сверху. 	margin-top — пространство снаружи блока, то есть отступ от соседних элементов карточки или других карточек.*/
   position: relative; /* чтобы кнопка закрыть позиционировалась внутри */
   /* box-shadow: 0 0 84px rgba(191, 191, 191, 1); */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* плавные переходы */
+  transition: transform 0.3s ease; /* плавные переходы */
 }
 
 /* Hover эффекты для карточек */
 .card-hover:hover {
   transform: translateY(-2px); /* легкое поднятие карточки при наведении */
-  box-shadow: -0px 25px 35px rgba(0, 0, 0, 0.15); /* усиление тени при наведении */
 }
 
 button {
@@ -320,6 +316,16 @@ footer {
   display: block;
 }
 
+/* Стили для счетчика лайков */
+.like-count {
+  font-size: 14px;
+  color: #666;
+  margin-left: 4px;
+  font-weight: 500;
+  min-width: 20px;
+  text-align: center;
+}
+
 /* Стили для модального окна формы */
 .post-form-modal {
   position: fixed;
@@ -338,7 +344,6 @@ footer {
   background-color: white;
   padding: 2rem;
   border-radius: 30px;
-  box-shadow: 0 0 84px rgba(0, 0, 0, 0.36);
   width: 90%;
   max-width: 500px;
   position: relative;
@@ -428,6 +433,16 @@ footer {
   background-color: #545b62;
 }
 
+.draft-btn {
+  background-color: #dc3545;
+  color: white;
+  border-radius: 32px;
+}
+
+.draft-btn:hover {
+  background-color: #c82333;
+}
+
 /* Стили для пагинации */
 .pagination-info {
   font-size: 14px;
@@ -439,374 +454,373 @@ footer {
 
 /* Контейнер для пагинации - всегда внизу экрана */
 .pagination-container {
-    position: fixed;
-    top: 80%; /* Начинается с 10% от верха экрана */
-    bottom: 0; /* Растягивается до низа */
-    left: 0;
-    right: 0;
-    background: white;
-    padding: 25px; /* Увеличили padding для большей области */
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.05); /* Легкая тень сверху для отделения */
-    display: flex;
-    align-items: flex-start; /* Контент будет вверху контейнера */
-    justify-content: center;
-    gap: 2rem; /* Увеличили отступ между элементами */
-    z-index: 100; /* Чтобы был поверх других элементов */
+  position: fixed;
+  top: 80%; /* Начинается с 10% от верха экрана */
+  bottom: 0; /* Растягивается до низа */
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 25px; /* Увеличили padding для большей области */
+  display: flex;
+  align-items: flex-start; /* Контент будет вверху контейнера */
+  justify-content: center;
+  gap: 2rem; /* Увеличили отступ между элементами */
+  z-index: 100; /* Чтобы был поверх других элементов */
 }
 
 /* Внутренний контейнер для кнопок пагинации */
 .pagination-controls-inner {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
-
-
 
 /* Стили для кнопок пагинации */
 .pagination-btn {
-    background-color: #ccc;
-    color: #000000;
-    border: none;
-    padding: 10px 40px; /* Уменьшили padding по высоте в 2 раза */
-    border-radius: 32px;
-    cursor: pointer;
-    font-size: 19.2px;
-    transition: background-color 0.3s;
-    min-width: 80px; /* Минимальная ширина для квадратной формы */
-    min-height: 40px; /* Уменьшили минимальную высоту в 2 раза */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background-color: #ccc;
+  color: #000000;
+  border: none;
+  padding: 10px 40px; /* Уменьшили padding по высоте в 2 раза */
+  border-radius: 32px;
+  cursor: pointer;
+  font-size: 19.2px;
+  transition: background-color 0.3s;
+  min-width: 80px; /* Минимальная ширина для квадратной формы */
+  min-height: 40px; /* Уменьшили минимальную высоту в 2 раза */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .pagination-btn:hover {
-    background-color: #000000;
-    color: #ffffff;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 .pagination-btn:disabled {
-    background-color: #e0e0e0;
-    color: #a0a0a0;
-    cursor: not-allowed;
+  background-color: #e0e0e0;
+  color: #a0a0a0;
+  cursor: not-allowed;
 }
 
 /* Стили для информации об авторе и дате */
 .author-info {
-    font-size: 12px;
-    color: #666;
-    margin-top: 8px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    flex-wrap: wrap;
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
 }
 
 .author-info a {
-    color: #666;
-    text-decoration: none;
+  color: #666;
+  text-decoration: none;
 }
 
 .author-info a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* Онлайн индикатор */
 .online-indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
 }
 
 .online-indicator.online {
-    background-color: #4CAF50;
+  background-color: #4caf50;
 }
 
 .online-indicator.offline {
-    background-color: #9E9E9E;
+  background-color: #9e9e9e;
 }
 
 /* Дата создания */
 .post-date {
-    color: #999;
-    font-size: 11px;
-    margin-left: 5px;
+  color: #999;
+  font-size: 11px;
+  margin-left: 5px;
 }
 
 /* Стили для модуля поиска */
 .search-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1001;
-    background: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1001;
+  background: white;
 }
 
 .search-header {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    background: white;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: white;
 }
 
 .search-toggle-btn {
-    background: none;
-    border: none;
-    padding: 8px;
-    cursor: pointer;
-    border-radius: 50%;
-    transition: background-color 0.3s;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.3s;
 }
 
 .search-toggle-btn:hover {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
 .search-toggle-btn img {
-    width: 24px;
-    height: 24px;
-    opacity: 0.7;
+  width: 24px;
+  height: 24px;
+  opacity: 0.7;
 }
 
 .search-box {
-    display: none;
-    flex: 1;
-    align-items: center;
-    gap: 10px;
-    margin: 0 1rem;
+  display: none;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  margin: 0 1rem;
 }
 
 .search-box input {
-    flex: 1;
-    padding: 12px 16px;
-    border: 2px solid #e0e0e0;
-    border-radius: 32px;
-    font-size: 16px;
-    font-family: "Roboto", Arial, sans-serif;
-    outline: none;
-    transition: border-color 0.3s;
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 32px;
+  font-size: 16px;
+  font-family: "Roboto", Arial, sans-serif;
+  outline: none;
+  transition: border-color 0.3s;
 }
 
 .search-box input:focus {
-    border-color: #007bff;
+  border-color: #007bff;
 }
 
 .search-close-btn {
-    background: none;
-    border: none;
-    padding: 8px;
-    cursor: pointer;
-    border-radius: 50%;
-    transition: background-color 0.3s;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.3s;
 }
 
 .search-close-btn:hover {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
 .search-close-btn img {
-    width: 20px;
-    height: 20px;
-    opacity: 0.7;
+  width: 20px;
+  height: 20px;
+  opacity: 0.7;
 }
 
 .search-container.search-active .search-results {
-    display: block;
+  display: block;
 }
 
 .search-results {
-    display: none;
-    max-height: 400px;
-    overflow-y: auto;
-    background: white;
-    border-top: 1px solid #e0e0e0;
+  display: none;
+  max-height: 400px;
+  overflow-y: auto;
+  background: white;
+  border-top: 1px solid #e0e0e0;
 }
 
 .search-results-header {
-    padding: 12px 16px;
-    font-size: 14px;
-    color: #666;
-    background: #f8f9fa;
-    border-bottom: 1px solid #e0e0e0;
-    font-weight: 500;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #666;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+  font-weight: 500;
 }
 
 .search-results-list {
-    padding: 8px;
+  padding: 8px;
 }
 
 .search-result-card {
-    background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    margin-bottom: 8px;
-    padding: 16px;
-    transition: box-shadow 0.3s, border-color 0.3s;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  padding: 16px;
+  transition: border-color 0.3s;
 }
 
 .search-result-card:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border-color: #007bff;
+  border-color: #007bff;
 }
 
 .search-result-content {
-    margin-bottom: 12px;
+  margin-bottom: 12px;
 }
 
 .search-result-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    font-size: 12px;
-    color: #666;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #666;
 }
 
 .search-result-username {
-    font-weight: 600;
-    color: #333;
+  font-weight: 600;
+  color: #333;
 }
 
 .search-result-date {
-    color: #999;
+  color: #999;
 }
 
 .search-result-text {
-    font-size: 14px;
-    line-height: 1.4;
-    color: #333;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #333;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .search-result-actions {
-    display: flex;
-    justify-content: flex-end;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .search-result-actions .like-button {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border: 1px solid #e0e0e0;
-    border-radius: 20px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 12px;
-    color: #666;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 12px;
+  color: #666;
 }
 
 .search-result-actions .like-button:hover {
-    background: #f0f0f0;
-    border-color: #007bff;
+  background: #f0f0f0;
+  border-color: #007bff;
 }
 
 .search-result-actions .like-button.liked {
-    background: #007bff;
-    color: white;
-    border-color: #007bff;
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
 }
 
 .search-result-actions .like-button img {
-    width: 16px;
-    height: 16px;
+  width: 16px;
+  height: 16px;
 }
 
 .likes-count {
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .search-loading,
 .search-error,
 .search-no-results {
-    padding: 20px;
-    text-align: center;
-    color: #666;
-    font-size: 14px;
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
 }
 
 .search-error {
-    color: #dc3545;
+  color: #dc3545;
 }
 
 .search-no-results {
-    color: #999;
+  color: #999;
 }
 
 /* Стили для индикатора загрузки */
 .loading-indicator {
-    text-align: center;
-    padding: 40px 20px;
-    color: #666;
-    font-size: 16px;
-    font-family: "Roboto", Arial, sans-serif;
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-size: 16px;
+  font-family: "Roboto", Arial, sans-serif;
 }
 
 .loading-indicator::before {
-    content: "";
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #f3f3f3;
-    border-top: 2px solid #007bff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-right: 10px;
-    vertical-align: middle;
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+  vertical-align: middle;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Стили для сообщения об отсутствии постов */
 .no-posts-message {
-    text-align: center;
-    padding: 60px 20px;
-    color: #999;
-    font-size: 18px;
-    font-family: "Roboto", Arial, sans-serif;
-    font-weight: 500;
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+  font-size: 18px;
+  font-family: "Roboto", Arial, sans-serif;
+  font-weight: 500;
 }
 
 .no-posts-message::before {
-    content: "📝";
-    display: block;
-    font-size: 48px;
-    margin-bottom: 16px;
-    opacity: 0.5;
+  content: "📝";
+  display: block;
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
 }
 
 /* Адаптивные стили для мобильных устройств */
 @media (max-width: 768px) {
-    .search-header {
-        padding: 0.8rem;
-    }
-    
-    .search-box {
-        margin: 0 0.5rem;
-    }
-    
-    .search-box input {
-        font-size: 14px;
-        padding: 10px 14px;
-    }
-    
-    .search-results {
-        max-height: 300px;
-    }
-    
-    .search-result-card {
-        padding: 12px;
-    }
-    
-    .search-result-text {
-        font-size: 13px;
-    }
+  .search-header {
+    padding: 0.8rem;
+  }
+
+  .search-box {
+    margin: 0 0.5rem;
+  }
+
+  .search-box input {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+
+  .search-results {
+    max-height: 300px;
+  }
+
+  .search-result-card {
+    padding: 12px;
+  }
+
+  .search-result-text {
+    font-size: 13px;
+  }
 }

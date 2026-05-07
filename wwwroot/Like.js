@@ -137,10 +137,13 @@ export function updateLikeButton(buttonElement, isLiked, likesCount) {
   const img = buttonElement.querySelector('img');
   if (img) {
     img.src = isLiked ? 'image/like+.png' : 'image/like.png';
-    // Обновляем счетчик лайков
-    const likeCount = buttonElement.querySelector('.like-count');
-    if (likeCount) {
-      likeCount.textContent = likesCount;
+    // Обновляем счетчик лайков (теперь он находится вне кнопки)
+    const postId = buttonElement.dataset.postId;
+    if (postId) {
+      const likeCount = document.getElementById(`like-count-${postId}`);
+      if (likeCount) {
+        likeCount.textContent = likesCount;
+      }
     }
   }
 }
