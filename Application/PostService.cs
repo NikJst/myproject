@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 public interface IPostService
 {
     Task<ViewPostsDto> CreatePostAsync(string text, Guid userId, string Username, bool IsPublished); // дописать dto на проверку гостя для черновика
-    void DeletePost(Guid postId);
+    void DeletePost(Guid postId, Guid userId);
     Post? GetPost(Guid postId);
     PagedResponse<ViewPostsDto> GetAllPosts(int PageNumber, int PageSize, Guid? userId = null);
     Task<List<ViewPostsDto>> GetUserPostsAsync(Guid userId);
@@ -64,6 +64,7 @@ public class PostService : IPostService
                     LikesCount = p.Likes.Count,
                     Username = p.User.Username,
                     CreatedAt = p.CreatedAt,
+                    DeletedButton = p.UserId == userId
                 })
                 // .GroupBy(p => p.UserId) вот так можно сгруппировать по пользователю
                 .Skip((PageNumber - 1) * PageSize)
@@ -108,14 +109,9 @@ public class PostService : IPostService
         return posts;
 
     }
-    public void DeletePost(Guid postId)
+    public void DeletePost(Guid postId, Guid userId)
     {
-        _logger.LogInformation($"Deleting post with ID: {postId}");
-        var post = _dbcontext.Posts.FirstOrDefault(p => p.Id == postId);
-        if (post != null)
-        {
-            _dbcontext.Posts.Remove(post);
-            _dbcontext.SaveChanges();
-        }
+        _dbcontext.Posts.Remove(_dbcontext.Posts.First(p => p.Id == postId && p.UserId == userId));
+        _dbcontext.SaveChanges();
     }
 }

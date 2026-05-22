@@ -12,8 +12,8 @@ using Testing3;
 namespace Testing3.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260318131843_InitialCreate2")]
-    partial class InitialCreate2
+    [Migration("20260519055525_UserDomen2")]
+    partial class UserDomen2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,10 +27,10 @@ namespace Testing3.Migrations
 
             modelBuilder.Entity("Testing3.Like", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("PostId")
+                    b.Property<Guid?>("PostId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("Id")
@@ -46,9 +46,12 @@ namespace Testing3.Migrations
 
             modelBuilder.Entity("Testing3.Post", b =>
                 {
-                    b.Property<Guid>("PostId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsPublished")
                         .HasColumnType("boolean");
@@ -63,7 +66,7 @@ namespace Testing3.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("PostId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
@@ -72,17 +75,33 @@ namespace Testing3.Migrations
 
             modelBuilder.Entity("Testing3.User", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<int>("Age")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("City")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("IsGuest")
-                        .HasColumnType("boolean");
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
 
-                    b.Property<bool>("IsOnline")
+                    b.Property<string>("Gender")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Header")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Hobby")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsGuest")
                         .HasColumnType("boolean");
 
                     b.Property<int>("LikeCount")
@@ -95,7 +114,14 @@ namespace Testing3.Migrations
                     b.Property<int>("PostCount")
                         .HasColumnType("integer");
 
-                    b.HasKey("UserId");
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });

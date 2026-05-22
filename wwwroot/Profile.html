@@ -89,6 +89,7 @@
           <!-- Кнопки действий -->
           <div class="flex space-x-3">
             <button
+              id="edit-profile-btn"
               class="px-6 py-0.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
             >
               Изменить
@@ -200,7 +201,282 @@
       </div>
     </main>
 
+    <!-- Модальное окно редактирования профиля -->
+    <div
+      id="edit-profile-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"
+    >
+      <div
+        class="bg-white rounded-lg p-6 max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold text-gray-800">Редактировать профиль</h2>
+          <button
+            id="close-modal-btn"
+            class="text-gray-500 hover:text-gray-700"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <form id="edit-profile-form">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Заголовок</label
+              >
+              <input
+                type="text"
+                id="edit-header"
+                name="header"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Ваш заголовок"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Описание</label
+              >
+              <textarea
+                id="edit-description"
+                name="description"
+                rows="3"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Расскажите о себе"
+              ></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Возраст</label
+              >
+              <input
+                type="number"
+                id="edit-age"
+                name="age"
+                min="1"
+                max="120"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Ваш возраст"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Пол</label
+              >
+              <select
+                id="edit-gender"
+                name="gender"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Не указано</option>
+                <option value="Мужской">Мужской</option>
+                <option value="Женский">Женский</option>
+                <option value="Другой">Другой</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Город</label
+              >
+              <input
+                type="text"
+                id="edit-city"
+                name="city"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Ваш город"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Улица</label
+              >
+              <input
+                type="text"
+                id="edit-street"
+                name="street"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Ваша улица"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Хобби</label
+              >
+              <input
+                type="text"
+                id="edit-hobby"
+                name="hobby"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Ваше хобби"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >Интересы</label
+              >
+              <input
+                type="text"
+                id="edit-interests"
+                name="interests"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Ваши интересы"
+              />
+            </div>
+          </div>
+
+          <div class="flex justify-end space-x-3 mt-6">
+            <button
+              type="button"
+              id="cancel-btn"
+              class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200"
+            >
+              Отмена
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+            >
+              Сохранить
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <script src="OnlineStatus.js"></script>
+    <script>
+      // Получаем элементы модального окна
+      const editProfileBtn = document.getElementById("edit-profile-btn");
+      const editProfileModal = document.getElementById("edit-profile-modal");
+      const closeModalBtn = document.getElementById("close-modal-btn");
+      const cancelBtn = document.getElementById("cancel-btn");
+      const editProfileForm = document.getElementById("edit-profile-form");
+
+      // Функция для открытия модального окна и заполнения данными
+      function openEditModal() {
+        // Получаем текущие данные профиля из DOM
+        const usernameElement = document.querySelector("h1");
+        const bioElement = document.querySelector(
+          ".text-gray-700.text-sm.max-w-md",
+        );
+
+        // Заполняем форму текущими данными
+        document.getElementById("edit-header").value = "";
+        document.getElementById("edit-description").value = bioElement
+          ? bioElement.textContent
+          : "";
+        document.getElementById("edit-age").value = "";
+        document.getElementById("edit-gender").value = "";
+        document.getElementById("edit-city").value = "";
+        document.getElementById("edit-street").value = "";
+        document.getElementById("edit-hobby").value = "";
+        document.getElementById("edit-interests").value = "";
+
+        // Показываем модальное окно
+        editProfileModal.classList.remove("hidden");
+        editProfileModal.classList.add("flex");
+      }
+
+      // Функция для закрытия модального окна
+      function closeEditModal() {
+        editProfileModal.classList.add("hidden");
+        editProfileModal.classList.remove("flex");
+        editProfileForm.reset();
+      }
+
+      // Обработчик клика на кнопку "Изменить"
+      editProfileBtn.addEventListener("click", openEditModal);
+
+      // Обработчики клика на кнопки закрытия
+      closeModalBtn.addEventListener("click", closeEditModal);
+      cancelBtn.addEventListener("click", closeEditModal);
+
+      // Закрытие модального окна при клике на затемненный фон
+      editProfileModal.addEventListener("click", function (e) {
+        if (e.target === editProfileModal) {
+          closeEditModal();
+        }
+      });
+
+      // Обработчик отправки формы
+      editProfileForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        // Собираем данные из формы
+        const profileData = {
+          header: document.getElementById("edit-header").value,
+          description: document.getElementById("edit-description").value,
+          age: parseInt(document.getElementById("edit-age").value) || 0,
+          gender: document.getElementById("edit-gender").value,
+          city: document.getElementById("edit-city").value,
+          street: document.getElementById("edit-street").value,
+          hobby: document.getElementById("edit-hobby").value,
+          interests: document.getElementById("edit-interests").value,
+        };
+
+        try {
+          // Получение данных текущего пользователя
+          const userResponse = await fetch("/User");
+          if (userResponse.ok) {
+            const user = await userResponse.json();
+            username = user.username || user.name;
+          }
+          // Отправляем данные на сервер
+          const response = await fetch(`/api/Profile/${username}/edit`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(profileData),
+          });
+
+          if (!response.ok) {
+            throw new Error("Ошибка обновления профиля");
+          }
+
+          const updatedProfile = await response.json();
+          console.log("Профиль обновлен:", updatedProfile);
+
+          // Обновляем интерфейс с новыми данными
+          if (updatedProfile.description) {
+            const bioElement = document.querySelector(
+              ".text-gray-700.text-sm.max-w-md",
+            );
+            if (bioElement) {
+              bioElement.textContent = updatedProfile.description;
+            }
+          }
+
+          // Закрываем модальное окно
+          closeEditModal();
+
+          // Показываем сообщение об успехе
+          alert("Профиль успешно обновлен!");
+        } catch (error) {
+          console.error("Ошибка при обновлении профиля:", error);
+          alert("Ошибка при обновлении профиля: " + error.message);
+        }
+      });
+    </script>
     <script type="module">
       // Импортируем инициализацию профиля
       import { initializeProfile } from "./Init.js";

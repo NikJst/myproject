@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Testing3;
@@ -11,9 +12,11 @@ using Testing3;
 namespace Testing3.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260519053611_UserDomen")]
+    partial class UserDomen
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,31 +79,19 @@ namespace Testing3.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("Age")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("City")
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<string>("Gender")
-                        .HasColumnType("text");
-
                     b.Property<string>("Header")
                         .HasColumnType("text");
 
-                    b.Property<string>("Hobby")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Interests")
-                        .HasColumnType("text");
-
                     b.Property<bool>("IsGuest")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsOnline")
                         .HasColumnType("boolean");
 
                     b.Property<int>("LikeCount")
@@ -112,9 +103,6 @@ namespace Testing3.Migrations
 
                     b.Property<int>("PostCount")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Street")
-                        .HasColumnType("text");
 
                     b.Property<string>("Username")
                         .HasColumnType("text");

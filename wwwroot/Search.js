@@ -58,7 +58,7 @@ class SearchModule {
 
         try {
             const response = await fetch(`/api/GIN?query=${encodeURIComponent(query)}`, {
-                method: 'POST',
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 }

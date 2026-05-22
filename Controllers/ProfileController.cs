@@ -24,13 +24,17 @@ public class ProfileController : ControllerBase
         //предположим что пользователь уже авторизован
         var user = await userService.GetOrCreateUser(HttpContext);
 
+        if (user == null)
+        {
+            return NotFound();
+        }
         var profileInfo = await profileService.GetTargetProfile(username, user);
         return Ok(profileInfo);
     }
 
     [HttpPatch]
     [Route("{username}/edit")] //username может изменяться далее так что лучше не использовать его в пути
-    public async Task<IActionResult> PatchInfo([FromRoute] string username, [FromBody] ProfileInfoDto profileDto)
+    public async Task<IActionResult> PatchInfo([FromRoute] string username, [FromBody] ProfileEditDto profileDto)
     {
         //предположим что пользователь уже авторизован
         var user = await userService.GetOrCreateUser(HttpContext);

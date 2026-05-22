@@ -170,26 +170,26 @@ async function getCurrentUser() {
 }
 
 // Обновление информации профиля
-export async function updateProfileInfo(profileData) {
+export async function updateProfileInfo(profileData, username) {
   try {
-    const response = await fetch('/api/Profile/info', {
+    const response = await fetch(`/api/Profile/${username}/edit`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(profileData)
     });
-    
+
     if (!response.ok) {
       throw new Error('Ошибка обновления профиля');
     }
-    
+
     const updatedProfile = await response.json();
     console.log('Профиль обновлен:', updatedProfile);
-    
+
     // Обновляем интерфейс с новыми данными
     updateProfileUI(updatedProfile);
-    
+
     return updatedProfile;
   } catch (error) {
     console.error('Ошибка при обновлении профиля:', error);

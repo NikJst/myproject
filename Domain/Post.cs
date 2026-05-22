@@ -18,14 +18,14 @@ public class Post
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid UserId { get; private set; }
+    [Required]
     public string Text { get; private set; } = string.Empty;
     public string? Title { get; private set; } = null;
     public DateTime CreatedAt { get; private set; }
     public bool IsPublished { get; set; } // true = видимо всем, false = черновик
-                                          // public NpgsqlTsVector? search_vector { get; set; }
-                                          // public bool Saved { get; private set; }
+
     public List<Like> Likes { get; private set; } = [];
 
     // Навигационное свойство для entity framework
-    public User User { get; set; } = null!;
+    public User User { get; set; } = null!; // с virtual проблема N+1
 }

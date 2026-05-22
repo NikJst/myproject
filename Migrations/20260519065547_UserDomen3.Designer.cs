@@ -12,8 +12,8 @@ using Testing3;
 namespace Testing3.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260318113314_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260519065547_UserDomen3")]
+    partial class UserDomen3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,26 +27,31 @@ namespace Testing3.Migrations
 
             modelBuilder.Entity("Testing3.Like", b =>
                 {
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("PostId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uuid");
+                    b.HasKey("UserId", "PostId");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
+                    b.HasIndex("PostId");
 
                     b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("Testing3.Post", b =>
                 {
-                    b.Property<Guid>("PostId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsPublished")
                         .HasColumnType("boolean");
@@ -61,7 +66,7 @@ namespace Testing3.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("PostId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
@@ -70,17 +75,37 @@ namespace Testing3.Migrations
 
             modelBuilder.Entity("Testing3.User", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<int>("Age")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("City")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("IsGuest")
-                        .HasColumnType("boolean");
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
 
-                    b.Property<bool>("IsOnline")
+                    b.Property<string>("Gender")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Header")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Hobby")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Interests")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsGuest")
                         .HasColumnType("boolean");
 
                     b.Property<int>("LikeCount")
@@ -93,22 +118,57 @@ namespace Testing3.Migrations
                     b.Property<int>("PostCount")
                         .HasColumnType("integer");
 
-                    b.HasKey("UserId");
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Testing3.Like", b =>
+                {
+                    b.HasOne("Testing3.Post", "Post")
+                        .WithMany("Likes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Testing3.User", "User")
+                        .WithMany("Likes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Testing3.Post", b =>
                 {
-                    b.HasOne("Testing3.User", null)
+                    b.HasOne("Testing3.User", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Testing3.Post", b =>
+                {
+                    b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("Testing3.User", b =>
                 {
+                    b.Navigation("Likes");
+
                     b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618

@@ -11,39 +11,12 @@ public class ViewPostsDto //для отображения всех постов
     public bool IsOnline { get; set; } = false;
     public DateTime CreatedAt { get; set; }
     public bool? IsPublished { get; set; }
+    public bool DeletedButton { get; set; }
 }
-// public class CreatePostDto //для создания постов
-// {
-//     public Guid PostId { get; set; }
-//     public Guid UserId { get; set; }
-//     public required string Text { get; set; }
-//     public string? Title { get; set; }
-//     public bool LikedByUser { get; set; }
-//     public bool IsGuest { get; set; }
-// }
 public class LikePostDto //для переключения лайка на посте
 {
     public Guid PostId { get; set; }
 }
-
-
-
-public class ProfileInfoDto //Для информации о профиле
-{
-    public required string Username { get; set; }
-    public Guid UserId { get; set; } //---------для проверки прав доступа
-    //     public string? AvatarUrl { get; set; }
-    public string? Header { get; set; }
-    //     public string? Location { get; set; }
-    public string? Description { get; set; }
-
-    // public bool IsGuest { get; set; } 
-    public int PostCount { get; set; } // счетчик перенести в META
-    public int LikesCount { get; set; } // счетчик лайков перенести в META
-                                        //     // public DateTime CreatedAt { get; set; }
-    public bool IsOnline { get; set; } = false;
-}
-
 
 public class PagedResponse<T>
 {

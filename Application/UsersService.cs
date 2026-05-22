@@ -29,14 +29,16 @@ public class UserService : IUserService
             .FirstOrDefaultAsync(u => u.Id == userId);
             if (findUser != null)
                 return findUser;
+            throw new Exception("===> User not found");
         }
+
 
         var newUserId = Guid.NewGuid();
         var user = new User(string.Empty)
         {
             Id = newUserId,//одинаковые id 
             Name = newUserId.ToString(), // одинаковые id 
-            Username = "User_" + newUserId.ToString().Substring(0, Math.Min(5, newUserId.ToString().Length)),
+            Username = "User_" + newUserId.ToString()[..Math.Min(5, newUserId.ToString().Length)],
             IsGuest = true,
             CreatedAt = DateTime.UtcNow
         };
@@ -47,6 +49,7 @@ public class UserService : IUserService
         logger.LogInformation("Создаем нового и отдаем cookie клиенту");
 
         return user; //целый обьект для использования в других методах
+
 
     }
 
