@@ -22,6 +22,25 @@ namespace Testing3.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Testing3.Bookmark", b =>
+                {
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("PostId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.HasKey("UserId", "PostId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("bookmarks");
+                });
+
             modelBuilder.Entity("Testing3.Like", b =>
                 {
                     b.Property<Guid?>("UserId")
@@ -76,7 +95,7 @@ namespace Testing3.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("Age")
+                    b.Property<int?>("Age")
                         .HasColumnType("integer");
 
                     b.Property<string>("City")
@@ -92,7 +111,8 @@ namespace Testing3.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Header")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Hobby")
                         .HasColumnType("text");
@@ -122,6 +142,25 @@ namespace Testing3.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Testing3.Bookmark", b =>
+                {
+                    b.HasOne("Testing3.Post", "Post")
+                        .WithMany("Bookmarks")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Testing3.User", "User")
+                        .WithMany("Bookmarks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Testing3.Like", b =>
@@ -156,11 +195,15 @@ namespace Testing3.Migrations
 
             modelBuilder.Entity("Testing3.Post", b =>
                 {
+                    b.Navigation("Bookmarks");
+
                     b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("Testing3.User", b =>
                 {
+                    b.Navigation("Bookmarks");
+
                     b.Navigation("Likes");
 
                     b.Navigation("Posts");

@@ -19,7 +19,7 @@ public class ProfileController : ControllerBase
     }
     [HttpGet]
     [Route("{username}")]
-    public async Task<IActionResult> GetTargetProfile([FromRoute] string username)
+    public async Task<IActionResult> GetProfile([FromRoute] string username)
     {
         //предположим что пользователь уже авторизован
         var user = await userService.GetOrCreateUser(HttpContext);
@@ -38,7 +38,7 @@ public class ProfileController : ControllerBase
     {
         //предположим что пользователь уже авторизован
         var user = await userService.GetOrCreateUser(HttpContext);
-        var updatedProfile = await profileService.PatchInfo(profileDto, user);
+        var updatedProfile = await profileService.PatchUserInfo(profileDto, user);
         return Ok(updatedProfile);
     }
 
@@ -83,14 +83,14 @@ public class ProfileController : ControllerBase
     }
 
 
-    // [HttpGet("{username}/favorites")]
-    // public async Task<IActionResult> GetFavorites([FromRoute] string username)
-    // {
-    //     //предположим что пользователь уже авторизован
-    //     var user = await userService.GetOrCreateUser(HttpContext);
+    [HttpGet("{username}/bookmarks")]
+    public async Task<IActionResult> GetBookmarks([FromRoute] string username)
+    {
+        //предположим что пользователь уже авторизован
+        var user = await userService.GetOrCreateUser(HttpContext);
 
-    //     var likes = await profileService.GetFavoritesPosts(username, user);
-    //     return Ok(likes);
-    // }
+        var bookmarks = await profileService.GetBookmarksPosts(username, user);
+        return Ok(bookmarks);
+    }
 
 }

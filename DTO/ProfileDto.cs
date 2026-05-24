@@ -14,12 +14,13 @@ public class ProfileInfoDto //Для информации о профиле
     public int LikesCount { get; set; } // счетчик лайков перенести в META
                                         //     // public DateTime CreatedAt { get; set; }
     public bool IsOnline { get; set; } = false;
-    public int Age { get; set; }
+    public int? Age { get; set; }
     public string? Gender { get; set; }
     public string? City { get; set; }
     public string? Street { get; set; }
     public string? Hobby { get; set; }
     public string? Interests { get; set; }
+    public int BookmarksCount { get; set; }
 
 }
 public class ProfileEditDto
@@ -28,7 +29,7 @@ public class ProfileEditDto
     //     public string? Location { get; set; }
     public string? Description { get; set; }
 
-    public int Age { get; set; }
+    public int? Age { get; set; }
     public string? Gender { get; set; }
     public string? City { get; set; }
     public string? Street { get; set; }

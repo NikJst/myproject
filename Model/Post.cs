@@ -13,19 +13,19 @@ public class Post
         IsPublished = isPublished;
         Id = Guid.NewGuid();
         CreatedAt = DateTime.UtcNow;
+
     }
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid UserId { get; private set; }
-    [Required]
     public string Text { get; private set; } = string.Empty;
     public string? Title { get; private set; } = null;
     public DateTime CreatedAt { get; private set; }
+    [Required]
     public bool IsPublished { get; set; } // true = видимо всем, false = черновик
 
     public List<Like> Likes { get; private set; } = [];
-
-    // Навигационное свойство для entity framework
+    public List<Bookmark> Bookmarks { get; private set; } = [];
     public User User { get; set; } = null!; // с virtual проблема N+1
 }

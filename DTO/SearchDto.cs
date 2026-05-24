@@ -1,20 +1,21 @@
 namespace Testing3.DTO;
 public class UserSearchRequest
 {
-    public RangeFilter<int>? Range { get; set; }
     public required UserFilterTarget Values { get; set; }
 }
 public class UserFilterTarget
 {
-    public int? Age { get; set; } = null;
+    public RangeFilter<int>? Age { get; set; } = null;
+    public int? AgeOut { get; set; }
     public string? Name { get; set; } = null;
-    public string? RegistrationDate { get; set; } = null;
-    public int? PostCount { get; set; } = null;
+    public RangeFilter<int>? PostCount { get; set; } = null;
+    public int PostCountOut { get; set; }
     public string? Username { get; set; } = null;
     public string? City { get; set; } = null;
     public string? Hobby { get; set; } = null;
     public string? Interests { get; set; } = null;
-    public DateTime Date { get; set; }
+    public RangeFilter<DateTime>? Date { get; set; } = null;
+    public DateTime DateOut { get; set; }
 }
 
 public enum StringFilterMode
@@ -28,6 +29,12 @@ public class RangeFilter<T> where T : struct, IComparable
 {
     public T? Min { get; set; } = null;
     public T? Max { get; set; } = null;
+    public bool Contains(T value)
+    {
+        if (Min != null && value.CompareTo(Min) < 0) return false;
+        if (Max != null && value.CompareTo(Max) > 0) return false;
+        return true;
+    }
 }
 public class StringFilter //позже
 {

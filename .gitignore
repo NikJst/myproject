@@ -11,6 +11,7 @@ obj */
 .vscode/
 *.user
 *.suo
+Migrations/
 
 # OS files
 .DS_Store
@@ -23,3 +24,4 @@ node_modules/
 *.dll
 *.pdb
 *.exe
+node_modules/

@@ -4,32 +4,33 @@ using LinqKit;
 using System.Linq.Expressions;
 namespace Testing3.Application;
 
-public interface ISearch
+public interface ISearchService
 {
-    Task<List<ViewPostsDto>> SearchToWords(string query);
-    Task<List<UserFilterTarget>> SearchUsers<T>(RangeFilter<T> range, UserFilterTarget Values) where T : struct, IComparable;
+    Task<List<ViewPostDto>> SearchToWords(string query);
+    Task<List<UserFilterTarget>> SearchUsers(UserFilterTarget Values);
 }
 
 
-public class Search : ISearch
+public class SearchService : ISearchService
 {
 
     private readonly ApplicationDbContext _dbcontext;
-    private readonly ILogger<Search> _logger;
-    public Search(ApplicationDbContext dbcontext, ILogger<Search> logger)
+    private readonly ILogger<SearchService> _logger;
+    public SearchService(ApplicationDbContext dbcontext, ILogger<SearchService> logger)
     {
         _dbcontext = dbcontext;
         _logger = logger;
     }
-    public async Task<List<ViewPostsDto>> SearchToWords(string query)
+    public async Task<List<ViewPostDto>> SearchToWords(string query)
     {
+
         var results = await _dbcontext.Posts.FromSql($@"
                 SELECT ""Id"", ""Text"", ""UserId"", ""CreatedAt""
                 FROM ""Posts"" 
                 WHERE to_tsvector('russian', ""Text"") @@ websearch_to_tsquery('russian', {query})
                 ORDER BY ""CreatedAt"" DESC")
             .Include(p => p.Likes)
-            .Select(p => new ViewPostsDto
+            .Select(p => new ViewPostDto
             {
                 PostId = p.Id,
                 UserId = p.UserId,
@@ -41,8 +42,8 @@ public class Search : ISearch
         return results;
 
     }
-    //===========>
-    public async Task<List<UserFilterTarget>> SearchUsers<T>(RangeFilter<T> range, UserFilterTarget filterTarget) where T : struct, IComparable
+
+    public async Task<List<UserFilterTarget>> SearchUsers(UserFilterTarget filterTarget)
     {
         IQueryable<User> result = _dbcontext.Users;
         var param = Expression.Parameter(typeof(User), "u");
@@ -51,17 +52,18 @@ public class Search : ISearch
         Expression filterBody = Expression.Constant(true);
 
 
-        if (filterTarget.Age is not null && range.Min is not null && range.Max is not null)
+        if (filterTarget.Age is not null)
         {
-            var propertyDatetime = Expression.Property(param, nameof(User.Age));
-            var constantMin = Expression.Constant(range.Min, propertyDatetime.Type);
-            var constantMax = Expression.Constant(range.Max, propertyDatetime.Type);
-            var leftAge = Expression.GreaterThanOrEqual(propertyDatetime, constantMin);
-            var rightAge = Expression.LessThanOrEqual(propertyDatetime, constantMax); //=====> изменить на нужный тип сравнения
-            var newcomparison = Expression.AndAlso(leftAge, rightAge);
-            filterBody = Expression.AndAlso(filterBody, newcomparison);
+            var propAge = Expression.Property(param, nameof(User.Age));
+            var constMin = Expression.Constant(filterTarget.Age.Min);
+            var constMax = Expression.Constant(filterTarget.Age.Max);
+            var minExpression = Expression.GreaterThanOrEqual(propAge, constMin);
+            var maxExpression = Expression.LessThanOrEqual(propAge, constMax);
+            var finalExpression = Expression.AndAlso(minExpression, maxExpression);
+            filterBody = Expression.AndAlso(filterBody, finalExpression);
             // result = result.Where(u => u.CreatedAt >= dateFilter.Min && u.CreatedAt <= dateFilter.Max);
             _logger.LogWarning("Age filter");
+            System.Console.WriteLine("Age filter ==> " + filterBody);
 
         }
         if (!string.IsNullOrWhiteSpace(filterTarget.Username))
@@ -93,13 +95,32 @@ public class Search : ISearch
         if (filterTarget.PostCount is not null)
         {
             var propPostCount = Expression.Property(param, nameof(User.PostCount));
-            var constPostCount = Expression.Constant(filterTarget.PostCount);
-            var leftPostCount = Expression.GreaterThanOrEqual(propPostCount, constPostCount);
-            var rightPostCount = Expression.LessThanOrEqual(propPostCount, constPostCount);
-            var newComparison = Expression.AndAlso(leftPostCount, rightPostCount);
+            var varMin = Convert.ChangeType(filterTarget.PostCount.Min, propPostCount.Type);
+            var varMax = Convert.ChangeType(filterTarget.PostCount.Max, propPostCount.Type);
+            var constMin = Expression.Constant(varMin, propPostCount.Type);
+            var constMax = Expression.Constant(varMax, propPostCount.Type);
+            var leftVar = Expression.GreaterThanOrEqual(propPostCount, constMin);
+            var rightVar = Expression.LessThanOrEqual(propPostCount, constMax);
+            var newComparison = Expression.AndAlso(leftVar, rightVar);
             filterBody = Expression.AndAlso(filterBody, newComparison);
             _logger.LogWarning("PostCount filter");
         }
+        if (filterTarget.Date is not null)
+        {
+            var propDate = Expression.Property(param, nameof(User.CreatedAt));
+            var varMin = Convert.ChangeType(filterTarget.Date.Min, propDate.Type);
+            var varMax = Convert.ChangeType(filterTarget.Date.Max, propDate.Type);
+
+            var constantMin = Expression.Constant(varMin, propDate.Type);
+            var constantMax = Expression.Constant(varMax, propDate.Type);
+
+            var leftComparison = Expression.GreaterThanOrEqual(propDate, constantMin);
+            var rightComparison = Expression.LessThanOrEqual(propDate, constantMax);
+            var newComparison = Expression.AndAlso(leftComparison, rightComparison);
+            filterBody = Expression.AndAlso(filterBody, newComparison);
+            // result = result.Where(u => u.CreatedAt >= dateFilter.Min && u.CreatedAt <= dateFilter.Max);
+        }
+
 
         var lambda = Expression.Lambda<Func<User, bool>>(filterBody, param);
         Console.WriteLine($"Lambda ==> {lambda}");
@@ -108,31 +129,14 @@ public class Search : ISearch
         return await result.Select(u => new UserFilterTarget
         {
             Username = u.Username ?? string.Empty,
-            Age = u.Age,
-            Date = u.CreatedAt,
-            PostCount = u.PostCount,
+            AgeOut = u.Age,
+            DateOut = u.CreatedAt,
+            PostCountOut = u.PostCount,
             City = u.City,
             Hobby = u.Hobby,
         }).ToListAsync();
     }
 }
 
-
-// case UserFilterTarget.RegistrationDate:
-//     _logger.LogWarning("RegistrationDate filter");
-//     // Компилятор должен быть уверен, что T — это DateTime
-//     if (range is RangeFilter<DateTime> dateFilter)
-//     {
-//         var propertyDatetime = Expression.Property(param, nameof(User.CreatedAt));
-//         var typedValueMin = Convert.ChangeType(range.Min, propertyDatetime.Type);
-//         var typedValueMax = Convert.ChangeType(range.Max, propertyDatetime.Type);
-//         var constantMin = Expression.Constant(typedValueMin, propertyDatetime.Type);
-//         var constantMax = Expression.Constant(typedValueMax, propertyDatetime.Type);
-
-//         var liftcomparison = Expression.GreaterThanOrEqual(propertyDatetime, constantMin);
-//         var rightcomparison = Expression.LessThanOrEqual(propertyDatetime, constantMax);
-//         comparison = Expression.AndAlso(liftcomparison, rightcomparison);
-//         // result = result.Where(u => u.CreatedAt >= dateFilter.Min && u.CreatedAt <= dateFilter.Max);
-//     }
-//     break;
+// Компилятор должен быть уверен, что T — это DateTime
 

@@ -18,7 +18,7 @@ public class LikeController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> ToggleLike([FromBody] LikePostDto dto)
+    public async Task<IActionResult> ToggleLike([FromBody] TogglePostDto dto)
     {
         var user = await _userService.GetOrCreateUser(HttpContext);// получаем объект UserId из куки или создаем новый
 

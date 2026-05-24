@@ -20,9 +20,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILikeService, LikeService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
-
 builder.Services.AddScoped<IOnlineService, OnlineService>();
-builder.Services.AddScoped<ISearch, Search>();
+builder.Services.AddScoped<ISearchService, SearchService>();
+builder.Services.AddScoped<IBookmarkService, BookmarkService>();
 
 builder.Services.AddMemoryCache();
 

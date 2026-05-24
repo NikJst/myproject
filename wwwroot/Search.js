@@ -97,7 +97,8 @@ class SearchModule {
                 post.username,
                 post.isOnline,
                 post.createdAt,
-                '.cards-container' // указываем контейнер для карточек
+                '.cards-container', // указываем контейнер для карточек
+                post.myBookmark
             );
         });
     }

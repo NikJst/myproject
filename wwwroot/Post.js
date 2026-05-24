@@ -56,12 +56,14 @@ async function loadAllPosts(pageNumber = 1, pageSizeParam = 10) {
         post.title,
         post.text,
         post.postId,
-        post.likedByUser,
+        post.myLike,
         post.userId,
         post.likesCount,
         post.username,
         post.isOnline,
-        post.createdAt
+        post.createdAt,
+        null,
+        post.myBookmark
       );
     });
     
@@ -85,7 +87,6 @@ async function createPost() {
         text: "Пример текста поста",
         userId: null, // Будет заполнено на сервере
         username: null, // Будет заполнено на сервере
-        // likedByUser и likesCount не нужны при создании
       }),
     });
 
@@ -97,12 +98,14 @@ async function createPost() {
       newPost.title,
       newPost.text,
       newPost.postId,//==
-      newPost.likedByUser,
+      newPost.myLike,
       newPost.userId,
       newPost.likesCount, // Используем значение из ответа сервера
       newPost.username, // Передаем имя автора
       newPost.isOnline,
-      newPost.createdAt
+      newPost.createdAt,
+      null,
+      newPost.myBookmark
     );
   } catch (error) {
     console.error(error);

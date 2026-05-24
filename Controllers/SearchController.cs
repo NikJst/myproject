@@ -7,16 +7,16 @@ namespace Testing3.Controllers;
 [Route("api/[controller]")]
 public class SearchController : ControllerBase
 {
-    private readonly ISearch _search;
+    private readonly ISearchService _search;
     private readonly ILogger<SearchController> _logger;
-    public SearchController(ISearch search, ILogger<SearchController> logger)
+    public SearchController(ISearchService search, ILogger<SearchController> logger)
     {
         _search = search;
         _logger = logger;
     }
 
     [HttpGet]
-    public async Task<List<ViewPostsDto>> Search([FromQuery] string query)
+    public async Task<List<ViewPostDto>> Search([FromQuery] string query)
     {
         _logger.LogWarning($"Запрос: {query}", query);
         if (string.IsNullOrWhiteSpace(query))
@@ -29,7 +29,7 @@ public class SearchController : ControllerBase
     [HttpPost("users")]
     public async Task<List<UserFilterTarget>> SearchUsers([FromBody] UserSearchRequest request)
     {
-        var result = await _search.SearchUsers(request.Range, request.Values);
+        var result = await _search.SearchUsers(request.Values);
         return result;
     }
 }

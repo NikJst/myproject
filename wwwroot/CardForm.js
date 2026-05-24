@@ -188,7 +188,7 @@ async function createPostWithFormData(postData) {
       postId: newPost.postId,
       title: newPost.title,
       text: newPost.text,
-      likedByUser: newPost.likedByUser,
+      myLike: newPost.myLike,
       userId: newPost.userId,
       likesCount: newPost.likesCount,
       username: newPost.username
@@ -202,12 +202,14 @@ async function createPostWithFormData(postData) {
         postData.title,
         postData.text,
         newPost.postId,
-        newPost.likedByUser,
+        newPost.myLike,
         newPost.userId,
         newPost.likesCount, // Используем значение из ответа сервера
         newPost.username,
         newPost.isOnline,
-        newPost.createdAt
+        newPost.createdAt,
+        null,
+        newPost.myBookmark
       );
       console.log("Карточка поста успешно создана");
     } catch (cardError) {
@@ -216,7 +218,7 @@ async function createPostWithFormData(postData) {
         title: postData.title,
         text: postData.text,
         postId: newPost.postId,
-        likedByUser: newPost.likedByUser,
+        myLike: newPost.myLike,
         userId: newPost.userId,
         likesCount: newPost.likesCount,
         username: newPost.username

@@ -15,6 +15,7 @@ public class UserController : Controller
     public async Task<IActionResult> GetOrCreateUser()
     {
         var user = await _userService.GetOrCreateUser(HttpContext);
+        Console.WriteLine($"User    ===> {user}");
         return Ok(user);
     }
 

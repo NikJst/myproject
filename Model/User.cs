@@ -5,9 +5,16 @@ namespace Testing3;
 // [Table("users", Schema = "public")]
 public class User
 {
-
+    public User(string? name) //контруктор дефолтный
+    {
+        Name = name ?? throw new ArgumentNullException(nameof(name));
+        IsGuest = true;
+        PostCount = 0;
+        LikeCount = 0;
+        Age = null;
+        // CreatedAt будет установлен явно при создании
+    }
     public string Name { get; set; }
-    [StringLength(10)]
     public string? Username { get; set; }
     // public string? AvatarUrl { get; set; }
     [StringLength(200)]
@@ -16,7 +23,7 @@ public class User
     public string? Description { get; set; }
     // остальное -->
     [Range(1, 60)]
-    public int Age { get; set; }
+    public int? Age { get; set; }
     public string? Gender { get; set; }
     public string? City { get; set; }
     public string? Street { get; set; }
@@ -30,12 +37,5 @@ public class User
     public DateTime CreatedAt { get; set; }
     public List<Post> Posts { get; private set; } = []; // навигация к Post 
     public List<Like> Likes { get; private set; } = []; // навигация к Like
-                                                        // Parameterless constructor for EF
-    public User(string? name)
-    {
-        Name = name ?? throw new ArgumentNullException(nameof(name));
-        IsGuest = true;
-        // CreatedAt будет установлен явно при создании
-    }
-
+    public List<Bookmark> Bookmarks { get; private set; } = []; // навигация к Bookmark
 }

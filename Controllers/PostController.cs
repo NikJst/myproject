@@ -18,7 +18,7 @@ public class PostController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreatePost([FromBody] ViewPostsDto request)
+    public async Task<IActionResult> CreatePost([FromBody] ViewPostDto request)
     {
 
         try
@@ -27,7 +27,7 @@ public class PostController : ControllerBase
             _logger.LogInformation("Full request object: {@Request}", request);
 
             var user = await _userService.GetOrCreateUser(HttpContext);
-            var response = await _postService.CreatePostAsync(request.Text, user.Id, user.Username, request.IsPublished ?? false); // убрал заголовок
+            var response = await _postService.CreatePostAsync(request.Text, user.Id, user.Username, request.IsPublished); // убрал заголовок
             return Ok(response);
         }
         catch (Exception ex)

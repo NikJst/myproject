@@ -2,19 +2,20 @@ export function createEmptyPostCard(
   title,
   text,
   postId,
-  likedByUser,
+  myLike,
   userId,
   likesCount = 0, // Добавляем параметр для счетчика лайков
   username = "Автор", // Добавляем параметр для имени автора
   isOnline = false, // Добавляем параметр для онлайн-статуса
   createdAt = null, // Добавляем параметр для даты создания
-  containerSelector = null // Добавляем параметр для выбора контейнера
+  containerSelector = null, // Добавляем параметр для выбора контейнера
+  myBookmark = false // Добавляем параметр для закладки
 ) {
   console.log(
     "createEmptyPostCard вызван с postId:",
     postId,
-    "likedByUser:",
-    likedByUser,
+    "myLike:",
+    myLike,
     "userId:",
     userId,
     "isOnline:",
@@ -22,7 +23,9 @@ export function createEmptyPostCard(
     "createdAt:",
     createdAt,
     "containerSelector:",
-    containerSelector
+    containerSelector,
+    "myBookmark:",
+    myBookmark
   );
 
   // Определяем, в какой контейнер добавлять карточку
@@ -84,14 +87,16 @@ export function createEmptyPostCard(
   // кнопки
   const buttonsBottom = document.createElement("div");
   buttonsBottom.classList.add("buttons-bottom");
-  const icons = ["repost.png", "star.png", "message.png", "like.png"];
+  const icons = ["repost.png", "bookmark.png", "message.png", "like.png"];
 
   // ====> перебираем и создаем кнопки
   icons.forEach((icon) => {
     const btn = document.createElement("button");
     const img = document.createElement("img");
-    if (icon === "like.png" && likedByUser) {
+    if (icon === "like.png" && myLike) {
       img.src = "image/like+.png";
+    } else if (icon === "bookmark.png" && myBookmark) {
+      img.src = "image/bookmark+.png";
     } else {
       img.src = `image/${icon}`;
     }
@@ -108,9 +113,22 @@ export function createEmptyPostCard(
         "Лайк-кнопка получила postId:",
         postId,
         "Liked:",
-        likedByUser,
+        myLike,
         "Likes count:",
         likesCount,
+      );
+    }
+
+    //===> bookmark-кнопка получает postId через data-атрибут
+    if (icon === "bookmark.png" && postId) {
+      btn.dataset.postId = postId;
+      btn.id = `bookmark-btn-${postId}`; // уникальный id для кнопки BOOKMARK
+
+      console.log(
+        "Bookmark-кнопка получила postId:",
+        postId,
+        "Bookmarked:",
+        myBookmark,
       );
     }
     buttonsBottom.appendChild(btn);

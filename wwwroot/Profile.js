@@ -116,8 +116,8 @@ function updateProfileStats(profileData) {
         console.log('Updated likes count to:', value.textContent);
         break;
       case 'Избранное':
-        // Заглушка
-        value.textContent = '48';
+        value.textContent = profileData.bookmarksCount || '0';
+        console.log('Updated bookmarks count to:', value.textContent);
         break;
     }
   });
@@ -164,9 +164,6 @@ async function getCurrentUser() {
   } catch (error) {
     console.error('Ошибка получения текущего пользователя:', error);
   }
-  
-  // Возвращаем заглушку если не удалось получить пользователя
-  return { username: 'Guest_' + Math.random().toString(36).substr(2, 5), name: 'Guest' };
 }
 
 // Обновление информации профиля
@@ -307,7 +304,7 @@ export async function loadUserFavorites(username) {
       throw new Error('Username не указан');
     }
     
-    const response = await fetch(`/api/Profile/${username}/favorites`);
+    const response = await fetch(`/api/Profile/${username}/bookmarks`);
     console.log('получаем избранные посты:', response.status);
     
     if (!response.ok) {
@@ -453,13 +450,14 @@ function createPostElement(post, containerSelector = '.posts-container') {
     post.title || '',
     post.text || '',
     post.postId,
-    post.likedByUser || false,
+    post.myLike || false,
     post.userId,
     post.likesCount || 0,
     post.username || 'Автор',
     post.isOnline || false,
     post.createdAt,
-    containerSelector
+    containerSelector,
+    post.myBookmark || false
   );
   
   // Возвращаем null, так как createEmptyPostCard сама добавляет карточку в DOM

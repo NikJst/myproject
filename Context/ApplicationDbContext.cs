@@ -1,8 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Testing3;
-
 namespace Testing3;
-//(Fluent API) кажется излишне формальной, но она дает огромную мощь.
 public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
@@ -10,6 +7,7 @@ public class ApplicationDbContext : DbContext
     }
     public DbSet<Post> Posts { get; set; }
     public DbSet<Like> Likes { get; set; }
+    public DbSet<Bookmark> Bookmarks { get; set; }
     public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) //цепочка
@@ -38,6 +36,19 @@ public class ApplicationDbContext : DbContext
                     .HasForeignKey(l => l.PostId)
                     .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<Bookmark>() // все ниже описанное действительно к одной (1) сущности LIKE
+                           .HasOne(b => b.User)             // У одной LIKE есть один автор (User) LIKE не могут делить оба автора. 
+                           .WithMany(u => u.Bookmarks)         // субьективная точка зрения POST на сущность LIKE - один POST может иметь много сущностей LIKE
+                           .HasForeignKey(b => b.UserId) // В таблице Like поле UserId является ключом
+                           .OnDelete(DeleteBehavior.Cascade); // Если удалить пользователя, его лайки удалятся автоматически
+        modelBuilder.Entity<Bookmark>()
+                    .HasOne(b => b.Post)
+                    .WithMany(p => p.Bookmarks) // У одного поста может быть много лайков
+                    .HasForeignKey(b => b.PostId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Bookmark>()
+            .HasKey(b => new { b.UserId, b.PostId });
 
         modelBuilder.Entity<Post>()
         .HasOne(p => p.User)
