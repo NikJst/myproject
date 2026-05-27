@@ -15,6 +15,12 @@ public class ViewPostDto //для отображения всех постов
     public int LikesCount { get; set; }
     public bool IsMyPost { get; set; }
 }
+public class UniversalPostDto
+{
+    public bool MyBookmark { get; set; }
+    public bool UserlikesPosts { get; set; }
+
+}
 public class PagedResponse<ViewPostDto>
 {
     // public int UsersCount { get; set; }

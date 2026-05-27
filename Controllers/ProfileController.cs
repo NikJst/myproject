@@ -10,13 +10,19 @@ public class ProfileController : ControllerBase
     private readonly IUserService userService;
     private readonly ILogger<ProfileController> logger;
     private readonly IProfileService profileService;
+    private readonly ITest test;
+    // private readonly IBuilder builder;
 
-    public ProfileController(IUserService userService, ILogger<ProfileController> logger, IProfileService profileService)
+    public ProfileController(IUserService userService, ILogger<ProfileController> logger, IProfileService profileService, ITest test)
     {
         this.userService = userService;
         this.logger = logger;
         this.profileService = profileService;
+        this.test = test;
+        // this.builder = builder;
     }
+    /*
+*/
     [HttpGet]
     [Route("{username}")]
     public async Task<IActionResult> GetProfile([FromRoute] string username)
@@ -33,64 +39,91 @@ public class ProfileController : ControllerBase
     }
 
     [HttpPatch]
-    [Route("{username}/edit")] //username может изменяться далее так что лучше не использовать его в пути
-    public async Task<IActionResult> PatchInfo([FromRoute] string username, [FromBody] ProfileEditDto profileDto)
+    [Route("edit")] //username может изменяться далее так что лучше не использовать его в пути
+    public async Task<IActionResult> PatchInfo([FromQuery] string username, [FromBody] ProfileEditDto profileDto)
     {
-        //предположим что пользователь уже авторизован
-        var user = await userService.GetOrCreateUser(HttpContext);
-        var updatedProfile = await profileService.PatchUserInfo(profileDto, user);
+
+        var me = await userService.GetOrCreateUser(HttpContext);
+
+        logger.LogWarning(username + " == " + " == " + me.Username);
+
+
+        var updatedProfile = await profileService.PatchUserInfo(profileDto, me, username);
+
         return Ok(updatedProfile);
     }
-
-    //===================>
-    [HttpGet]
-    [Route("{username}/posts")]
-    public async Task<IActionResult> GetUserPosts([FromRoute] string username)
+    [HttpPost("geatusposts")]
+    public async Task<IActionResult> Posts([FromQuery] string username, [FromQuery] char i)
     {
-        //предположим что пользователь уже авторизован
-        var user = await userService.GetOrCreateUser(HttpContext);
-
-        var userPosts = await profileService.GetTargetUserPosts(username, user);
-        return Ok(userPosts);
-    }
-
-
-
-    //===================>
-    // [Authorize] только авторизованные
-    [HttpGet]
-    [Route("{username}/likes")]
-    public async Task<IActionResult> GetLikes([FromRoute] string username)
-    {
-        //предположим что пользователь уже авторизован
-        var user = await userService.GetOrCreateUser(HttpContext);
-
-        var likedPosts = await profileService.GetLikesPosts(username, user);
-        return Ok(likedPosts);
-    }
-
-    //===================>
-    // [Authorize] только авторизованные
-    [HttpGet]
-    [Route("{username}/drafts")]
-    public async Task<IActionResult> GetDrafts([FromRoute] string username)
-    {
-        //предположим что пользователь уже авторизован
-        var user = await userService.GetOrCreateUser(HttpContext);
-
-        var draftPosts = await profileService.GetDraftsPosts(username, user);
-        return Ok(draftPosts);
-    }
-
-
-    [HttpGet("{username}/bookmarks")]
-    public async Task<IActionResult> GetBookmarks([FromRoute] string username)
-    {
-        //предположим что пользователь уже авторизован
-        var user = await userService.GetOrCreateUser(HttpContext);
-
-        var bookmarks = await profileService.GetBookmarksPosts(username, user);
-        return Ok(bookmarks);
+        var me = await userService.GetOrCreateUser(HttpContext);
+        var res = await test.TestMethod(me, i, username);
+        return Ok(res);
     }
 
 }
+
+
+/*
+[HttpGet]
+[Route("{username}/posts")]
+public async Task<IActionResult> GetUserPosts([FromRoute] string username)
+{
+    //предположим что пользователь уже авторизован
+    var user = await userService.GetOrCreateUser(HttpContext);
+
+    var userPosts = await profileService.GetTargetUserPosts(username, user);
+    return Ok(userPosts);
+}
+
+//===================>
+// [Authorize] только авторизованные
+[HttpGet]
+[Route("{username}/likes")]
+public async Task<IActionResult> GetLikes([FromRoute] string username)
+{
+    //предположим что пользователь уже авторизован
+    var user = await userService.GetOrCreateUser(HttpContext);
+
+    var likedPosts = await profileService.GetLikesPosts(username, user);
+    return Ok(likedPosts);
+}
+
+//===================>
+// [Authorize] только авторизованные
+[HttpGet]
+[Route("{username}/drafts")]
+public async Task<IActionResult> GetDrafts([FromRoute] string username)
+{
+    //предположим что пользователь уже авторизован
+    var user = await userService.GetOrCreateUser(HttpContext);
+
+    var draftPosts = await profileService.GetDraftsPosts(username, user);
+    return Ok(draftPosts);
+}
+
+
+[HttpGet("{username}/bookmarks")]
+public async Task<IActionResult> GetBookmarks([FromRoute] string username)
+{
+    //предположим что пользователь уже авторизован
+    var user = await userService.GetOrCreateUser(HttpContext);
+
+    var bookmarks = await profileService.GetBookmarksPosts(username, user);
+    return Ok(bookmarks);
+}
+
+[HttpPost("{strusername}/targetposts")]
+
+public async Task<IActionResult> GetTargetUserPosts([FromBody] UniversalPostDto universal, [FromRoute] string strusername)
+{
+    var me = await userService.GetOrCreateUser(HttpContext);
+
+    var targetuserposts = await builder.GetTargetUserPosts(universal, me, strusername);
+    return Ok(targetuserposts);
+}
+*/
+
+
+
+
+

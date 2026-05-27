@@ -1,6 +1,6 @@
 // Импортируем необходимые функции
 import { createEmptyPostCard } from "./Post.js";
-import { loadProfileData, getCurrentUsername, loadUserPosts, loadUserLikes, loadUserFavorites, loadUserDrafts } from "./Profile.js";
+import { loadProfileData, getCurrentUsername } from "./Profile.js";
 import { setupScrollEffect } from "./ScrollUtils.js";
 import { setupLikeObservers, toggleLikeOnServer, updateLikeButton } from "./Like.js";
 
@@ -12,12 +12,8 @@ export function initializeProfile() {
   const username = getCurrentUsername();
   loadProfileData(username).then((profileData) => {
     console.log("Profile data loaded");
-    // После загрузки данных профиля загружаем посты пользователя
-    return loadUserPosts(profileData.username);
-  }).then(() => {
-    console.log("User posts loaded");
   }).catch(error => {
-    console.error("Failed to load profile data or posts:", error);
+    console.error("Failed to load profile data:", error);
   });
   
   // Настраиваем эффект прокрутки
@@ -26,13 +22,11 @@ export function initializeProfile() {
   // Настраиваем обработчики лайков
   setupLikeObservers();
   
-  // Настраиваем переключение вкладок
-  setupTabSwitching();
-  
   // Делаем функцию доступной глобально для других скриптов
   window.createEmptyPostCard = createEmptyPostCard;
 }
 
+/*
 // Функция для настройки переключения вкладок
 function setupTabSwitching() {
   const tabButtons = document.querySelectorAll('.tab-button');
@@ -112,6 +106,7 @@ async function loadTabData(targetTab, username) {
     console.error(`Failed to load ${targetTab}:`, error);
   }
 }
+*/
 
 // Автоматическая инициализация при загрузке DOM
 document.addEventListener("DOMContentLoaded", initializeProfile);

@@ -25,6 +25,7 @@ public class ProfileInfoDto //Для информации о профиле
 }
 public class ProfileEditDto
 {
+    public string? Username { get; set; }
     public string? Header { get; set; }
     //     public string? Location { get; set; }
     public string? Description { get; set; }

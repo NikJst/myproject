@@ -1,12 +1,12 @@
 async function pingServer() {
     try {
-        console.log('Sending ping to server...');
+        // console.log('Sending ping to server...');
         const response = await fetch('/api/online', {
             method: 'POST'
         });
         
         if (response.ok) {
-            console.log('Ping sent successfully, response:', await response.text());
+            // console.log('Ping sent successfully, response:', await response.text());
         } else {
             console.error('Ping failed with status:', response.status);
         }
@@ -21,7 +21,7 @@ async function updateStatuses() {
                          .filter(el => el.dataset.userId)
                          .map(el => el.dataset.userId);
 
-    console.log('updateStatuses: Found user IDs:', userIds);
+    // console.log('updateStatuses: Found user IDs:', userIds);
 
     if (userIds.length > 0) {
         // 2. Спрашиваем у быстрого эндпоинта (который смотрит только в кэш)
@@ -29,24 +29,24 @@ async function updateStatuses() {
             method: 'GET'
         });
         const statuses = await response.json(); // Придет { "userId": true, "userId2": false }
-        console.log('updateStatuses: Received statuses:', statuses);
+        // console.log('updateStatuses: Received statuses:', statuses);
 
         // 3. Обновляем классы в HTML
         for (const [id, isActive] of Object.entries(statuses)) {
             const indicator = document.querySelector(`#status-dot-${id}`);
-            console.log(`Processing indicator for ID ${id}:`, indicator);
+            // console.log(`Processing indicator for ID ${id}:`, indicator);
             if (indicator) {
                 if (isActive) {
                     indicator.classList.add('online');
                     indicator.classList.remove('offline');
-                    console.log(`Set user ${id} to ONLINE`);
+                    // console.log(`Set user ${id} to ONLINE`);
                 } else {
                     indicator.classList.remove('online');
                     indicator.classList.add('offline');
-                    console.log(`Set user ${id} to OFFLINE`);
+                    // console.log(`Set user ${id} to OFFLINE`);
                 }
             } else {
-                console.log(`No indicator found for ID ${id}`);
+                // console.log(`No indicator found for ID ${id}`);
             }
         }
     }
@@ -59,7 +59,7 @@ async function updateStatuses() {
 async function updateProfileOnlineStatus() {
     const profileIndicator = document.getElementById('online-indicator');
     if (!profileIndicator) {
-        console.log('No profile indicator found, not on profile page');
+        // console.log('No profile indicator found, not on profile page');
         return; // Не на странице профиля
     }
     
@@ -70,7 +70,7 @@ async function updateProfileOnlineStatus() {
         return;
     }
     
-    console.log('Updating online status for profile user:', profileUserId);
+    // console.log('Updating online status for profile user:', profileUserId);
     
     try {
         const response = await fetch(`/api/online/users?userIds=${profileUserId}`, {
@@ -79,10 +79,10 @@ async function updateProfileOnlineStatus() {
         
         if (response.ok) {
             const statuses = await response.json();
-            console.log('Received online statuses:', statuses);
+            // console.log('Received online statuses:', statuses);
             
             const isOnline = statuses[profileUserId] || false;
-            console.log('Profile user isOnline:', isOnline);
+            // console.log('Profile user isOnline:', isOnline);
             
             if (isOnline) {
                 profileIndicator.classList.remove('offline');
@@ -141,7 +141,7 @@ const onlineStatus = {
             clearInterval(this.intervalId);
         }
         this.intervalId = setInterval(updateStatusesWithPing, 5000);
-        console.log('Online status tracking started');
+        // console.log('Online status tracking started');
     },
     
     // Остановка отслеживания
@@ -149,7 +149,7 @@ const onlineStatus = {
         if (this.intervalId) {
             clearInterval(this.intervalId);
             this.intervalId = null;
-            console.log('Online status tracking stopped');
+            // console.log('Online status tracking stopped');
         }
     }
 };

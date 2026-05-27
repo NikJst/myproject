@@ -62,34 +62,4 @@ public class UserService : IUserService
         }
         return null;
     }
-
-    //----не помню делал ли я сам 
-    /* public async Task<ViewUsersListDto> GetAllUsers()
-     {
-         var users = await dbcontext.Users
-         .OrderBy(u => u.Name)//нет индекса по имени, но в тесте не жалко
-         .ToListAsync();
-         var count = await dbcontext.Users.CountAsync();
-         logger.LogInformation($"Получено {count} пользователей");
-
-         // Преобразуем User в ViewUserCardDto
-         var userCards = users.Select(u => new ViewUserCardDto
-         {
-             UserId = u.UserId,
-             Username = u.Username,
-             Name = u.Name,
-             Description = u.Description,
-             PostCount = u.PostCount,
-             LikeCount = u.LikeCount,
-             CreatedAt = u.CreatedAt,
-             IsOnline = u.IsOnline
-         }).ToList();
-
-         return new ViewUsersListDto
-         {
-             Users = userCards,
-             UsersCount = count
-         };
-     }
- }*/
 }

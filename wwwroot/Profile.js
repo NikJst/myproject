@@ -1,3 +1,5 @@
+import { createEmptyPostCard } from './ModelCard.js';
+
 // Загрузка данных профиля
 export async function loadProfileData(username) {
   try {
@@ -194,6 +196,142 @@ export async function updateProfileInfo(profileData, username) {
   }
 }
 
+
+// Создание элемента поста
+function createPostElement(post, containerSelector = '.posts-container') {
+  // Используем существующую функцию создания карточки
+  createEmptyPostCard(
+    post.title || '',
+    post.text || '',
+    post.postId,
+    post.myLike || false,
+    post.userId,
+    post.likesCount || 0,
+    post.username || 'Автор',
+    post.isOnline || false,
+    post.createdAt,
+    containerSelector,
+    post.myBookmark || false
+  );
+  
+  // Возвращаем null, так как createEmptyPostCard сама добавляет карточку в DOM
+  return null;
+}
+
+// Загрузка данных вкладки через единый эндпоинт с параметром i
+export async function loadProfileTabData(username, tabType) {
+  try {
+    console.log('loadProfileTabData: Загрузка данных для вкладки:', tabType, 'username:', username);
+    
+    // Всегда получаем username профиля из URL, игнорируя переданный параметр
+    const profileUsername = getCurrentUsername();
+    if (!profileUsername) {
+      throw new Error('Username профиля не найден в URL');
+    }
+    console.log('Используем username профиля из URL:', profileUsername);
+
+    // Маппинг типа вкладки на параметр i
+    const tabToParam = {
+      'posts': '1',
+      'favorites': '2',
+      'likes': '3'
+    };
+
+    const iParam = tabToParam[tabType];
+    if (!iParam) {
+      throw new Error(`Неизвестный тип вкладки: ${tabType}`);
+    }
+
+    // Делаем запрос к единому эндпоинту с параметром i, используя username профиля из URL
+    const response = await fetch(`/api/Profile/geatusposts?username=${profileUsername}&i=${iParam}`, {
+      method: 'POST'
+    });
+    console.log('Загрузка данных вкладки:', response.status);
+    
+    if (!response.ok) {
+      console.error('Ошибка загрузки данных вкладки:', response.status, response.statusText);
+      throw new Error(`Ошибка загрузки данных вкладки: ${response.status}`);
+    }
+    
+    const posts = await response.json();
+    console.log('Данные вкладки:', posts);
+    
+    // Определяем контейнер для обновления
+    const containerSelector = {
+      'posts': '.posts-container',
+      'favorites': '.favorites-container',
+      'likes': '.likes-container'
+    }[tabType];
+
+    // Очищаем контейнер
+    const container = document.querySelector(containerSelector);
+    if (container) {
+      container.innerHTML = '';
+      
+      if (!posts || posts.length === 0) {
+        const emptyMessages = {
+          'posts': 'У пользователя пока нет постов',
+          'favorites': 'Избранных постов пока нет',
+          'likes': 'Понравившихся постов пока нет'
+        };
+        container.innerHTML = `<p class="text-gray-500 text-center">${emptyMessages[tabType]}</p>`;
+        return;
+      }
+      
+      // Создаем карточки для каждого поста
+      posts.forEach(post => {
+        createPostElement(post, containerSelector);
+      });
+    }
+    
+    return posts;
+  } catch (error) {
+    console.error('Ошибка при загрузке данных вкладки:', error);
+    // Показываем сообщение об ошибке в интерфейсе
+    const containerSelector = {
+      'posts': '.posts-container',
+      'favorites': '.favorites-container',
+      'likes': '.likes-container'
+    }[tabType];
+    
+    const container = document.querySelector(containerSelector);
+    if (container) {
+      container.innerHTML = `<p class="text-red-500 text-center">Ошибка загрузки: ${error.message}</p>`;
+    }
+    throw error;
+  }
+}
+// =======================><==============================
+
+// Функция для переключения лайка (заглушка, нужно реализовать)
+// async function toggleLike(postId) {
+//   try {
+//     const response = await fetch('/api/Posts/like', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({ postId: postId })
+//     });
+    
+//     if (!response.ok) {
+//       throw new Error('Ошибка переключения лайка');
+//     }
+    
+//     // Перезагружаем посты для обновления состояния лайков
+//     const currentUsername = getCurrentUsername();
+//     await loadUserPosts(currentUsername);
+    
+//   } catch (error) {
+//     console.error('Ошибка при переключении лайка:', error);
+//   }
+// }
+
+
+
+
+
+/*
 // Загрузка постов пользователя
 export async function loadUserPosts(username) {
   try {
@@ -259,7 +397,9 @@ function updatePostsUI(postsResponse) {
     createPostElement(post);
   });
 }
+*/
 
+/*
 // Загрузка понравившихся постов
 export async function loadUserLikes(username) {
   try {
@@ -294,7 +434,9 @@ export async function loadUserLikes(username) {
     throw error;
   }
 }
+*/
 
+/*
 // Загрузка избранных постов
 export async function loadUserFavorites(username) {
   try {
@@ -329,7 +471,9 @@ export async function loadUserFavorites(username) {
     throw error;
   }
 }
+*/
 
+/*
 // Загрузка черновиков
 export async function loadUserDrafts(username) {
   try {
@@ -364,7 +508,9 @@ export async function loadUserDrafts(username) {
     throw error;
   }
 }
+*/
 
+/*
 // Обновление интерфейса с понравившимися постами
 function updateLikesUI(posts) {
   console.log('Updating likes UI with:', posts);
@@ -442,48 +588,4 @@ function updateDraftsUI(posts) {
     createPostElement(post, '.drafts-container');
   });
 }
-
-// Создание элемента поста
-function createPostElement(post, containerSelector = '.posts-container') {
-  // Используем существующую функцию создания карточки
-  createEmptyPostCard(
-    post.title || '',
-    post.text || '',
-    post.postId,
-    post.myLike || false,
-    post.userId,
-    post.likesCount || 0,
-    post.username || 'Автор',
-    post.isOnline || false,
-    post.createdAt,
-    containerSelector,
-    post.myBookmark || false
-  );
-  
-  // Возвращаем null, так как createEmptyPostCard сама добавляет карточку в DOM
-  return null;
-}
-
-// Функция для переключения лайка (заглушка, нужно реализовать)
-// async function toggleLike(postId) {
-//   try {
-//     const response = await fetch('/api/Posts/like', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify({ postId: postId })
-//     });
-    
-//     if (!response.ok) {
-//       throw new Error('Ошибка переключения лайка');
-//     }
-    
-//     // Перезагружаем посты для обновления состояния лайков
-//     const currentUsername = getCurrentUsername();
-//     await loadUserPosts(currentUsername);
-    
-//   } catch (error) {
-//     console.error('Ошибка при переключении лайка:', error);
-//   }
-// }
+*/
