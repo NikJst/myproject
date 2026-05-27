@@ -23,7 +23,8 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<IOnlineService, OnlineService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
-builder.Services.AddScoped<ITest, Test>();
+builder.Services.AddScoped<IActionService, ActionService>();
+
 
 
 builder.Services.AddMemoryCache();

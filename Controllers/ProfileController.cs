@@ -10,16 +10,14 @@ public class ProfileController : ControllerBase
     private readonly IUserService userService;
     private readonly ILogger<ProfileController> logger;
     private readonly IProfileService profileService;
-    private readonly ITest test;
     // private readonly IBuilder builder;
 
-    public ProfileController(IUserService userService, ILogger<ProfileController> logger, IProfileService profileService, ITest test)
+    public ProfileController(IUserService userService, ILogger<ProfileController> logger, IProfileService profileService)
     {
         this.userService = userService;
         this.logger = logger;
         this.profileService = profileService;
-        this.test = test;
-        // this.builder = builder;
+
     }
     /*
 */
@@ -44,10 +42,6 @@ public class ProfileController : ControllerBase
     {
 
         var me = await userService.GetOrCreateUser(HttpContext);
-
-        logger.LogWarning(username + " == " + " == " + me.Username);
-
-
         var updatedProfile = await profileService.PatchUserInfo(profileDto, me, username);
 
         return Ok(updatedProfile);
@@ -56,7 +50,7 @@ public class ProfileController : ControllerBase
     public async Task<IActionResult> Posts([FromQuery] string username, [FromQuery] char i)
     {
         var me = await userService.GetOrCreateUser(HttpContext);
-        var res = await test.TestMethod(me, i, username);
+        var res = await profileService.GetUserActivity(me, i, username);
         return Ok(res);
     }
 
